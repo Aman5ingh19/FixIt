@@ -1,8 +1,6 @@
 # FixIt — On-Demand Service Request & Repair Network
 
-> 
-
-FixIt is a production-grade, full-stack on-demand home & appliance repair platform connecting customers with background-verified, skilled technicians (electrical, plumbing, HVAC, carpentry, electronics, and appliances) with real-time socket matching, live chat, multi-source photo uploads, and end-to-end job status tracking.
+> **A Production-Grade Full-Stack Service Booking & Repair Network** connecting customers with background-verified, certified technicians (Electrical, Plumbing, HVAC, Carpentry, Electronics, and Home Appliances). Powered by **Razorpay Payment Gateway (Test/Sandbox Mode)** with HMAC-SHA256 cryptographic verification, bidirectional **Socket.IO** real-time dispatch & chat, multi-source media uploads, and end-to-end job status tracking.
 
 ---
 
