@@ -1,0 +1,357 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── FixIt Design System — Tailwind v4 CSS-first config ── */
+
+@theme {
+  /* Brand Colors */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-primary-950: #172554;
+
+  /* Accent */
+  --color-accent-50: #f0fdf4;
+  --color-accent-100: #dcfce7;
+  --color-accent-200: #bbf7d0;
+  --color-accent-300: #86efac;
+  --color-accent-400: #4ade80;
+  --color-accent-500: #22c55e;
+  --color-accent-600: #16a34a;
+  --color-accent-700: #15803d;
+  --color-accent-800: #166534;
+  --color-accent-900: #14532d;
+
+  /* Warning */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+
+  /* Danger */
+  --color-danger-50: #fef2f2;
+  --color-danger-100: #fee2e2;
+  --color-danger-200: #fecaca;
+  --color-danger-300: #fca5a5;
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+
+  /* Surface Colors */
+  --color-surface-50: var(--color-surface-50);
+  --color-surface-100: var(--color-surface-100);
+  --color-surface-200: var(--color-surface-200);
+  --color-surface-300: var(--color-surface-300);
+  --color-surface-400: var(--color-surface-400);
+  --color-surface-500: var(--color-surface-500);
+  --color-surface-600: var(--color-surface-600);
+  --color-surface-700: var(--color-surface-700);
+  --color-surface-800: var(--color-surface-800);
+  --color-surface-900: var(--color-surface-900);
+  --color-surface-950: var(--color-surface-950);
+}
+
+@layer base {
+  :root {
+    /* Light mode surface tokens */
+    --color-surface-50: #F8FAFC;   /* page background */
+    --color-surface-100: #F1F5F9;  /* subtle bg */
+    --color-surface-200: #E2E8F0;  /* borders */
+    --color-surface-300: #CBD5E1;
+    --color-surface-400: #94A3B8;  /* placeholder / muted */
+    --color-surface-500: #64748B;  /* secondary text */
+    --color-surface-600: #475569;
+    --color-surface-700: #334155;
+    --color-surface-800: #1E293B;
+    --color-surface-900: #0F172A;  /* primary text */
+    --color-surface-950: #020617;
+    /* Named semantic aliases */
+    --color-navbar-bg: #FFFFFF;
+    --color-card-bg: #FFFFFF;
+    --color-border: #E2E8F0;
+  }
+  .dark {
+    /* Dark mode surface tokens — vibrant high-contrast dark palette */
+    --color-surface-50: #0B1120;   /* page background */
+    --color-surface-100: #111827;  /* navbar / sidebar */
+    --color-surface-200: #162033;  /* cards & panels */
+    --color-surface-300: #25354E;  /* borders & dividers */
+    --color-surface-400: #93A7C3;  /* captions, placeholders, icons */
+    --color-surface-500: #A8BBD5;  /* secondary text & meta info */
+    --color-surface-600: #C2D3EB;  /* body text & labels */
+    --color-surface-700: #DCE7F5;  /* strong text */
+    --color-surface-800: #EDF4FD;  /* highlighted text */
+    --color-surface-900: #F8FAFC;  /* primary white headings */
+    --color-surface-950: #FFFFFF;
+    /* Named semantic aliases */
+    --color-navbar-bg: #111827;
+    --color-card-bg: #162033;
+    --color-border: #25354E;
+  }
+}
+@theme {
+  /* Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.3);
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-slide-down: slide-down 0.3s ease-out;
+  --animate-slide-left: slide-left 0.3s ease-out;
+  --animate-scale-in: scale-in 0.2s ease-out;
+  --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
+}
+
+/* ── Keyframes ── */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-left {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Base Styles ── */
+
+@layer base {
+  *, ::before, ::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    /* Ensure smooth scrolling on iOS */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--color-surface-50);
+    color: var(--color-surface-900);
+    line-height: 1.6;
+    overflow-x: clip;
+    position: relative;
+  }
+
+  #root {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Prevent media elements from causing horizontal overflow */
+  img,
+  video,
+  canvas,
+  iframe,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Ensure all flex/grid children can shrink below their min-content size */
+  * {
+    min-width: 0;
+  }
+
+  /* Text wrapping safeguard */
+  p, h1, h2, h3, h4, h5, h6, span, a, label, li {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Focus Ring */
+  *:focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Touch target minimum size for interactive elements */
+  button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ── Utility & Component Helpers ── */
+
+@layer utilities {
+  /* Skeleton Loader */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-200) 25%,
+      var(--color-surface-100) 50%,
+      var(--color-surface-200) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--radius-md);
+  }
+
+  /* Glass effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--color-primary-600), var(--color-accent-500));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Responsive Table Container — controlled horizontal scroll for data tables */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Subtle scrollbar always visible on table containers so users know it's scrollable */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-surface-300) transparent;
+  }
+
+  /* Touch scroll helpers */
+  .touch-scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .touch-scroll-x::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe area padding for notched/edge devices */
+  .safe-px {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  /* Fluid page content container */
+  .page-container {
+    width: 100%;
+    max-width: 80rem; /* 1280px */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ── Scrollbar ── */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-surface-400);
+}
+
+/* ── Responsive Global Adjustments ── */
+
+/* Extra small mobile: tighten baseline spacing */
+@media (max-width: 480px) {
+  .text-3xl { font-size: 1.5rem; line-height: 2rem; }
+  .text-4xl { font-size: 1.875rem; line-height: 2.25rem; }
+  .text-5xl { font-size: 2.25rem; line-height: 2.5rem; }
+  .text-6xl { font-size: 2.5rem; line-height: 2.75rem; }
+}
+
+/* Mobile: Ensure filter pill rows have smooth touch scrolling */
+@media (max-width: 640px) {
+  .filter-pills-row {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filter-pills-row::-webkit-scrollbar {
+    display: none;
+  }
+}

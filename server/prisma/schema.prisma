@@ -1,0 +1,462 @@
+// FixIt — Neon PostgreSQL Schema
+// Properly normalized relational database design
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────
+// Enums
+// ──────────────────────────────────────
+
+enum Role {
+  CUSTOMER
+  TECHNICIAN
+  ADMIN
+}
+
+enum RequestStatus {
+  PENDING
+  MATCHING
+  ASSIGNED
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TechnicianAvailability {
+  ONLINE
+  OFFLINE
+  BUSY
+}
+
+enum TechnicianVerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum NotificationType {
+  REQUEST_CREATED
+  REQUEST_ASSIGNED
+  REQUEST_ACCEPTED
+  REQUEST_REJECTED
+  REQUEST_IN_PROGRESS
+  REQUEST_COMPLETED
+  REQUEST_CANCELLED
+  NEW_MESSAGE
+  TECHNICIAN_VERIFIED
+  REVIEW_RECEIVED
+  SYSTEM
+}
+
+enum AssignmentStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+// ──────────────────────────────────────
+// Core User Model
+// ──────────────────────────────────────
+
+model User {
+  id            String       @id @default(uuid())
+  email         String       @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  phone         String?
+  avatarUrl     String?
+  role          Role         @default(CUSTOMER)
+  isActive      Boolean      @default(true)
+  emailVerified Boolean      @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  technicianProfile TechnicianProfile?
+  serviceRequests   ServiceRequest[]
+  sentMessages      Message[]        @relation("SentMessages")
+  receivedMessages  Message[]        @relation("ReceivedMessages")
+  notifications     Notification[]
+  reviewsAuthored   Review[]         @relation("ReviewAuthor")
+  reviewsReceived   Review[]         @relation("ReviewSubject")
+  refreshTokens     RefreshToken[]
+  activityLogs      ActivityLog[]
+
+  @@map("users")
+  @@index([email])
+  @@index([role])
+}
+
+// ──────────────────────────────────────
+// Technician Profile
+// ──────────────────────────────────────
+
+model TechnicianProfile {
+  id                 String                       @id @default(uuid())
+  userId             String                       @unique
+  bio                String?
+  experienceYears    Int                          @default(0)
+  verificationStatus TechnicianVerificationStatus @default(PENDING)
+  availability       TechnicianAvailability       @default(OFFLINE)
+  averageRating      Float                        @default(0)
+  totalReviews       Int                          @default(0)
+  totalJobsCompleted Int                          @default(0)
+  totalEarnings      Float                        @default(0)
+  idDocumentUrl      String?
+  certificateUrl     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  technicianServices TechnicianService[]
+  serviceAreas       ServiceArea[]
+  assignments        RequestAssignment[]
+
+  @@map("technician_profiles")
+  @@index([availability])
+  @@index([verificationStatus])
+  @@index([averageRating(sort: Desc)])
+}
+
+// ──────────────────────────────────────
+// Service Category
+// ──────────────────────────────────────
+
+model ServiceCategory {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+  iconName    String? // Lucide icon name
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  services Service[]
+
+  @@map("service_categories")
+}
+
+// ──────────────────────────────────────
+// Service
+// ──────────────────────────────────────
+
+model Service {
+  id          String  @id @default(uuid())
+  categoryId  String
+  name        String
+  slug        String  @unique
+  description String?
+  basePrice   Float?
+  imageUrl    String?
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  category           ServiceCategory     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  serviceRequests    ServiceRequest[]
+  technicianServices TechnicianService[]
+
+  @@map("services")
+  @@index([categoryId])
+  @@index([isActive])
+  @@unique([categoryId, name])
+}
+
+// ──────────────────────────────────────
+// Service Request
+// ──────────────────────────────────────
+
+model ServiceRequest {
+  id          String        @id @default(uuid())
+  customerId  String
+  serviceId   String
+  title       String
+  description String
+  status      RequestStatus @default(PENDING)
+  priority    Int           @default(0) // 0=normal, 1=high, 2=urgent
+  scheduledAt DateTime?
+  completedAt DateTime?
+  cancelledAt DateTime?
+  cancelReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  customer    User               @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  service     Service            @relation(fields: [serviceId], references: [id])
+  images      RequestImage[]
+  location    ServiceLocation?
+  assignments RequestAssignment[]
+  messages    Message[]
+  review      Review?
+  payment     Payment?
+
+  @@map("service_requests")
+  @@index([customerId])
+  @@index([serviceId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+// ──────────────────────────────────────
+// Request Image
+// ──────────────────────────────────────
+
+model RequestImage {
+  id        String @id @default(uuid())
+  requestId String
+  imageUrl  String
+  publicId  String? // Cloudinary public_id for deletion
+  caption   String?
+
+  createdAt DateTime @default(now())
+
+  request ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@map("request_images")
+  @@index([requestId])
+}
+
+// ──────────────────────────────────────
+// Service Location
+// ──────────────────────────────────────
+
+model ServiceLocation {
+  id        String  @id @default(uuid())
+  requestId String  @unique
+  address   String
+  city      String
+  state     String
+  zipCode   String
+  country   String  @default("India")
+  latitude  Float?
+  longitude Float?
+
+  createdAt DateTime @default(now())
+
+  request ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@map("service_locations")
+  @@index([city])
+}
+
+// ──────────────────────────────────────
+// Technician ↔ Service (many-to-many)
+// ──────────────────────────────────────
+
+model TechnicianService {
+  id           String @id @default(uuid())
+  technicianId String
+  serviceId    String
+  hourlyRate   Float?
+
+  createdAt DateTime @default(now())
+
+  technician TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+  service    Service           @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@map("technician_services")
+  @@unique([technicianId, serviceId])
+  @@index([serviceId])
+}
+
+// ──────────────────────────────────────
+// Service Area (cities/regions a technician covers)
+// ──────────────────────────────────────
+
+model ServiceArea {
+  id           String @id @default(uuid())
+  technicianId String
+  city         String
+  state        String
+  zipCode      String?
+
+  createdAt DateTime @default(now())
+
+  technician TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@map("service_areas")
+  @@unique([technicianId, city, state])
+  @@index([city])
+}
+
+// ──────────────────────────────────────
+// Request Assignment (technician assigned to a request)
+// ──────────────────────────────────────
+
+model RequestAssignment {
+  id           String           @id @default(uuid())
+  requestId    String
+  technicianId String
+  status       AssignmentStatus @default(PENDING)
+  assignedAt   DateTime         @default(now())
+  respondedAt  DateTime?
+
+  request    ServiceRequest    @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  technician TechnicianProfile @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@map("request_assignments")
+  @@unique([requestId, technicianId])
+  @@index([technicianId, status])
+  @@index([requestId])
+}
+
+// ──────────────────────────────────────
+// Message (Customer ↔ Technician chat)
+// ──────────────────────────────────────
+
+model Message {
+  id         String  @id @default(uuid())
+  requestId  String
+  senderId   String
+  receiverId String
+  content    String
+  isRead     Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  request  ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  sender   User           @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User           @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+  @@index([requestId, createdAt])
+  @@index([receiverId, isRead])
+}
+
+// ──────────────────────────────────────
+// Notification
+// ──────────────────────────────────────
+
+model Notification {
+  id     String           @id @default(uuid())
+  userId String
+  type   NotificationType
+  title  String
+  body   String
+  data   Json?  // Extra metadata (requestId, technicianId, etc.)
+  isRead Boolean          @default(false)
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+  @@index([userId, isRead])
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+// ──────────────────────────────────────
+// Review
+// ──────────────────────────────────────
+
+model Review {
+  id        String @id @default(uuid())
+  requestId String @unique
+  authorId  String
+  subjectId String // The technician being reviewed
+  rating    Int    // 1-5
+  comment   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  request ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  author  User           @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  subject User           @relation("ReviewSubject", fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+  @@index([subjectId])
+  @@index([authorId])
+}
+
+// ──────────────────────────────────────
+// Payment
+// ──────────────────────────────────────
+
+model Payment {
+  id        String        @id @default(uuid())
+  requestId String        @unique
+  amount    Float
+  status    PaymentStatus @default(PENDING)
+  method    String?
+  transactionId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  request ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+  @@index([status])
+}
+
+// ──────────────────────────────────────
+// Activity Log
+// ──────────────────────────────────────
+
+model ActivityLog {
+  id       String @id @default(uuid())
+  userId   String?
+  action   String
+  entity   String  // e.g. "ServiceRequest", "User"
+  entityId String?
+  details  Json?
+  ipAddress String?
+
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("activity_logs")
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([createdAt(sort: Desc)])
+}
+
+// ──────────────────────────────────────
+// Refresh Token
+// ──────────────────────────────────────
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+  userAgent String?
+  ipAddress String?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+}
