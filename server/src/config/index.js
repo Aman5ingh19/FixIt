@@ -64,6 +64,12 @@ const config = {
     maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 10000,
   },
 
+  razorpay: {
+    keyId: process.env.RAZORPAY_KEY_ID || '',
+    keySecret: process.env.RAZORPAY_KEY_SECRET || '',
+    webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',
+  },
+
   cors: {
     origins: (process.env.CORS_ORIGINS || 'http://localhost:5173').split(','),
   },

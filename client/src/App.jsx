@@ -16,6 +16,7 @@ const CreateRequestPage = lazy(() => import('./pages/customer/CreateRequestPage'
 const ActiveRequestsPage = lazy(() => import('./pages/customer/ActiveRequestsPage'));
 const RequestDetailPage = lazy(() => import('./pages/customer/RequestDetailPage'));
 const RequestHistoryPage = lazy(() => import('./pages/customer/RequestHistoryPage'));
+const PaymentHistoryPage = lazy(() => import('./pages/customer/PaymentHistoryPage'));
 
 // Technician
 const TechnicianDashboard = lazy(() => import('./pages/technician/TechnicianDashboard'));
@@ -26,6 +27,7 @@ const AssignedJobsPage = lazy(() => import('./pages/technician/AssignedJobsPage'
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminTechniciansPage = lazy(() => import('./pages/admin/AdminTechniciansPage'));
 const AdminRequestsPage = lazy(() => import('./pages/admin/AdminRequestsPage'));
+const AdminPaymentsPage = lazy(() => import('./pages/admin/AdminPaymentsPage'));
 const AdminActivityLogPage = lazy(() => import('./pages/admin/AdminActivityLogPage'));
 
 // Shared
@@ -38,12 +40,16 @@ const SettingsPage = lazy(() => import('./pages/shared/SettingsPage'));
 import { AuthRequiredModal } from './components/common';
 
 function AppRoutes() {
-  const { isAuthenticated, isGuest, user } = useAuth();
+  const { isAuthenticated, user, isGuest } = useAuth();
 
   const getDefaultRoute = () => {
-    if (!user) return '/';
-    const routes = { CUSTOMER: '/customer/dashboard', TECHNICIAN: '/technician/dashboard', ADMIN: '/admin/dashboard' };
-    return routes[user.role] || '/';
+    if (!user) return '/login';
+    switch (user.role) {
+      case 'ADMIN': return '/admin/dashboard';
+      case 'TECHNICIAN': return '/technician/dashboard';
+      case 'CUSTOMER': return '/customer/dashboard';
+      default: return '/login';
+    }
   };
 
   const P = ({ children }) => <ProtectedRoute>{children}</ProtectedRoute>;
@@ -67,6 +73,7 @@ function AppRoutes() {
           <Route path="/customer/requests/active" element={<P><RoleGuard roles={['CUSTOMER']}><ActiveRequestsPage /></RoleGuard></P>} />
           <Route path="/customer/requests/history" element={<P><RoleGuard roles={['CUSTOMER']}><RequestHistoryPage /></RoleGuard></P>} />
           <Route path="/customer/requests/:id" element={<P><RoleGuard roles={['CUSTOMER']}><RequestDetailPage /></RoleGuard></P>} />
+          <Route path="/customer/payments" element={<P><RoleGuard roles={['CUSTOMER']}><PaymentHistoryPage /></RoleGuard></P>} />
           <Route path="/customer/notifications" element={<P><RoleGuard roles={['CUSTOMER']}><NotificationsPage /></RoleGuard></P>} />
           <Route path="/customer/profile" element={<P><RoleGuard roles={['CUSTOMER']}><ProfilePage /></RoleGuard></P>} />
           <Route path="/customer/about" element={<P><RoleGuard roles={['CUSTOMER']}><AboutPage /></RoleGuard></P>} />
@@ -87,6 +94,7 @@ function AppRoutes() {
           <Route path="/admin/dashboard" element={<P><RoleGuard roles={['ADMIN']}><AdminDashboard /></RoleGuard></P>} />
           <Route path="/admin/technicians" element={<P><RoleGuard roles={['ADMIN']}><AdminTechniciansPage /></RoleGuard></P>} />
           <Route path="/admin/requests" element={<P><RoleGuard roles={['ADMIN']}><AdminRequestsPage /></RoleGuard></P>} />
+          <Route path="/admin/payments" element={<P><RoleGuard roles={['ADMIN']}><AdminPaymentsPage /></RoleGuard></P>} />
           <Route path="/admin/activity-log" element={<P><RoleGuard roles={['ADMIN']}><AdminActivityLogPage /></RoleGuard></P>} />
           <Route path="/admin/notifications" element={<P><RoleGuard roles={['ADMIN']}><NotificationsPage /></RoleGuard></P>} />
           <Route path="/admin/profile" element={<P><RoleGuard roles={['ADMIN']}><ProfilePage /></RoleGuard></P>} />

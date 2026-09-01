@@ -23,6 +23,7 @@ import {
   BookOpen,
   Info,
   HelpCircle,
+  CreditCard,
 } from 'lucide-react';
 
 const adminNavSections = [
@@ -32,6 +33,7 @@ const adminNavSections = [
       { label: 'Dashboard',    path: '/admin/dashboard',    icon: LayoutDashboard, badge: null },
       { label: 'Technicians',  path: '/admin/technicians',  icon: Shield, badge: 'Verified' },
       { label: 'Requests',     path: '/admin/requests',     icon: ClipboardList, badge: null },
+      { label: 'Payments',     path: '/admin/payments',     icon: CreditCard, badge: 'Razorpay' },
       { label: 'Activity Log', path: '/admin/activity-log', icon: FileText, badge: null },
     ],
   },
@@ -86,6 +88,7 @@ const customerNavSections = [
       { label: 'New Request',     path: '/customer/requests/new',     icon: PlusCircle },
       { label: 'Active Requests', path: '/customer/requests/active',  icon: ClipboardList },
       { label: 'History',         path: '/customer/requests/history', icon: History },
+      { label: 'Payments',        path: '/customer/payments',         icon: CreditCard },
     ],
   },
   {

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, MapPin, Clock, Star, Phone, MessageSquare,
   CheckCircle2, XCircle, User, Wrench, Image as ImageIcon,
-  Calendar, AlertTriangle,
+  Calendar, AlertTriangle, CreditCard, ShieldCheck,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
@@ -12,11 +12,14 @@ import { PageSpinner } from '../../components/common/Spinner';
 import ErrorState from '../../components/common/ErrorState';
 import ChatPanel from '../../components/chat/ChatPanel';
 import requestApi from '../../services/request.api';
+import { useAuth } from '../../contexts/AuthContext';
+import { initiateRazorpayPayment } from '../../utils/razorpay';
 import toast from 'react-hot-toast';
 
 export default function RequestDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,6 +28,7 @@ export default function RequestDetailPage() {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [imageModal, setImageModal] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [paying, setPaying] = useState(false);
 
   const fetchRequest = async () => {
     setLoading(true);
@@ -36,6 +40,26 @@ export default function RequestDetailPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => { fetchRequest(); }, [id]);
+
+  const handlePayNow = async () => {
+    setPaying(true);
+    await initiateRazorpayPayment({
+      requestId: id,
+      user,
+      onSuccess: () => {
+        fetchRequest();
+        setPaying(false);
+      },
+      onFailure: () => {
+        setPaying(false);
+      },
+      onCancel: () => {
+        setPaying(false);
+      },
+    });
   };
 
   useEffect(() => { fetchRequest(); }, [id]);
@@ -224,16 +248,62 @@ export default function RequestDetailPage() {
               </div>
             </Card>
 
-            {/* Payment */}
-            {request.payment && (
-              <Card>
-                <h3 className="text-sm font-semibold text-surface-900 mb-3">Payment</h3>
+            {/* Payment Section */}
+            <Card className={request.payment?.status === 'PAID' ? 'border-emerald-500/30 bg-emerald-50/10' : 'border-primary-500/20 bg-primary-50/10'}>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-surface-900 flex items-center gap-2">
+                  <CreditCard className={`w-4 h-4 ${request.payment?.status === 'PAID' ? 'text-emerald-500' : 'text-primary-600'}`} />
+                  {request.payment?.status === 'PAID' ? 'Payment Receipt' : 'Service Payment'}
+                </h3>
+                <Badge variant={request.payment?.status || 'PENDING'} size="sm">
+                  {request.payment?.status || 'PENDING'}
+                </Badge>
+              </div>
+
+              {request.payment?.status === 'PAID' ? (
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-surface-500">Amount</span><span className="font-semibold">₹{request.payment.amount}</span></div>
-                  <div className="flex justify-between"><span className="text-surface-500">Status</span><Badge variant={request.payment.status} size="sm">{request.payment.status}</Badge></div>
+                  <div className="flex justify-between">
+                    <span className="text-surface-500">Amount Paid</span>
+                    <span className="font-extrabold text-emerald-600 dark:text-emerald-400">₹{request.payment.amount}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-surface-500">Gateway</span>
+                    <span className="font-medium text-surface-700">Razorpay (Test)</span>
+                  </div>
+                  {request.payment.transactionId && (
+                    <div className="flex justify-between text-xs text-surface-400 pt-1 border-t border-surface-200 dark:border-surface-300">
+                      <span>Transaction ID</span>
+                      <span className="font-mono truncate max-w-[130px]">{request.payment.transactionId}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 mt-2">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>Verified Cryptographic Payment</span>
+                  </div>
                 </div>
-              </Card>
-            )}
+              ) : (
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-surface-500">Total Payable</span>
+                    <span className="font-black text-lg text-primary-600 dark:text-primary-400">
+                      ₹{request.payment?.amount || request.service?.basePrice || 499}
+                    </span>
+                  </div>
+                  <Button
+                    fullWidth
+                    variant="primary"
+                    className="bg-blue-600 hover:bg-blue-700 font-bold shadow-md shadow-blue-600/20 py-2.5 flex items-center justify-center gap-2"
+                    onClick={handlePayNow}
+                    loading={paying}
+                  >
+                    ⚡ Pay with Razorpay
+                  </Button>
+                  <p className="text-[11px] text-center text-surface-400">
+                    Secure 256-bit SSL encrypted • Razorpay Sandbox
+                  </p>
+                </div>
+              )}
+            </Card>
           </div>
         </div>
 

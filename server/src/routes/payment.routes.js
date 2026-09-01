@@ -11,21 +11,28 @@ const {
 
 const router = Router();
 
+// ── Public Endpoints ──
+router.get('/config', paymentController.getConfig);
+router.post('/webhook', paymentController.handleWebhook);
+
+// ── Authenticated Endpoints ──
 router.use(authenticate);
 
-// Create payment record
+// Razorpay Order Creation & Signature Verification
+router.post('/create-order', authorize('CUSTOMER', 'ADMIN'), paymentController.createOrder);
+router.post('/verify-signature', authorize('CUSTOMER', 'ADMIN'), paymentController.verifySignature);
+
+// Customer Payment History
+router.get('/my-history', authorize('CUSTOMER'), paymentController.getMyHistory);
+
+// Admin Payment Stats & Overview
+router.get('/stats', authorize('ADMIN'), paymentController.getStats);
+
+// Legacy & Generic Routes
 router.post('/', validate(createPaymentSchema), paymentController.create);
-
-// Get payment by request ID
 router.get('/request/:requestId', paymentController.getByRequestId);
-
-// Update status (Admin or authorized roles)
-router.patch('/:id/status', authorize('ADMIN', 'CUSTOMER'), validate(updatePaymentStatusSchema), paymentController.updateStatus);
-
-// Get payment by ID
+router.patch('/:id/status', authorize('ADMIN'), validate(updatePaymentStatusSchema), paymentController.updateStatus);
 router.get('/:id', paymentController.getById);
-
-// Admin: list all payments
 router.get('/', authorize('ADMIN'), validate(paymentQuerySchema, 'query'), paymentController.getAll);
 
 module.exports = router;

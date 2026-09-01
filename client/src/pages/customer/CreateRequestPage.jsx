@@ -3,13 +3,15 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, Upload, X, MapPin, FileText,
   CheckCircle2, Image as ImageIcon, Wrench, Camera, Link2, Sparkles,
-  Eye, Plus, FileQuestion, AlertCircle
+  Eye, Plus, FileQuestion, AlertCircle, CreditCard, ShieldCheck
 } from 'lucide-react';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import { Button, Input, Card, Badge } from '../../components/common';
 import serviceApi from '../../services/service.api';
 import requestApi from '../../services/request.api';
 import uploadApi from '../../services/upload.api';
+import { useAuth } from '../../contexts/AuthContext';
+import { initiateRazorpayPayment } from '../../utils/razorpay';
 import toast from 'react-hot-toast';
 
 const STEPS = ['Service', 'Details', 'Images', 'Location', 'Review'];
@@ -191,12 +193,14 @@ export default function CreateRequestPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const { user } = useAuth();
+
   const nextStep = () => {
     if (validateStep()) setStep((prev) => Math.min(prev + 1, STEPS.length - 1));
   };
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (shouldPayNow = false) => {
     if (!validateStep()) return;
     setLoading(true);
     try {
@@ -212,12 +216,31 @@ export default function CreateRequestPage() {
 
       const allImageUrls = [...directUrls, ...serverUploadedUrls];
 
-      await requestApi.create({ ...form, imageUrls: allImageUrls });
+      const res = await requestApi.create({ ...form, imageUrls: allImageUrls });
+      const createdRequest = res.data?.request;
+
       toast.success('Service request created successfully!');
-      navigate('/customer/requests/active');
+
+      if (shouldPayNow && createdRequest?.id) {
+        setLoading(false);
+        await initiateRazorpayPayment({
+          requestId: createdRequest.id,
+          user,
+          onSuccess: () => {
+            navigate(`/customer/requests/${createdRequest.id}`);
+          },
+          onFailure: () => {
+            navigate(`/customer/requests/${createdRequest.id}`);
+          },
+          onCancel: () => {
+            navigate(`/customer/requests/${createdRequest.id}`);
+          },
+        });
+      } else {
+        navigate('/customer/requests/active');
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to create request');
-    } finally {
       setLoading(false);
     }
   };
@@ -570,26 +593,60 @@ export default function CreateRequestPage() {
                   <span className="text-surface-500">Images Attached:</span>
                   <span className="font-medium text-surface-900">{uploadedItems.length} photos</span>
                 </div>
+
+                {/* Pricing Estimate Card */}
+                <div className="pt-3">
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800/60 flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <CreditCard className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                        <p className="text-xs font-bold text-blue-900 dark:text-blue-200">Standard Service Estimate</p>
+                      </div>
+                      <p className="text-[11px] text-blue-700 dark:text-blue-400 mt-0.5">Includes initial diagnosis & verified technician visit</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xl font-black text-primary-600 dark:text-primary-400">
+                        ₹{selectedService?.basePrice || 499}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
           {/* Navigation Actions */}
-          <div className="flex items-center justify-between pt-6 mt-6 border-t border-surface-200 dark:border-surface-300">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 mt-6 border-t border-surface-200 dark:border-surface-300">
             {step > 0 ? (
-              <Button type="button" variant="secondary" icon={ArrowLeft} onClick={prevStep}>
+              <Button type="button" variant="secondary" icon={ArrowLeft} onClick={prevStep} className="w-full sm:w-auto">
                 Back
               </Button>
             ) : <div />}
 
             {step < STEPS.length - 1 ? (
-              <Button type="button" icon={ArrowRight} iconPosition="right" onClick={nextStep}>
+              <Button type="button" icon={ArrowRight} iconPosition="right" onClick={nextStep} className="w-full sm:w-auto">
                 Next
               </Button>
             ) : (
-              <Button type="button" loading={loading} onClick={handleSubmit} className="bg-emerald-600 hover:bg-emerald-700">
-                Submit Request
-              </Button>
+              <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  loading={loading}
+                  onClick={() => handleSubmit(false)}
+                  className="w-full sm:w-auto text-xs"
+                >
+                  Book Service (Pay Later)
+                </Button>
+                <Button
+                  type="button"
+                  loading={loading}
+                  onClick={() => handleSubmit(true)}
+                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 font-extrabold text-white shadow-md shadow-blue-600/20 text-xs flex items-center justify-center gap-1.5"
+                >
+                  ⚡ Book & Pay Online (₹{selectedService?.basePrice || 499})
+                </Button>
+              </div>
             )}
           </div>
         </Card>

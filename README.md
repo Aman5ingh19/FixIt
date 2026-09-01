@@ -217,9 +217,55 @@ FixIt/
 - `POST /api/technicians/jobs/:id/accept` — Accept assigned repair ticket
 - `POST /api/technicians/jobs/:id/status` — Update job status (`IN_PROGRESS` / `COMPLETED`)
 
-### 💬 Real-Time Live Chat (`/api/requests/:id/messages`)
-- `GET  /api/requests/:id/messages` — Fetch message history
-- `POST /api/requests/:id/messages` — Send message (also broadcasted over Socket.IO)
+### 💳 Payments & Razorpay (`/api/payments`)
+- `GET  /api/payments/config` — Fetch public Razorpay key ID & active payment mode
+- `POST /api/payments/create-order` — Create backend Razorpay order with server-calculated price
+- `POST /api/payments/verify-signature` — Cryptographically verify HMAC-SHA256 signature and mark `PAID`
+- `GET  /api/payments/my-history` — Fetch customer payment transaction history & receipts
+- `GET  /api/payments/stats` — Admin KPI overview (total revenue, paid volume, failure rate)
+- `POST /api/payments/webhook` — Process asynchronous Razorpay webhook events
+
+---
+
+## 💳 Razorpay Payment Gateway (Test Mode & Live Transition)
+
+FixIt features a production-grade, secure **Razorpay Payment Gateway** with backend order management, cryptographic HMAC-SHA256 signature verification, and automated transaction state machines.
+
+### 🧪 Test Mode (Sandbox Simulation)
+- **Zero-Friction Testing**: No real bank transactions occur. The platform supports simulated payments (UPI, Debit/Credit Card, Netbanking) with instant transaction ID generation and server-side signature verification.
+- **Payment Lifecycle**: `PENDING` &rarr; `PAID` (or `FAILED` / `REFUNDED`).
+- **Customer Portal**: `/customer/payments` tracks all receipts and lets users pay pending service requests with one click.
+- **Admin Control**: `/admin/payments` provides a platform-wide revenue dashboard and searchable transaction audit log.
+
+### 🔑 Adding Your Free Razorpay Test Keys (Recommended for Portfolio / Demos)
+To open the official Razorpay branded checkout popup in Test Mode:
+1. Sign up for free at **[dashboard.razorpay.com](https://dashboard.razorpay.com)**.
+2. In the top navbar, toggle the switch from *Live Mode* to **"Test Mode"**.
+3. Navigate to **Account & Settings &rarr; API Keys &rarr; Generate Key**.
+4. Copy your credentials into `server/.env`:
+   ```env
+   RAZORPAY_KEY_ID=rzp_test_yourKeyId
+   RAZORPAY_KEY_SECRET=yourKeySecret
+   RAZORPAY_WEBHOOK_SECRET=yourWebhookSecret
+   ```
+5. Restart your server (`npm run dev` in `server/`).
+
+### 🚀 Transitioning from Test Mode to Live Mode in Production
+When you are ready to accept real money in production:
+1. Complete your KYC on the **Razorpay Dashboard**.
+2. Toggle the dashboard switch to **"Live Mode"**.
+3. Generate **Live API Keys** under **Account & Settings &rarr; API Keys**.
+4. Update your production environment variables (e.g. on AWS, Railway, or Render):
+   ```env
+   NODE_ENV=production
+   RAZORPAY_KEY_ID=rzp_live_yourLiveKeyId
+   RAZORPAY_KEY_SECRET=yourLiveKeySecret
+   RAZORPAY_WEBHOOK_SECRET=yourLiveWebhookSecret
+   ```
+5. Set up your Webhook URL in Razorpay Dashboard pointing to:
+   `https://api.yourdomain.com/api/payments/webhook`
+   Subscribed events: `payment.captured`, `payment.failed`, `refund.processed`.
+6. No frontend or code changes required — the platform automatically adapts to Live credentials securely!
 
 ---
 
