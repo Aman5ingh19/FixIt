@@ -69,20 +69,27 @@ export default function LoginPage() {
           <p className="text-[10px] font-bold text-surface-500 dark:text-surface-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
             <span>⚡</span> Quick Demo Logins
           </p>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-1.5">
+            <button
+              type="button"
+              onClick={() => setForm({ email: 'admin@fixit.com', password: 'Password123!', rememberMe: true })}
+              className="px-1.5 py-1.5 rounded-lg bg-white dark:bg-surface-200 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/40 text-[11px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
+            >
+              👑 Admin
+            </button>
             <button
               type="button"
               onClick={() => setForm({ email: 'tech@fixit.com', password: 'Password123!', rememberMe: true })}
-              className="px-2 py-1.5 rounded-lg bg-white dark:bg-surface-200 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold transition-all text-center cursor-pointer shadow-2xs"
+              className="px-1.5 py-1.5 rounded-lg bg-white dark:bg-surface-200 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[11px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
             >
-              🔧 Demo Technician
+              🔧 Technician
             </button>
             <button
               type="button"
               onClick={() => setForm({ email: 'customer@fixit.com', password: 'Password123!', rememberMe: true })}
-              className="px-2 py-1.5 rounded-lg bg-white dark:bg-surface-200 border border-blue-200 dark:border-blue-800/80 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-xs font-bold transition-all text-center cursor-pointer shadow-2xs"
+              className="px-1.5 py-1.5 rounded-lg bg-white dark:bg-surface-200 border border-blue-200 dark:border-blue-800/80 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[11px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
             >
-              👤 Demo Customer
+              👤 Customer
             </button>
           </div>
         </div>

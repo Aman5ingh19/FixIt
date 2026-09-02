@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { PlusCircle, Search, UserCheck, Wrench, CheckCircle2, Star, ShieldCheck, ToggleRight, DollarSign, Bell, ArrowRight, BookOpen } from 'lucide-react';
+import {
+  PlusCircle, Search, UserCheck, Wrench, CheckCircle2, Star,
+  ShieldCheck, ToggleRight, DollarSign, Bell, ArrowRight, BookOpen,
+  CreditCard, Activity, ShieldAlert, Users
+} from 'lucide-react';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import { Card, Badge, Button } from '../../components/common';
 import { Link } from 'react-router-dom';
@@ -7,7 +11,9 @@ import { useAuth } from '../../contexts/AuthContext';
 
 export default function HowToUsePage() {
   const { user } = useAuth();
-  const [roleTab, setRoleTab] = useState(user?.role === 'TECHNICIAN' ? 'technician' : 'customer');
+  const [roleTab, setRoleTab] = useState(
+    user?.role === 'ADMIN' ? 'admin' : user?.role === 'TECHNICIAN' ? 'technician' : 'customer'
+  );
 
   const customerSteps = [
     {
@@ -33,8 +39,8 @@ export default function HowToUsePage() {
     },
     {
       step: '04',
-      title: 'Repair & 30-Day Guarantee',
-      desc: 'Once the job is completed to your satisfaction, complete payment securely and leave a review. All jobs carry FixIt 30-day warranty.',
+      title: 'Online Payment & 30-Day Guarantee',
+      desc: 'Pay securely using Razorpay Sandbox/Live checkout with instant receipts. All completed jobs include FixIt 30-day warranty.',
       icon: CheckCircle2,
       badge: 'Step 4',
     },
@@ -65,13 +71,44 @@ export default function HowToUsePage() {
     {
       step: '04',
       title: 'Earn & Grow Your Rating',
-      desc: 'Earn instant payouts per job completed. Higher customer ratings boost your matching priority for premium commercial requests.',
+      desc: 'Track completed jobs and earned revenue directly. Higher customer ratings boost your matching priority for premium requests.',
       icon: DollarSign,
       badge: 'Step 4',
     },
   ];
 
-  const currentSteps = roleTab === 'technician' ? technicianSteps : customerSteps;
+  const adminSteps = [
+    {
+      step: '01',
+      title: 'Platform Analytics & Revenue',
+      desc: 'Inspect real-time KPI metrics, total revenue collected, active service request volumes, and system health status.',
+      icon: DollarSign,
+      badge: 'Step 1',
+    },
+    {
+      step: '02',
+      title: 'Technician Verification & KYC',
+      desc: 'Review government ID cards, trade certificates, and technician credentials with one-click Approve or Reject actions.',
+      icon: UserCheck,
+      badge: 'Step 2',
+    },
+    {
+      step: '03',
+      title: 'Global Request & Dispatch Override',
+      desc: 'Monitor and manage service tickets across all categories and cities with capabilities to inspect, reassign, or resolve issues.',
+      icon: Wrench,
+      badge: 'Step 3',
+    },
+    {
+      step: '04',
+      title: 'Security Audit & Activity Logs',
+      desc: 'Inspect comprehensive audit logs capturing IP addresses, user agents, timestamps, and Razorpay transaction flows.',
+      icon: ShieldCheck,
+      badge: 'Step 4',
+    },
+  ];
+
+  const currentSteps = roleTab === 'admin' ? adminSteps : roleTab === 'technician' ? technicianSteps : customerSteps;
 
   const content = (
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-12">
@@ -84,17 +121,17 @@ export default function HowToUsePage() {
           How to Use <span className="text-primary-600 dark:text-primary-400">FixIt Platform</span>
         </h1>
         <p className="text-surface-600 dark:text-surface-400 text-sm sm:text-base max-w-xl mx-auto">
-          Learn how to book services, track technicians, manage service assignments, and get the most out of FixIt.
+          Learn how to book services, track technicians, manage service assignments, and administer the platform.
         </p>
       </div>
 
       {/* Role Switcher Tabs */}
       <div className="flex justify-center">
-        <div className="inline-flex p-1.5 rounded-2xl bg-surface-100 dark:bg-surface-200 border border-surface-200 dark:border-surface-300">
+        <div className="inline-flex flex-wrap items-center justify-center p-1.5 rounded-2xl bg-surface-100 dark:bg-surface-200 border border-surface-200 dark:border-surface-300 gap-1">
           <button
             type="button"
             onClick={() => setRoleTab('customer')}
-            className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               roleTab === 'customer'
                 ? 'bg-primary-600 text-white shadow-xs'
                 : 'text-surface-600 hover:text-surface-900'
@@ -105,13 +142,24 @@ export default function HowToUsePage() {
           <button
             type="button"
             onClick={() => setRoleTab('technician')}
-            className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               roleTab === 'technician'
                 ? 'bg-primary-600 text-white shadow-xs'
                 : 'text-surface-600 hover:text-surface-900'
             }`}
           >
             🔧 For Technicians
+          </button>
+          <button
+            type="button"
+            onClick={() => setRoleTab('admin')}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              roleTab === 'admin'
+                ? 'bg-primary-600 text-white shadow-xs'
+                : 'text-surface-600 hover:text-surface-900'
+            }`}
+          >
+            👑 For Admins
           </button>
         </div>
       </div>
@@ -145,7 +193,7 @@ export default function HowToUsePage() {
       <Card className="bg-surface-50 dark:bg-surface-200/40 p-6 rounded-3xl border border-surface-200 dark:border-surface-300 space-y-4">
         <h3 className="text-base font-bold text-surface-900 flex items-center gap-2">
           <ShieldCheck className="w-5 h-5 text-emerald-600" />
-          FixIt Best Practices &amp; Security Tips
+          FixIt Best Practices &amp; Security Standards
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-surface-600 dark:text-surface-400">
           <div className="flex items-start gap-2">
@@ -162,7 +210,7 @@ export default function HowToUsePage() {
           </div>
           <div className="flex items-start gap-2">
             <span className="text-emerald-500 font-bold">✓</span>
-            <span>Rate your service provider to maintain high community standards.</span>
+            <span>Secure payments via Razorpay Sandbox with instant transaction invoices.</span>
           </div>
         </div>
       </Card>

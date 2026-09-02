@@ -46,10 +46,11 @@ Cloudinary (Media Storage) + Redis/Upstash (Cache) + Socket.IO (Live Chat & Aler
 - **Earnings & Rating Dashboard**: Live tracking of completed jobs, total revenue (₹10,000+ stat metrics), and client reviews.
 - **Custom Trade Avatars**: Profile customization with industry-specific avatars (Electrician, Plumber, HVAC Expert, Appliance Tech, Electronics Pro, Lead Technician).
 
-### 📊 Real-Time Operations & Service Monitoring
-- **Platform Analytics & Health**: Track active ticket lifecycles, service demand distributions, and technician dispatch queues.
-- **Automated Verification Standards**: Compliance checks on government IDs, trade certifications, and background verification.
-- **Activity & Security Audit Trail**: Structured logging of security events, client IPs, user agents, and transaction flows.
+### 🛡️ Super Admin Control Center & Operations
+- **KPI Metrics & Analytics**: Platform revenue analytics, active request volumes, and technician verification queue.
+- **Technician Verification**: Government ID & certificate inspection with one-click approve/reject actions.
+- **Global Ticket Management**: Oversee all service requests across cities, with capability to reassign or resolve issues.
+- **Security & Activity Audit**: Comprehensive audit logs capturing IP addresses, endpoints, timestamps, and user agents.
 
 ### 🌓 Ultra High-Contrast Dark & Light Themes
 - Custom CSS design tokens tailored for crisp contrast in both sunny outdoor and dark environment conditions.
@@ -137,10 +138,11 @@ Open **[http://localhost:5173](http://localhost:5173)** in your browser.
 
 ## 🔑 Pre-Configured Demo Credentials
 
-Password for pre-seeded test accounts: **`Password123!`**
+Password for all pre-seeded accounts: **`Password123!`**
 
 | Role | Email | Password | Primary Portal |
 | :--- | :--- | :--- | :--- |
+| **Super Admin** | `admin@fixit.com` | `Password123!` | `/admin/dashboard` |
 | **Demo Customer** | `customer@fixit.com` | `Password123!` | `/customer/dashboard` |
 | **Demo Technician** | `tech@fixit.com` | `Password123!` | `/technician/dashboard` |
 
