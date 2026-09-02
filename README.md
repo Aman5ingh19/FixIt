@@ -138,11 +138,10 @@ Open **[http://localhost:5173](http://localhost:5173)** in your browser.
 
 ## 🔑 Pre-Configured Demo Credentials
 
-Password for all pre-seeded accounts: **`Password123!`**
+Password for pre-seeded test accounts: **`Password123!`**
 
 | Role | Email | Password | Primary Portal |
 | :--- | :--- | :--- | :--- |
-| **Super Admin** | `admin@fixit.com` | `Password123!` | `/admin/dashboard` |
 | **Demo Customer** | `customer@fixit.com` | `Password123!` | `/customer/dashboard` |
 | **Demo Technician** | `tech@fixit.com` | `Password123!` | `/technician/dashboard` |
 
