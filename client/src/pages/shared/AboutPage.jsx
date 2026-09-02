@@ -23,6 +23,8 @@ import {
   GitBranch,
   Radio,
   Share2,
+  CreditCard,
+  Check,
 } from 'lucide-react';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import { Card, Badge, Button } from '../../components/common';
@@ -52,9 +54,9 @@ export default function AboutPage() {
       color: 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
     },
     {
-      icon: Lock,
-      title: 'Transparent Pricing & Security',
-      desc: 'No hidden fees or surprise charges. Upfront service estimates with encrypted transactions and secure customer data privacy.',
+      icon: CreditCard,
+      title: 'Razorpay Secured Transactions',
+      desc: 'End-to-end cryptographic HMAC-SHA256 signature verification with transparent upfront pricing and instant invoice receipts.',
       color: 'bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800',
     },
   ];
@@ -75,7 +77,7 @@ export default function AboutPage() {
       items: [
         { name: 'React 18', tag: 'UI Library', desc: 'Component-driven reactive single page application architecture.' },
         { name: 'Vite 5', tag: 'Build Engine', desc: 'Lightning-fast HMR and optimized production asset bundling.' },
-        { name: 'TailwindCSS', tag: 'Styling', desc: 'Class-based design system with seamless dark & light themes.' },
+        { name: 'TailwindCSS v4', tag: 'Styling', desc: 'Design system with seamless high-contrast dark & light themes.' },
         { name: 'React Router v6', tag: 'Routing', desc: 'Protected client routing with role-based access guards.' },
         { name: 'Lucide Icons', tag: 'Visuals', desc: 'Crisp, lightweight SVG icon system across all interfaces.' },
       ],
@@ -86,11 +88,24 @@ export default function AboutPage() {
       color: 'from-emerald-500/10 to-teal-500/10 border-emerald-200 dark:border-emerald-900/60',
       iconColor: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50',
       items: [
-        { name: 'Node.js', tag: 'Runtime', desc: 'Asynchronous event-driven JavaScript server environment.' },
+        { name: 'Node.js 20+', tag: 'Runtime', desc: 'Asynchronous event-driven JavaScript server environment.' },
         { name: 'Express.js', tag: 'REST API', desc: 'Robust middleware pipeline and modular controller routes.' },
-        { name: 'Prisma ORM', tag: 'Database Layer', desc: 'Type-safe database modeling, transactions, and auto-migrations.' },
-        { name: 'PostgreSQL / SQLite', tag: 'Database', desc: 'Relational data persistence for users, jobs, reviews, & logs.' },
-        { name: 'Zod', tag: 'Validation', desc: 'Strict runtime request body & query parameter schema validation.' },
+        { name: 'Prisma ORM', tag: 'Database Layer', desc: 'Type-safe database modeling, transactions, and connection pooling.' },
+        { name: 'PostgreSQL (Neon)', tag: 'Cloud DB', desc: 'Serverless cloud relational database for persistent storage.' },
+        { name: 'Zod Validation', tag: 'Validation', desc: 'Strict runtime request body & query parameter schema validation.' },
+      ],
+    },
+    {
+      title: 'Payments & Gateway Engine',
+      icon: CreditCard,
+      color: 'from-blue-500/10 to-cyan-500/10 border-blue-200 dark:border-blue-900/60',
+      iconColor: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50',
+      items: [
+        { name: 'Razorpay Gateway', tag: 'Payments', desc: 'Seamless online checkout with Sandbox & Live mode capability.' },
+        { name: 'HMAC-SHA256', tag: 'Cryptography', desc: 'Cryptographic signature verification preventing payment spoofing.' },
+        { name: 'Webhook Engine', tag: 'Event Handlers', desc: 'Asynchronous event processing for payments, captures & refunds.' },
+        { name: 'State Machine', tag: 'Lifecycle', desc: 'Strict transitions across PENDING, PAID, FAILED, and REFUNDED.' },
+        { name: 'Financial History', tag: 'Audit Logs', desc: 'Searchable customer transaction receipts & admin revenue analytics.' },
       ],
     },
     {
@@ -99,10 +114,10 @@ export default function AboutPage() {
       color: 'from-purple-500/10 to-pink-500/10 border-purple-200 dark:border-purple-900/60',
       iconColor: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/50',
       items: [
-        { name: 'JWT Auth', tag: 'Tokens', desc: 'Access & refresh token rotation with HTTP-only cookie support.' },
-        { name: 'Bcryptjs', tag: 'Cryptography', desc: 'Strong adaptive salted password hashing algorithms.' },
+        { name: 'JWT Authentication', tag: 'Tokens', desc: 'Access & refresh token rotation with secure cookie support.' },
+        { name: 'Bcryptjs (12 rounds)', tag: 'Cryptography', desc: 'Strong adaptive salted password hashing algorithms.' },
         { name: 'Rate Limiting', tag: 'Protection', desc: 'DDoS and brute-force prevention on authentication endpoints.' },
-        { name: 'Cloudinary & Multer', tag: 'Media Storage', desc: 'Automated image processing and secure media cloud storage.' },
+        { name: 'Cloudinary Media', tag: 'Image Storage', desc: 'Multi-source photo upload pipeline (Camera, URL, Device).' },
         { name: 'Winston & Morgan', tag: 'Observability', desc: 'Structured server logging and HTTP request telemetry.' },
       ],
     },
@@ -136,7 +151,7 @@ export default function AboutPage() {
         {
           name: 'Apache Kafka (KRaft / Upstash)',
           role: 'Event Streaming',
-          desc: 'Distributed distributed event pipeline for asynchronous job status streaming, telemetry, and audit logging.',
+          desc: 'Distributed event pipeline for asynchronous job status streaming, telemetry, and audit logging.',
         },
         {
           name: 'RabbitMQ',
@@ -154,7 +169,7 @@ export default function AboutPage() {
         {
           name: 'GitHub Actions',
           role: 'CI/CD Pipeline',
-          desc: 'Automated linting, integration testing, Docker container image pushes, and seamless production deploy gates.',
+          desc: 'Automated linting, integration testing, Docker container image pushes, and production deploy gates.',
         },
         {
           name: 'n8n Automation Engine',
@@ -195,7 +210,7 @@ export default function AboutPage() {
           <span className="text-primary-600 dark:text-primary-400">Home &amp; Appliance Repair Network</span>
         </h1>
         <p className="text-surface-600 dark:text-surface-400 text-sm sm:text-base max-w-2xl mx-auto">
-          FixIt connects homeowners and businesses with background-verified, skilled technicians for electrical, plumbing, HVAC, carpentry, and appliance services.
+          FixIt connects homeowners and businesses with background-verified, skilled technicians for electrical, plumbing, HVAC, carpentry, electronics, and home appliance services.
         </p>
       </div>
 
@@ -275,29 +290,29 @@ export default function AboutPage() {
           <span className="text-xs font-medium text-surface-500">Modular &amp; Scalable</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {techCategories.map((cat, idx) => {
             const CatIcon = cat.icon;
             return (
-              <Card key={idx} className="p-5 space-y-4 flex flex-col justify-between">
+              <Card key={idx} className="p-4 space-y-3 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center gap-2.5 pb-3 border-b border-surface-200 dark:border-surface-300">
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${cat.iconColor}`}>
-                      <CatIcon className="w-4.5 h-4.5" />
+                  <div className="flex items-center gap-2 pb-2.5 border-b border-surface-200 dark:border-surface-300">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${cat.iconColor}`}>
+                      <CatIcon className="w-4 h-4" />
                     </div>
-                    <h3 className="text-sm font-bold text-surface-900">{cat.title}</h3>
+                    <h3 className="text-xs font-bold text-surface-900">{cat.title}</h3>
                   </div>
 
-                  <div className="space-y-3 pt-3">
+                  <div className="space-y-2.5 pt-2.5">
                     {cat.items.map((tech) => (
                       <div key={tech.name} className="space-y-0.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-surface-900">{tech.name}</span>
-                          <span className="text-[10px] font-semibold px-1.5 py-0.2 rounded bg-surface-100 dark:bg-surface-200 text-surface-600 border border-surface-200 dark:border-surface-300">
+                          <span className="text-[11px] font-bold text-surface-900">{tech.name}</span>
+                          <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-surface-100 dark:bg-surface-200 text-surface-600 border border-surface-200 dark:border-surface-300">
                             {tech.tag}
                           </span>
                         </div>
-                        <p className="text-[11px] text-surface-500 leading-snug">{tech.desc}</p>
+                        <p className="text-[10px] text-surface-500 leading-snug">{tech.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -305,7 +320,7 @@ export default function AboutPage() {
 
                 <div className="pt-2 border-t border-surface-100 dark:border-surface-300/50">
                   <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                    <CheckCircle2 className="w-3 h-3" /> Core Layer Active
+                    <CheckCircle2 className="w-3 h-3" /> Active &amp; Verified
                   </div>
                 </div>
               </Card>
@@ -366,9 +381,9 @@ export default function AboutPage() {
 
       {/* ── Creator Signature ── */}
       <div className="pt-2 pb-1 text-center">
-        <div className="inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-2xl bg-white dark:bg-surface-200 border border-surface-200 dark:border-surface-300 shadow-xs">
-          <span className="text-xs text-surface-500 font-medium">Platform Architect &amp; Developer:</span>
-          <span className="text-xs font-bold text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-950/60 px-3 py-1 rounded-xl border border-primary-200 dark:border-primary-800">
+        <div className="inline-flex flex-wrap items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-white dark:bg-surface-200 border border-surface-200 dark:border-surface-300 shadow-sm">
+          <span className="text-xs text-surface-600 dark:text-surface-400 font-medium">Platform Architect &amp; Developer:</span>
+          <span className="text-xs font-black text-primary-700 dark:text-white bg-primary-50 dark:bg-primary-950/80 px-3.5 py-1 rounded-xl border border-primary-200 dark:border-primary-700 shadow-2xs">
             Built by - Aman Singh
           </span>
         </div>
