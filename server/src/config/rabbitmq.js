@@ -17,6 +17,11 @@ const EXCHANGES = {
 };
 
 async function initRabbitMQ() {
+  if (!config.rabbitmq.url) {
+    logger.info('RabbitMQ not configured (RABBITMQ_URL not set) — skipping message queue');
+    return { connection: null, channel: null };
+  }
+
   try {
     connection = await amqplib.connect(config.rabbitmq.url);
     channel = await connection.createChannel();
