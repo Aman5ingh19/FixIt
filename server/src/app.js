@@ -54,6 +54,19 @@ function createApp() {
     skip: (req) => req.path === '/api/health',
   }));
 
+  // ── Root Route ──
+  app.get('/', (req, res) => {
+    res.json({
+      name: 'FixIt Backend API',
+      version: '1.0.0',
+      status: 'online',
+      message: 'FixIt Service Request & Repair Network API is live and operational.',
+      healthCheck: '/api/health',
+      documentation: 'https://github.com/AmanSingh19/FixIt#readme',
+      author: 'Aman Singh',
+    });
+  });
+
   // ── Routes ──
   app.use('/api', routes);
 
