@@ -203,7 +203,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={continueAsGuest}
-            className="w-full h-9 rounded-xl border border-surface-200 dark:border-surface-300 hover:bg-surface-100 dark:hover:bg-surface-200 text-surface-700 dark:text-surface-200 text-xs font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full h-10 rounded-xl border border-surface-200 dark:border-surface-300 bg-surface-50 dark:bg-surface-200 hover:bg-surface-100 dark:hover:bg-surface-300 text-surface-800 dark:text-surface-900 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
             Continue as Guest
           </button>
@@ -214,16 +214,16 @@ export default function LoginPage() {
           Don't have an account?{' '}
           <Link
             to="/register"
-            className="font-bold text-primary-600 hover:text-primary-700 hover:underline transition-colors"
+            className="font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 hover:underline transition-colors"
           >
             Create account
           </Link>
         </p>
 
         {/* ── Built by - Aman Singh Signature ── */}
-        <div className="pt-3 border-t border-surface-200/80 dark:border-surface-300/60 flex items-center justify-center gap-1 text-[11px] text-surface-400">
-          <span>Built by -</span>
-          <span className="font-bold text-surface-700 dark:text-surface-200">Aman Singh</span>
+        <div className="pt-3 border-t border-surface-200/80 dark:border-surface-300/60 flex items-center justify-center gap-1.5 text-xs text-surface-500 dark:text-surface-400">
+          <span>Built by —</span>
+          <span className="font-black text-surface-900 dark:text-surface-900 tracking-wide">Aman Singh</span>
         </div>
       </div>
     </AuthLayout>

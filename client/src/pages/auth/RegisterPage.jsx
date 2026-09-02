@@ -292,22 +292,28 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={continueAsGuest}
-            className="w-full h-10 rounded-xl border border-surface-200 dark:border-surface-300 hover:bg-surface-100 dark:hover:bg-surface-200 text-surface-600 dark:text-surface-600 hover:text-surface-800 dark:hover:text-surface-800 text-xs font-medium transition-colors flex items-center justify-center gap-2"
+            className="w-full h-10 rounded-xl border border-surface-200 dark:border-surface-300 bg-surface-50 dark:bg-surface-200 hover:bg-surface-100 dark:hover:bg-surface-300 text-surface-800 dark:text-surface-900 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
             Continue as Guest
           </button>
         </form>
 
         {/* Sign in footer link */}
-        <p className="text-center text-sm text-surface-500 dark:text-surface-600 pt-1">
+        <p className="text-center text-xs text-surface-500 dark:text-surface-400 pt-0.5">
           Already have an account?{' '}
           <Link
             to="/login"
-            className="font-bold text-primary-600 hover:text-primary-700 hover:underline transition-colors"
+            className="font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 hover:underline transition-colors"
           >
             Sign in
           </Link>
         </p>
+
+        {/* ── Built by - Aman Singh Signature ── */}
+        <div className="pt-3 border-t border-surface-200/80 dark:border-surface-300/60 flex items-center justify-center gap-1.5 text-xs text-surface-500 dark:text-surface-400">
+          <span>Built by —</span>
+          <span className="font-black text-surface-900 dark:text-surface-900 tracking-wide">Aman Singh</span>
+        </div>
       </div>
     </AuthLayout>
   );
