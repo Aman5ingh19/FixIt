@@ -62,7 +62,7 @@ export default function CreateRequestPage() {
   const initialDraft = useRef(loadDraft()).current;
 
   const [step, setStep] = useState(() => (typeof initialDraft?.step === 'number' ? initialDraft.step : 0));
-  const [loading, setLoading] = useState(false);
+  const [submittingAction, setSubmittingAction] = useState(null); // 'payLater' | 'payOnline' | null
   const [categories, setCategories] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(() => initialDraft?.selectedCategory || null);
@@ -324,8 +324,9 @@ export default function CreateRequestPage() {
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 0));
 
   const handleSubmit = async (shouldPayNow = false) => {
-    if (!validateStep()) return;
-    setLoading(true);
+    if (!validateStep() || submittingAction) return;
+    const action = shouldPayNow ? 'payOnline' : 'payLater';
+    setSubmittingAction(action);
     try {
       // 1. Separate direct URLs and file objects to upload
       const directUrls = uploadedItems
@@ -362,21 +363,24 @@ export default function CreateRequestPage() {
       toast.success('Service request created successfully!');
 
       if (shouldPayNow && createdRequest?.id) {
-        setLoading(false);
         await initiateRazorpayPayment({
           requestId: createdRequest.id,
           user,
           onSuccess: () => {
+            setSubmittingAction(null);
             navigate(`/customer/requests/${createdRequest.id}`);
           },
           onFailure: () => {
+            setSubmittingAction(null);
             navigate(`/customer/requests/${createdRequest.id}`);
           },
           onCancel: () => {
+            setSubmittingAction(null);
             navigate(`/customer/requests/${createdRequest.id}`);
           },
         });
       } else {
+        setSubmittingAction(null);
         navigate('/customer/requests/active');
       }
     } catch (error) {
@@ -384,7 +388,7 @@ export default function CreateRequestPage() {
         ? error.response.data.errors.map((e) => e.message).join(', ')
         : (error.response?.data?.message || 'Failed to create request');
       toast.error(errMsg);
-      setLoading(false);
+      setSubmittingAction(null);
     }
   };
 
@@ -813,7 +817,8 @@ export default function CreateRequestPage() {
                 <Button
                   type="button"
                   variant="secondary"
-                  loading={loading}
+                  loading={submittingAction === 'payLater'}
+                  disabled={!!submittingAction}
                   onClick={() => handleSubmit(false)}
                   className="w-full sm:w-auto text-xs"
                 >
@@ -821,7 +826,8 @@ export default function CreateRequestPage() {
                 </Button>
                 <Button
                   type="button"
-                  loading={loading}
+                  loading={submittingAction === 'payOnline'}
+                  disabled={!!submittingAction}
                   onClick={() => handleSubmit(true)}
                   className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 font-extrabold text-white shadow-md shadow-blue-600/20 text-xs flex items-center justify-center gap-1.5"
                 >

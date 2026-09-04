@@ -10,12 +10,12 @@ const LandingPage = lazy(() => import('./pages/landing/LandingPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
 
-// Customer
-const CustomerDashboard = lazy(() => import('./pages/customer/CustomerDashboard'));
-const CreateRequestPage = lazy(() => import('./pages/customer/CreateRequestPage'));
-const ActiveRequestsPage = lazy(() => import('./pages/customer/ActiveRequestsPage'));
-const RequestDetailPage = lazy(() => import('./pages/customer/RequestDetailPage'));
-const AdminRequestDetailPage = lazy(() => import('./pages/customer/RequestDetailPage'));
+// Customer (Eagerly loaded for instant transitions during booking & payment)
+import CustomerDashboard from './pages/customer/CustomerDashboard';
+import CreateRequestPage from './pages/customer/CreateRequestPage';
+import ActiveRequestsPage from './pages/customer/ActiveRequestsPage';
+import RequestDetailPage from './pages/customer/RequestDetailPage';
+const AdminRequestDetailPage = RequestDetailPage;
 const RequestHistoryPage = lazy(() => import('./pages/customer/RequestHistoryPage'));
 const PaymentHistoryPage = lazy(() => import('./pages/customer/PaymentHistoryPage'));
 const ReviewPage = lazy(() => import('./pages/customer/ReviewPage'));

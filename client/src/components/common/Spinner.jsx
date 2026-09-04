@@ -16,9 +16,9 @@ export default function Spinner({ size = 'md', className = '' }) {
 
 export function PageSpinner() {
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
+    <div className="flex items-center justify-center min-h-[60vh] w-full bg-surface-50 dark:bg-[#0B1120] text-surface-900 dark:text-surface-100 transition-colors">
       <div className="flex flex-col items-center gap-3">
-        <Loader2 className="w-10 h-10 animate-spin text-primary-600" />
+        <Loader2 className="w-10 h-10 animate-spin text-primary-600 dark:text-primary-400" />
         <p className="text-sm text-surface-500 font-medium">Loading...</p>
       </div>
     </div>
