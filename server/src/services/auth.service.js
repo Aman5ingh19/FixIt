@@ -212,11 +212,17 @@ const authService = {
       expiresAt,
     });
 
-    // Fire-and-forget: do NOT await — respond to client immediately.
-    // SMTP timeouts won't block the HTTP response this way.
-    emailService.sendPasswordResetEmail(user.email, user.firstName, rawToken)
-      .then(() => logger.info('Password reset email sent', { userId: user.id }))
-      .catch((err) => logger.error('Reset email failed (non-blocking)', { userId: user.id, error: err.message }));
+    // Send password reset email
+    try {
+      await emailService.sendPasswordResetEmail(user.email, user.firstName, rawToken);
+      logger.info('Password reset email sent successfully', { userId: user.id, email: user.email });
+    } catch (err) {
+      logger.error('Failed to send password reset email', {
+        userId: user.id,
+        email: user.email,
+        error: err.message,
+      });
+    }
   },
 
 

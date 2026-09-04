@@ -35,19 +35,33 @@ const emailService = {
    * Send a password reset email with a token link.
    */
   async sendPasswordResetEmail(toEmail, firstName, resetToken) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    const smtpUser = (process.env.SMTP_USER || '').trim();
+    const smtpPass = (process.env.SMTP_PASS || '').trim();
+
+    if (!smtpUser || !smtpPass) {
       logger.error('SMTP credentials missing! SMTP_USER or SMTP_PASS not set in environment.', {
-        hasUser: Boolean(process.env.SMTP_USER),
-        hasPass: Boolean(process.env.SMTP_PASS),
+        hasUser: Boolean(smtpUser),
+        hasPass: Boolean(smtpPass),
       });
       throw new Error('SMTP credentials not configured in environment variables');
     }
 
-    const transporter = getTransporter();
-    const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    const clientUrl = (process.env.CLIENT_URL || 'https://fix-it-nu-sable.vercel.app').replace(/\/+$/, '');
+    const resetUrl = `${clientUrl}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
-      from: process.env.EMAIL_FROM || `"FixIt Support" <${process.env.SMTP_USER}>`,
+      from: `"FixIt Support" <${smtpUser}>`,
       to: toEmail,
       subject: '🔐 Reset Your FixIt Password',
       html: `
@@ -74,7 +88,7 @@ const emailService = {
                   <!-- Body -->
                   <tr>
                     <td style="padding:36px 32px;">
-                      <h2 style="color:#f1f5f9;font-size:20px;font-weight:700;margin:0 0 12px;">Hi ${firstName},</h2>
+                      <h2 style="color:#f1f5f9;font-size:20px;font-weight:700;margin:0 0 12px;">Hi ${firstName || 'User'},</h2>
                       <p style="color:#94a3b8;font-size:14px;line-height:1.7;margin:0 0 24px;">
                         We received a request to reset your FixIt account password. Click the button below to create a new password.
                         This link is valid for <strong style="color:#60a5fa;">15 minutes</strong>.
