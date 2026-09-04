@@ -1,8 +1,34 @@
 # FixIt — On-Demand Service Request & Repair Network
 
-> **A Production-Grade Full-Stack Service Booking & Repair Network** connecting customers with background-verified, certified technicians (Electrical, Plumbing, HVAC, Carpentry, Electronics, and Home Appliances). Powered by **Razorpay Payment Gateway (Test/Sandbox Mode)** with HMAC-SHA256 cryptographic verification, bidirectional **Socket.IO** real-time dispatch & chat, multi-source media uploads, and end-to-end job status tracking.
+<div align="center">
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://fix-it-nu-sable.vercel.app)
+[![Backend API](https://img.shields.io/badge/Backend_API-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://fixit-dk08.onrender.com)
+[![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js_20-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
+[![Prisma](https://img.shields.io/badge/Prisma_ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
+[![Razorpay](https://img.shields.io/badge/Razorpay-Payments-02042B?style=for-the-badge&logo=razorpay&logoColor=3395FF)](https://razorpay.com/)
+
+<p align="center">
+  <strong>A Production-Grade Full-Stack Service Booking & Repair Network</strong> connecting customers with background-verified, certified technicians (Electrical, Plumbing, HVAC, Carpentry, Electronics, and Home Appliances).
+</p>
 
 🌐 **Live Demo:** [https://fix-it-nu-sable.vercel.app](https://fix-it-nu-sable.vercel.app) &nbsp;|&nbsp; 🖥️ **Backend API:** [https://fixit-dk08.onrender.com](https://fixit-dk08.onrender.com)
+
+</div>
+
+---
+
+## 💡 Engineering Highlights (Why FixIt Stands Out)
+
+- 🛡️ **Role-Based Access Control (RBAC):** Strict multi-tenant security separating Customer, Certified Technician, and Super Admin domains with granular route guards.
+- ⚡ **Real-Time WebSocket Engine:** Bidirectional Socket.IO architecture for instant job dispatch, live customer-technician chat, and real-time review alerts.
+- 💳 **Cryptographic Payment Lifecycle:** End-to-end Razorpay sandbox integration with server-side HMAC-SHA256 signature verification and automated status state-machines.
+- 🔐 **Token-Based Auth & Recovery:** Dual JWT token rotation (Access + HttpOnly Refresh) paired with Brevo HTTPS REST API for single-use 15-minute password resets.
+- 📸 **Multi-Source Diagnostic Uploads:** Cloudinary-backed uploads supporting live camera capture, device files, external URLs, and 10+ real-world appliance breakdown presets.
+- 🚀 **High-Availability Cloud Stack:** Serverless Neon PostgreSQL (connection pooled), Redis/Upstash session cache, Vercel frontend, and Render backend.
 
 ---
 
@@ -10,29 +36,31 @@
 
 ```text
 React 18 (Vite 5 + TailwindCSS + Lucide Icons)
-      ↓ (Axios + Real-time Socket.IO)
+      ↓ (Axios + Real-time Socket.IO Client)
 Node.js + Express.js Modular REST API
       ↓ (JWT Auth + bcrypt + RBAC + Zod Validation)
 Prisma ORM (Connection Pooler & Type-safe Queries)
       ↓
 Neon PostgreSQL (Cloud Serverless Database)
       ↓
-Cloudinary (Media Storage) + Redis/Upstash (Cache) + Socket.IO (Live Chat & Alerts)
+Cloudinary (Media CDN) + Redis/Upstash (Cache) + Brevo (HTTPS Email) + Razorpay (Payments)
 ```
 
-| Component | Technology / Library | Description |
+| Layer / Component | Technology / Library | Description |
 | :--- | :--- | :--- |
-| **Frontend** | React 18, Vite 5, TailwindCSS | High-performance SPA with responsive design & dark/light theme |
-| **Icons & Visuals** | Lucide React | Clean, scalable modern SVG icons across all interfaces |
-| **Backend** | Node.js 20+, Express.js | Modular controller-service-repository architecture |
-| **Database** | **Neon PostgreSQL** (Cloud) | Fully managed serverless relational database |
-| **ORM** | Prisma ORM | Type-safe queries, connection pooling & schema migrations |
-| **Authentication** | JWT + bcryptjs (12 rounds) | Secure Access Tokens + HttpOnly Refresh Tokens with DB rotation |
-| **Real-Time Layer**| Socket.IO | Bidirectional WebSocket engine for live chat & instant dispatch |
-| **File Uploads** | Multer + Cloudinary | Universal image formats (JPEG, PNG, WebP, GIF, SVG, BMP, HEIC) |
-| **Caching & Rate** | Redis / Upstash | Distributed session caching & reverse proxy rate limiters |
-| **Frontend Deploy** | Vercel | Auto-deploy from GitHub with SPA rewrites & API proxy |
-| **Backend Deploy** | Render | Managed Node.js cloud server with environment secrets |
+| **Frontend Framework** | React 18, Vite 5, TailwindCSS | High-performance SPA with custom theme tokens & responsive design |
+| **UI Components & Icons**| Lucide React | Clean, scalable modern SVG icons across all portals |
+| **Backend REST API** | Node.js 20+, Express.js | Modular Controller-Service-Repository clean architecture |
+| **Database** | **Neon PostgreSQL** (Cloud) | Fully managed serverless relational database with pooling |
+| **ORM & Migrations** | Prisma ORM | Type-safe models, automated migrations, relational joins & seeding |
+| **Authentication** | JWT + bcryptjs (12 rounds) | Short-lived access tokens + rotating refresh tokens in PostgreSQL |
+| **Password Recovery** | **Brevo REST API** / Nodemailer | Transactional email delivery over HTTPS Port 443 with token expiry |
+| **Payment Gateway** | **Razorpay SDK** (Sandbox/Live) | Order creation, HMAC-SHA256 signature verification & webhooks |
+| **Real-Time Engine** | **Socket.IO** | Room-based chat channels, live typing, and instant status dispatch |
+| **Media & CDN** | Multer + Cloudinary | Multi-format image storage (JPEG, PNG, WebP, GIF, SVG, BMP, HEIC) |
+| **Caching & Rate Limit** | Redis / Upstash | Distributed session caching & reverse proxy rate limiters |
+| **Validation** | Zod | Comprehensive schema-level payload validation on all endpoints |
+| **Deployment** | Vercel (Client) + Render (API) | Continuous deployment from GitHub with automated builds |
 
 ---
 
@@ -40,12 +68,13 @@ Cloudinary (Media Storage) + Redis/Upstash (Cache) + Socket.IO (Live Chat & Aler
 
 ### 👤 Customer Experience
 - **5-Step Interactive Request Wizard**: Service selection, symptom checklist, multi-source image attachments (Device files, Live Camera, Image URL, Sample breakdown presets), and preferred scheduling.
+- **📸 10+ Sample Breakdown Presets**: One-click diagnostic test images for AC leaks, burnt sockets, clogged sinks, cracked screens, circuit trips, etc.
 - **Active Job Center**: Filter by `ALL`, `PENDING`, `ACCEPTED`, `COMPLETED` with realtime status updates.
 - **Live Chat Modal**: Instant real-time Socket.IO messaging with the assigned technician with persistent chat cache.
 - **Service History & Invoices**: Detailed repair receipts, time logs, and technician rating reviews.
 - **⭐ Star Rating & Review System**: After a job is completed, customer can leave a 1–5 star rating with a written comment for the technician. Review is displayed on the request detail page and contributes to the technician's live average rating.
-- **🔐 Secure Forgot & Reset Password Flow**: Automated transactional password recovery powered by Brevo REST API / Nodemailer with single-use 15-minute cryptographically signed tokens.
-- **Razorpay Payments**: Pay for completed service requests directly within the app (Test/Sandbox mode).
+- **🔐 Secure Forgot & Reset Password Flow**: Automated transactional password recovery powered by Brevo REST API with single-use 15-minute cryptographically signed tokens.
+- **💳 Razorpay Payments**: Pay for completed service requests directly within the app (Test/Sandbox mode with simulated card, UPI & Netbanking).
 
 ### 🔧 Technician Workspace
 - **Smart Auto-Dispatch**: Direct job allocations for electrical, plumbing, HVAC, appliances, and electronics.
