@@ -334,6 +334,31 @@ export default function RequestDetailPage() {
                   <p className="text-[11px] text-center text-surface-400">
                     Secure 256-bit SSL encrypted • Razorpay Sandbox
                   </p>
+
+                  {/* Test Mode Helper */}
+                  <div className="mt-1 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-900/20 p-3 space-y-2">
+                    <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                      🧪 Test Mode — Use these credentials
+                    </p>
+                    <div className="space-y-1.5 text-[11px] text-amber-800 dark:text-amber-300">
+                      <div className="flex items-center justify-between">
+                        <span className="text-amber-600 dark:text-amber-500">💳 Card Number</span>
+                        <code className="font-mono font-bold bg-amber-100 dark:bg-amber-800/50 px-1.5 py-0.5 rounded select-all">4111 1111 1111 1111</code>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-amber-600 dark:text-amber-500">📅 Expiry / CVV</span>
+                        <span className="font-semibold">Any future date • Any 3 digits</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-amber-600 dark:text-amber-500">🔢 OTP</span>
+                        <code className="font-mono font-bold bg-amber-100 dark:bg-amber-800/50 px-1.5 py-0.5 rounded select-all">1234</code>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-amber-600 dark:text-amber-500">📱 UPI ID</span>
+                        <code className="font-mono font-bold bg-amber-100 dark:bg-amber-800/50 px-1.5 py-0.5 rounded select-all">success@razorpay</code>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </Card>
