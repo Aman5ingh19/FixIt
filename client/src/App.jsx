@@ -15,6 +15,7 @@ const CustomerDashboard = lazy(() => import('./pages/customer/CustomerDashboard'
 const CreateRequestPage = lazy(() => import('./pages/customer/CreateRequestPage'));
 const ActiveRequestsPage = lazy(() => import('./pages/customer/ActiveRequestsPage'));
 const RequestDetailPage = lazy(() => import('./pages/customer/RequestDetailPage'));
+const AdminRequestDetailPage = lazy(() => import('./pages/customer/RequestDetailPage'));
 const RequestHistoryPage = lazy(() => import('./pages/customer/RequestHistoryPage'));
 const PaymentHistoryPage = lazy(() => import('./pages/customer/PaymentHistoryPage'));
 
@@ -94,6 +95,7 @@ function AppRoutes() {
           <Route path="/admin/dashboard" element={<P><RoleGuard roles={['ADMIN']}><AdminDashboard /></RoleGuard></P>} />
           <Route path="/admin/technicians" element={<P><RoleGuard roles={['ADMIN']}><AdminTechniciansPage /></RoleGuard></P>} />
           <Route path="/admin/requests" element={<P><RoleGuard roles={['ADMIN']}><AdminRequestsPage /></RoleGuard></P>} />
+          <Route path="/admin/requests/:id" element={<P><RoleGuard roles={['ADMIN']}><AdminRequestDetailPage /></RoleGuard></P>} />
           <Route path="/admin/payments" element={<P><RoleGuard roles={['ADMIN']}><AdminPaymentsPage /></RoleGuard></P>} />
           <Route path="/admin/activity-log" element={<P><RoleGuard roles={['ADMIN']}><AdminActivityLogPage /></RoleGuard></P>} />
           <Route path="/admin/notifications" element={<P><RoleGuard roles={['ADMIN']}><NotificationsPage /></RoleGuard></P>} />

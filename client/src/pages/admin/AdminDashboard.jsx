@@ -125,7 +125,7 @@ export default function AdminDashboard() {
                         Customer: {req.customer?.firstName} {req.customer?.lastName} • {req.service?.name}
                       </p>
                     </div>
-                    <Link to={`/customer/requests/${req.id}`}>
+                    <Link to={`/admin/requests/${req.id}`}>
                       <Button size="sm" variant="outline">
                         Inspect
                       </Button>
