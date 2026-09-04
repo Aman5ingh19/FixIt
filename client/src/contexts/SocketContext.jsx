@@ -22,7 +22,9 @@ export function SocketProvider({ children }) {
     const token = localStorage.getItem('accessToken');
     if (!token) return;
 
-    const socket = io('/', {
+    const SOCKET_URL = import.meta.env.PROD ? 'https://fixit-dk08.onrender.com' : '/';
+
+    const socket = io(SOCKET_URL, {
       auth: { token },
       transports: ['websocket', 'polling'],
       reconnection: true,
