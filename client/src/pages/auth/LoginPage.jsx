@@ -44,7 +44,11 @@ export default function LoginPage() {
     try {
       await login({ email: form.email, password: form.password });
     } catch (error) {
-      const message = error.response?.data?.message || 'Invalid email or password. Please try again.';
+      const message =
+        error.response?.data?.message ||
+        (error.message === 'Network Error' || !error.response
+          ? 'Cannot connect to server. Please check your network or server connection.'
+          : 'Invalid email or password. Please try again.');
       toast.error(message);
     } finally {
       setLoading(false);

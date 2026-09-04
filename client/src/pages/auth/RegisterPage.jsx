@@ -64,7 +64,11 @@ export default function RegisterPage() {
     try {
       await register(form);
     } catch (error) {
-      const message = error.response?.data?.message || 'Registration failed. Please try again.';
+      const message =
+        error.response?.data?.message ||
+        (error.message === 'Network Error' || !error.response
+          ? 'Cannot connect to server. Please check your network or server connection.'
+          : 'Registration failed. Please try again.');
       toast.error(message);
       if (error.response?.data?.errors) {
         const fieldErrors = {};

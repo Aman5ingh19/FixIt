@@ -15,6 +15,10 @@ async function startServer() {
     await prisma.$connect();
     logger.info('✓ Connected to PostgreSQL');
 
+    // Auto-verify & seed demo accounts if missing
+    const { autoSeed } = require('./config/autoSeed');
+    await autoSeed();
+
     // Connect to Redis / Upstash (optional caching)
     getRedisClient();
 
