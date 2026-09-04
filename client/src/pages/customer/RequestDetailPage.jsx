@@ -250,6 +250,37 @@ export default function RequestDetailPage() {
               </Card>
             )}
 
+            {/* Review Card — shown after customer submits, visible to customer + admin */}
+            {request.review && (
+              <Card className="border-warning-200 dark:border-warning-800/50 bg-warning-50/30 dark:bg-warning-900/10">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-surface-900 flex items-center gap-2">
+                    <Star className="w-4 h-4 text-warning-500 fill-warning-500" />
+                    {user?.role === 'ADMIN' ? 'Customer Review' : 'Your Review'}
+                  </h3>
+                  <span className="text-xs text-surface-400">
+                    {format(new Date(request.review.createdAt), 'PP')}
+                  </span>
+                </div>
+                {/* Stars */}
+                <div className="flex items-center gap-1 mb-2">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star
+                      key={s}
+                      className={`w-5 h-5 ${s <= request.review.rating ? 'text-warning-400 fill-warning-400' : 'text-surface-200 dark:text-surface-600'}`}
+                    />
+                  ))}
+                  <span className="ml-1.5 text-sm font-bold text-warning-600">{request.review.rating}/5</span>
+                </div>
+                {/* Comment */}
+                {request.review.comment && (
+                  <p className="text-sm text-surface-600 dark:text-surface-400 italic leading-relaxed">
+                    "{request.review.comment}"
+                  </p>
+                )}
+              </Card>
+            )}
+
             {/* Payment Section */}
             <Card className={request.payment?.status === 'PAID' ? 'border-emerald-500/30 bg-emerald-50/10' : 'border-primary-500/20 bg-primary-50/10'}>
               <div className="flex items-center justify-between mb-3">
