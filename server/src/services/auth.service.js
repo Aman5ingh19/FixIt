@@ -212,17 +212,15 @@ const authService = {
       expiresAt,
     });
 
-    // Send password reset email
-    try {
-      await emailService.sendPasswordResetEmail(user.email, user.firstName, rawToken);
-      logger.info('Password reset email sent successfully', { userId: user.id, email: user.email });
-    } catch (err) {
-      logger.error('Failed to send password reset email', {
+    // Send password reset email in background (non-blocking for UI)
+    emailService
+      .sendPasswordResetEmail(user.email, user.firstName, rawToken)
+      .then(() => logger.info('Password reset email dispatched successfully', { userId: user.id, email: user.email }))
+      .catch((err) => logger.error('Failed to send password reset email', {
         userId: user.id,
         email: user.email,
         error: err.message,
-      });
-    }
+      }));
   },
 
 

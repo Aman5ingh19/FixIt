@@ -37,6 +37,7 @@
     "nodemailer": "^10.0.0",
     "prisma": "^6.8.0",
     "razorpay": "^2.9.8",
+    "resend": "^6.26.0",
     "socket.io": "^4.7.5",
     "uuid": "^10.0.0",
     "winston": "^3.14.2",
