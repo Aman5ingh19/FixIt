@@ -72,7 +72,7 @@ const emailService = {
       </html>
     `;
 
-    // 1. If RESEND_API_KEY is configured, use Resend HTTPS API (fastest & reliable on cloud)
+    // 1. If RESEND_API_KEY is configured, try Resend first
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY.trim()) {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY.trim());
@@ -84,28 +84,24 @@ const emailService = {
           html: htmlContent,
         });
 
-        if (result.error) {
-          throw new Error(result.error.message || JSON.stringify(result.error));
+        if (!result.error) {
+          logger.info('Password reset email sent via Resend', { to: toEmail, id: result.data?.id });
+          return result.data;
         }
-
-        logger.info('Password reset email sent via Resend HTTPS API', { to: toEmail, id: result.data?.id });
-        return result.data;
+        logger.warn('Resend returned error, falling back to Gmail SMTP', { error: result.error?.message });
       } catch (resendError) {
-        logger.error('Resend email failed, falling back to SMTP', { error: resendError.message });
+        logger.warn('Resend threw error, falling back to Gmail SMTP', { error: resendError.message });
       }
     }
 
-    // 2. Fallback to Gmail SMTP / Nodemailer
-    const smtpUser = (process.env.SMTP_USER || '').trim();
-    const smtpPass = (process.env.SMTP_PASS || '').trim();
-
-    if (!smtpUser || !smtpPass) {
-      logger.error('SMTP credentials missing! Set RESEND_API_KEY or SMTP_USER & SMTP_PASS in environment.');
-      throw new Error('Email credentials not configured');
-    }
+    // 2. Gmail SMTP with direct Port 465 SSL fallback
+    const smtpUser = (process.env.SMTP_USER || 'appauth.support@gmail.com').trim();
+    const smtpPass = (process.env.SMTP_PASS || 'cxxlnlvrpspyqmfu').trim();
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: smtpUser,
         pass: smtpPass,
@@ -113,9 +109,6 @@ const emailService = {
       tls: {
         rejectUnauthorized: false,
       },
-      connectionTimeout: 5000,
-      greetingTimeout: 5000,
-      socketTimeout: 8000,
     });
 
     const mailOptions = {
@@ -127,7 +120,7 @@ const emailService = {
 
     try {
       const info = await transporter.sendMail(mailOptions);
-      logger.info('Password reset email sent via SMTP', { to: toEmail, messageId: info.messageId });
+      logger.info('Password reset email sent via Gmail SMTP (SSL 465)', { to: toEmail, messageId: info.messageId });
       return info;
     } catch (error) {
       logger.error('Failed to send password reset email via SMTP', { to: toEmail, error: error.message });
