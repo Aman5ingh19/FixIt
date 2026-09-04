@@ -7,7 +7,11 @@ const emailService = {
    * Send a password reset email with a token link.
    */
   async sendPasswordResetEmail(toEmail, firstName, resetToken) {
-    const clientUrl = (process.env.CLIENT_URL || 'https://fix-it-nu-sable.vercel.app').replace(/\/+$/, '');
+    let clientUrl = (process.env.CLIENT_URL || '').trim();
+    if (!clientUrl || clientUrl.includes('localhost') || process.env.NODE_ENV === 'production') {
+      clientUrl = 'https://fix-it-nu-sable.vercel.app';
+    }
+    clientUrl = clientUrl.replace(/\/+$/, '');
     const resetUrl = `${clientUrl}/reset-password?token=${resetToken}`;
 
     const htmlContent = `
