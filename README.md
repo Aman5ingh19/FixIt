@@ -2,7 +2,7 @@
 
 > **A Production-Grade Full-Stack Service Booking & Repair Network** connecting customers with background-verified, certified technicians (Electrical, Plumbing, HVAC, Carpentry, Electronics, and Home Appliances). Powered by **Razorpay Payment Gateway (Test/Sandbox Mode)** with HMAC-SHA256 cryptographic verification, bidirectional **Socket.IO** real-time dispatch & chat, multi-source media uploads, and end-to-end job status tracking.
 
-🌐 **Live Demo:** [https://fixit-aman.vercel.app](https://fixit-aman.vercel.app) &nbsp;|&nbsp; 🖥️ **Backend API:** [https://fixit-dk08.onrender.com](https://fixit-dk08.onrender.com)
+🌐 **Live Demo:** [https://fix-it-nu-sable.vercel.app](https://fix-it-nu-sable.vercel.app) &nbsp;|&nbsp; 🖥️ **Backend API:** [https://fixit-dk08.onrender.com](https://fixit-dk08.onrender.com)
 
 ---
 
@@ -44,6 +44,7 @@ Cloudinary (Media Storage) + Redis/Upstash (Cache) + Socket.IO (Live Chat & Aler
 - **Live Chat Modal**: Instant real-time Socket.IO messaging with the assigned technician with persistent chat cache.
 - **Service History & Invoices**: Detailed repair receipts, time logs, and technician rating reviews.
 - **⭐ Star Rating & Review System**: After a job is completed, customer can leave a 1–5 star rating with a written comment for the technician. Review is displayed on the request detail page and contributes to the technician's live average rating.
+- **🔐 Secure Forgot & Reset Password Flow**: Automated transactional password recovery powered by Brevo REST API / Nodemailer with single-use 15-minute cryptographically signed tokens.
 - **Razorpay Payments**: Pay for completed service requests directly within the app (Test/Sandbox mode).
 
 ### 🔧 Technician Workspace
@@ -96,7 +97,7 @@ Create `.env` inside `server/`:
 ```env
 NODE_ENV=development
 PORT=5000
-CLIENT_URL=http://localhost:5173
+CLIENT_URL=https://fix-it-nu-sable.vercel.app
 
 # Neon PostgreSQL (Cloud Database)
 DATABASE_URL="postgresql://neondb_owner:your_password@ep-sample-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require&connection_limit=10&pool_timeout=15"
@@ -107,6 +108,14 @@ JWT_ACCESS_SECRET=fixit-dev-access-secret-change-in-production
 JWT_REFRESH_SECRET=fixit-dev-refresh-secret-change-in-production
 JWT_ACCESS_EXPIRY=15m
 JWT_REFRESH_EXPIRY=7d
+
+# Email (Brevo HTTPS REST API / Gmail SMTP)
+BREVO_API_KEY=xkeysib-your_brevo_api_key
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=appauth.support@gmail.com
+SMTP_PASS=your_gmail_app_password
+EMAIL_FROM="FixIt Support <appauth.support@gmail.com>"
 
 # Redis / Upstash (Optional)
 REDIS_URL="rediss://default:your_redis_token@your_instance.upstash.io:6379"
@@ -174,7 +183,7 @@ FixIt/
 │   │   ├── contexts/           # AuthContext, SocketContext, LanguageContext
 │   │   ├── pages/
 │   │   │   ├── admin/          # Dashboard, Technicians, Requests, Payments, ActivityLog
-│   │   │   ├── auth/           # LoginPage, RegisterPage
+│   │   │   ├── auth/           # LoginPage, RegisterPage, ResetPasswordPage
 │   │   │   ├── customer/       # Dashboard, CreateRequest, ActiveRequests, Detail, History, ReviewPage
 │   │   │   ├── landing/        # LandingPage
 │   │   │   ├── shared/         # AboutPage, HowToUsePage, NotificationsPage, ProfilePage, SettingsPage
@@ -185,15 +194,16 @@ FixIt/
 │
 ├── server/                     # Node.js + Express.js REST API
 │   ├── prisma/
-│   │   ├── schema.prisma       # Database schema (Users, Requests, TechProfiles, Reviews, Chats)
+│   │   ├── schema.prisma       # Database schema (Users, PasswordResetTokens, Requests, TechProfiles, Reviews, Chats)
 │   │   └── seed.js             # Initial database seeder (auto-runs on fresh deploy)
 │   ├── src/
 │   │   ├── config/             # Database, Redis, Socket, Multer, Logger, Cloudinary
 │   │   ├── controllers/        # Auth, Request, Technician, Review, Notification, Upload
 │   │   ├── middleware/         # AuthGuard, RBAC, RateLimiter, Security, ErrorHandler
-│   │   ├── repositories/       # Prisma query abstraction layer
+│   │   ├── repositories/       # Prisma query abstraction layer (user, passwordResetToken, etc.)
 │   │   ├── routes/             # Express API routes
-│   │   ├── services/           # Business logic, Auto-matching engine, Token generators
+│   │   ├── services/           # Business logic, Auto-matching engine, Token generators, Auth service
+│   │   ├── utils/              # Email service (Brevo HTTP API + Gmail SMTP), JWT, Errors
 │   │   └── validators/         # Zod request validation schemas
 │   └── package.json
 │
@@ -211,6 +221,8 @@ FixIt/
 - `POST /api/auth/login` — Sign in and issue JWT access/refresh tokens
 - `POST /api/auth/refresh` — Rotate and issue fresh access token
 - `POST /api/auth/logout` — Revoke active session tokens
+- `POST /api/auth/forgot-password` — Send 15-minute secure password reset link via Brevo / SMTP
+- `POST /api/auth/reset-password` — Validate single-use reset token and set new password
 - `GET  /api/auth/me` — Fetch currently authenticated user profile
 
 ### 📋 Service Requests (`/api/requests`)
