@@ -17,7 +17,7 @@ const getTransporter = () => {
   }
 
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '587', 10),
     secure: process.env.SMTP_PORT === '465',
     auth: {
@@ -30,14 +30,21 @@ const getTransporter = () => {
   });
 };
 
-const transporter = getTransporter();
-
 const emailService = {
   /**
    * Send a password reset email with a token link.
    */
   async sendPasswordResetEmail(toEmail, firstName, resetToken) {
-    const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      logger.error('SMTP credentials missing! SMTP_USER or SMTP_PASS not set in environment.', {
+        hasUser: Boolean(process.env.SMTP_USER),
+        hasPass: Boolean(process.env.SMTP_PASS),
+      });
+      throw new Error('SMTP credentials not configured in environment variables');
+    }
+
+    const transporter = getTransporter();
+    const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_FROM || `"FixIt Support" <${process.env.SMTP_USER}>`,
