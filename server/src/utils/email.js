@@ -86,7 +86,7 @@ const emailService = {
             'content-type': 'application/json',
           },
           body: JSON.stringify({
-            sender: { name: 'FixIt Support', email: process.env.BREVO_SENDER || 'appauth.support@gmail.com' },
+            sender: { name: 'FixIt Support', email: process.env.BREVO_SENDER || 'amansingh1992002@gmail.com' },
             to: [{ email: toEmail, name: firstName || 'User' }],
             subject: '🔐 Reset Your FixIt Password',
             htmlContent: htmlContent,
