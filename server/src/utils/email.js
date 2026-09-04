@@ -76,7 +76,7 @@ const emailService = {
       </html>
     `;
 
-    // 1. If RESEND_API_KEY is configured, try Resend first
+    // 1. If RESEND_API_KEY is configured, try Resend
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY.trim()) {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY.trim());
@@ -92,9 +92,38 @@ const emailService = {
           logger.info('Password reset email sent via Resend', { to: toEmail, id: result.data?.id });
           return result.data;
         }
-        logger.warn('Resend returned error, falling back to Gmail SMTP', { error: result.error?.message });
+        logger.warn('Resend returned error, trying fallback', { error: result.error?.message });
       } catch (resendError) {
-        logger.warn('Resend threw error, falling back to Gmail SMTP', { error: resendError.message });
+        logger.warn('Resend threw error, trying fallback', { error: resendError.message });
+      }
+    }
+
+    // 2. If BREVO_API_KEY is configured, send via Brevo HTTPS REST API (Supports any recipient email)
+    if (process.env.BREVO_API_KEY && process.env.BREVO_API_KEY.trim()) {
+      try {
+        const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'api-key': process.env.BREVO_API_KEY.trim(),
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            sender: { name: 'FixIt Support', email: process.env.BREVO_SENDER || 'appauth.support@gmail.com' },
+            to: [{ email: toEmail, name: firstName || 'User' }],
+            subject: '🔐 Reset Your FixIt Password',
+            htmlContent: htmlContent,
+          }),
+        });
+
+        const brevoData = await brevoRes.json();
+        if (brevoRes.ok) {
+          logger.info('Password reset email sent via Brevo HTTPS API', { to: toEmail, messageId: brevoData.messageId });
+          return brevoData;
+        }
+        logger.warn('Brevo returned error, trying SMTP fallback', { status: brevoRes.status, error: brevoData });
+      } catch (brevoErr) {
+        logger.warn('Brevo request failed', { error: brevoErr.message });
       }
     }
 
