@@ -194,19 +194,16 @@ const authService = {
   /**
    * Forgot password — generate a reset token and send it via email.
    * Always responds 200 (don't leak whether email is registered).
+   * Email is sent fire-and-forget so the API never blocks on SMTP.
    */
   async forgotPassword(email) {
     const user = await userRepository.findByEmail(email);
     if (!user || !user.isActive) {
-      // Silently succeed to avoid user enumeration
       logger.info('Forgot password: email not found or inactive', { email });
       return;
     }
 
-    // Generate a cryptographically secure token
     const rawToken = uuidv4().replace(/-/g, '') + uuidv4().replace(/-/g, '');
-
-    // 15-minute expiry
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     await passwordResetTokenRepository.create({
@@ -215,10 +212,13 @@ const authService = {
       expiresAt,
     });
 
-    await emailService.sendPasswordResetEmail(user.email, user.firstName, rawToken);
-
-    logger.info('Password reset email sent', { userId: user.id, email: user.email });
+    // Fire-and-forget: do NOT await — respond to client immediately.
+    // SMTP timeouts won't block the HTTP response this way.
+    emailService.sendPasswordResetEmail(user.email, user.firstName, rawToken)
+      .then(() => logger.info('Password reset email sent', { userId: user.id }))
+      .catch((err) => logger.error('Reset email failed (non-blocking)', { userId: user.id, error: err.message }));
   },
+
 
   /**
    * Reset password — validate the token and update the password.
