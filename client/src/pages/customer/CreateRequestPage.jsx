@@ -228,13 +228,24 @@ export default function CreateRequestPage() {
     setLoading(true);
     try {
       // 1. Separate direct URLs and file objects to upload
-      const directUrls = uploadedItems.filter((i) => i.type === 'url').map((i) => i.url);
-      const filesToUpload = uploadedItems.filter((i) => i.type === 'file').map((i) => i.file);
+      const directUrls = uploadedItems
+        .filter((i) => i.type === 'url' && i.url)
+        .map((i) => ({
+          imageUrl: i.url,
+          caption: i.name || undefined,
+        }));
+
+      const filesToUpload = uploadedItems
+        .filter((i) => i.type === 'file' && i.file)
+        .map((i) => i.file);
 
       let serverUploadedUrls = [];
       if (filesToUpload.length > 0) {
         const uploadRes = await uploadApi.uploadImages(filesToUpload, 'requests');
-        serverUploadedUrls = uploadRes.data?.images || [];
+        serverUploadedUrls = (uploadRes.data?.images || []).map((img) => ({
+          imageUrl: typeof img === 'string' ? img : img.imageUrl,
+          publicId: (typeof img === 'object' && img?.publicId) || undefined,
+        }));
       }
 
       const allImageUrls = [...directUrls, ...serverUploadedUrls];
@@ -263,7 +274,10 @@ export default function CreateRequestPage() {
         navigate('/customer/requests/active');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to create request');
+      const errMsg = error.response?.data?.errors?.length
+        ? error.response.data.errors.map((e) => e.message).join(', ')
+        : (error.response?.data?.message || 'Failed to create request');
+      toast.error(errMsg);
       setLoading(false);
     }
   };

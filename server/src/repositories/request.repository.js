@@ -8,7 +8,17 @@ const requestRepository = {
       data: {
         ...requestData,
         location: location ? { create: location } : undefined,
-        images: imageUrls?.length ? { createMany: { data: imageUrls } } : undefined,
+        images: imageUrls?.length
+          ? {
+              createMany: {
+                data: imageUrls.map((img) => ({
+                  imageUrl: typeof img === 'string' ? img : img.imageUrl,
+                  publicId: (typeof img === 'object' && img?.publicId) || null,
+                  caption: (typeof img === 'object' && img?.caption) || null,
+                })),
+              },
+            }
+          : undefined,
       },
       include: {
         service: { include: { category: true } },
