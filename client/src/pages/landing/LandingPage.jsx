@@ -19,6 +19,7 @@ import {
   Users,
   Package,
   Settings,
+  Paintbrush,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button, ThemeToggle } from '../../components/common';
@@ -75,14 +76,14 @@ const servicesList = [
     iconColor: 'text-purple-600',
   },
   {
-    id: 'cleaning',
-    icon: Sparkles,
-    name: 'Cleaning',
-    desc: 'Home, kitchen, sofa, and deep cleaning',
-    badge: '',
-    price: 'From ₹199',
-    image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=900&auto=format&fit=crop&q=85',
-    iconColor: 'text-pink-600',
+    id: 'painting',
+    icon: Paintbrush,
+    name: 'Painting',
+    desc: 'Interior, exterior wall painting & texture waterproofing',
+    badge: 'Trending',
+    price: 'From ₹499',
+    image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=900&auto=format&fit=crop&q=85',
+    iconColor: 'text-amber-600',
   },
 ];
 
@@ -143,13 +144,17 @@ export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleBookService = (serviceName = '') => {
+    const targetUrl = serviceName
+      ? `/customer/requests/new?category=${encodeURIComponent(serviceName)}`
+      : '/customer/requests/new';
+
     if (isAuthenticated) {
-      navigate('/customer/requests/new', { state: { prefillService: serviceName } });
+      navigate(targetUrl, { state: { prefillService: serviceName } });
     } else {
       openAuthModal({
         title: 'Sign in to book a service',
         message: 'Create a free account or sign in to submit a service request with verified technicians.',
-        returnUrl: '/customer/requests/new',
+        returnUrl: targetUrl,
       });
     }
   };

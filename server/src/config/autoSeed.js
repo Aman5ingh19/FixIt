@@ -154,6 +154,108 @@ async function autoSeed() {
             basePrice: 350,
           },
         });
+      } else if (cat.slug === 'electrical') {
+        await prisma.service.upsert({
+          where: { slug: 'wiring-repair' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Wiring Repair',
+            slug: 'wiring-repair',
+            description: 'Fix faulty wiring and short circuits',
+            basePrice: 350,
+          },
+        });
+        await prisma.service.upsert({
+          where: { slug: 'fan-installation' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Fan Installation',
+            slug: 'fan-installation',
+            description: 'Ceiling and exhaust fan installation',
+            basePrice: 200,
+          },
+        });
+      } else if (cat.slug === 'appliances') {
+        await prisma.service.upsert({
+          where: { slug: 'washing-machine-repair' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Washing Machine Repair',
+            slug: 'washing-machine-repair',
+            description: 'All brands washing machine repair',
+            basePrice: 450,
+          },
+        });
+        await prisma.service.upsert({
+          where: { slug: 'refrigerator-repair' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Refrigerator Repair',
+            slug: 'refrigerator-repair',
+            description: 'Cooling issues, compressor, thermostat repair',
+            basePrice: 500,
+          },
+        });
+      } else if (cat.slug === 'painting') {
+        await prisma.service.upsert({
+          where: { slug: 'interior-painting' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Interior Wall Painting',
+            slug: 'interior-painting',
+            description: 'Full home interior wall painting, primer, 2-coat paint & smooth finish',
+            basePrice: 1999,
+          },
+        });
+        await prisma.service.upsert({
+          where: { slug: 'exterior-painting' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Exterior Weatherproof Painting',
+            slug: 'exterior-painting',
+            description: 'Durable weather-resistant exterior wall painting and surface protection',
+            basePrice: 2999,
+          },
+        });
+        await prisma.service.upsert({
+          where: { slug: 'wall-texture-painting' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Designer Wall & Texture Painting',
+            slug: 'wall-texture-painting',
+            description: 'Designer accent wall textures, stencil patterns, and premium luxury finish',
+            basePrice: 1499,
+          },
+        });
+        await prisma.service.upsert({
+          where: { slug: 'waterproofing-treatment' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Waterproofing & Damp Treatment',
+            slug: 'waterproofing-treatment',
+            description: 'Wall seepage repair, anti-damp treatment, and leak prevention coating',
+            basePrice: 899,
+          },
+        });
+        await prisma.service.upsert({
+          where: { slug: 'wall-touchup-painting' },
+          update: {},
+          create: {
+            categoryId: category.id,
+            name: 'Patch Repair & Spot Touch-up',
+            slug: 'wall-touchup-painting',
+            description: 'Nail hole filling, drywall plaster patch repair, and spot color matching',
+            basePrice: 499,
+          },
+        });
       }
     }
 

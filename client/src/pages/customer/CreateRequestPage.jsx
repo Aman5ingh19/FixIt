@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, Upload, X, MapPin, FileText,
   CheckCircle2, Image as ImageIcon, Wrench, Camera, Link2, Sparkles,
-  Eye, Plus, FileQuestion, AlertCircle, CreditCard, ShieldCheck
+  Eye, Plus, FileQuestion, AlertCircle, CreditCard, ShieldCheck,
+  Laptop, Wind, Zap, Droplets, Package, Paintbrush
 } from 'lucide-react';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import { Button, Input, Card, Badge } from '../../components/common';
@@ -23,11 +24,28 @@ const SAMPLE_PRESETS = [
   { label: 'Pipe Water Drain Leak', url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&auto=format&fit=crop&q=80', tag: 'Plumbing' },
   { label: 'Motherboard Breakdown', url: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800&auto=format&fit=crop&q=80', tag: 'Electronics' },
   { label: 'Appliance Motor Noise', url: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&auto=format&fit=crop&q=80', tag: 'Appliances' },
+  { label: 'Wall Damp & Paint Peel', url: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&auto=format&fit=crop&q=80', tag: 'Painting' },
 ];
+
+const getCategoryIcon = (slugOrName = '') => {
+  const s = slugOrName.toLowerCase();
+  if (s.includes('electr') && !s.includes('appliance')) {
+    if (s.includes('tronic')) return Laptop;
+    return Zap;
+  }
+  if (s.includes('hvac') || s.includes('air') || s.includes('cool')) return Wind;
+  if (s.includes('plumb') || s.includes('pipe') || s.includes('leak')) return Droplets;
+  if (s.includes('appliance')) return Package;
+  if (s.includes('paint')) return Paintbrush;
+  return Wrench;
+};
 
 export default function CreateRequestPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const prefillParam = location.state?.prefillService || queryParams.get('category') || queryParams.get('service') || '';
+
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -46,7 +64,7 @@ export default function CreateRequestPage() {
 
   const [form, setForm] = useState({
     serviceId: '',
-    title: location.state?.prefillService ? `${location.state.prefillService} Service` : '',
+    title: prefillParam ? `${prefillParam} Service` : '',
     description: '',
     priority: 0,
     location: { address: '', city: '', state: '', zipCode: '', country: 'India' },
@@ -58,13 +76,18 @@ export default function CreateRequestPage() {
     serviceApi.getCategories().then((res) => {
       const cats = res.data?.categories || [];
       setCategories(cats);
-      const prefill = location.state?.prefillService;
+      const prefill = prefillParam;
       if (prefill && cats.length > 0) {
-        const matched = cats.find((c) => c.name.toLowerCase().includes(prefill.toLowerCase()));
-        if (matched) setSelectedCategory(matched.id);
+        const matched = cats.find((c) =>
+          c.name.toLowerCase().includes(prefill.toLowerCase()) ||
+          c.slug?.toLowerCase().includes(prefill.toLowerCase())
+        );
+        if (matched) {
+          setSelectedCategory(matched.id);
+        }
       }
     }).catch(() => {});
-  }, [location.state]);
+  }, [location.state, location.search, prefillParam]);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -284,55 +307,73 @@ export default function CreateRequestPage() {
               <h2 className="text-lg font-semibold text-surface-900">Choose a Category &amp; Service</h2>
 
               {/* Categories */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedCategory(cat.id);
-                      setForm((prev) => ({ ...prev, serviceId: '' }));
-                    }}
-                    className={`p-3.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${
-                      selectedCategory === cat.id
-                        ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-950/40 shadow-xs'
-                        : 'border-surface-200 dark:border-surface-300 hover:border-surface-300 bg-white dark:bg-surface-200'
-                    }`}
-                  >
-                    <Wrench className="w-6 h-6 mx-auto mb-1.5 text-primary-600 dark:text-primary-400" />
-                    <p className="text-xs sm:text-sm font-bold text-surface-900">{cat.name}</p>
-                  </button>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                {categories.map((cat) => {
+                  const Icon = getCategoryIcon(cat.slug || cat.name);
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(cat.id);
+                        setForm((prev) => ({ ...prev, serviceId: '' }));
+                      }}
+                      className={`p-3.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${
+                        selectedCategory === cat.id
+                          ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-950/40 shadow-xs'
+                          : 'border-surface-200 dark:border-surface-300 hover:border-surface-300 bg-white dark:bg-surface-200'
+                      }`}
+                    >
+                      <Icon className="w-6 h-6 mx-auto mb-1.5 text-primary-600 dark:text-primary-400" />
+                      <p className="text-xs sm:text-sm font-bold text-surface-900">{cat.name}</p>
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Services List */}
               {selectedCategory && (
                 <div className="space-y-3 pt-2">
                   <h3 className="text-sm font-semibold text-surface-700">Select Specific Service</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-1">
-                    {services.map((svc) => (
-                      <button
-                        key={svc.id}
-                        type="button"
-                        onClick={() => setForm((prev) => ({ ...prev, serviceId: svc.id }))}
-                        className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer ${
-                          form.serviceId === svc.id
-                            ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-950/40 shadow-xs'
-                            : 'border-surface-200 dark:border-surface-300 hover:border-surface-300 bg-white dark:bg-surface-200'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm font-bold text-surface-900">{svc.name}</p>
-                          <span className="text-xs font-bold text-primary-600 dark:text-primary-400">
-                            ₹{svc.basePrice || svc.price || 249}
-                          </span>
-                        </div>
-                        {svc.description && (
-                          <p className="text-xs text-surface-500 mt-1 line-clamp-1">{svc.description}</p>
-                        )}
-                      </button>
-                    ))}
-                  </div>
+                  {services.length === 0 ? (
+                    <div className="p-5 text-center rounded-2xl border border-dashed border-surface-300 dark:border-surface-600 bg-surface-50 dark:bg-surface-800">
+                      <p className="text-sm text-surface-500">
+                        No specific services listed under this category yet.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-1">
+                      {services.map((svc) => (
+                        <button
+                          key={svc.id}
+                          type="button"
+                          onClick={() => {
+                            setForm((prev) => ({
+                              ...prev,
+                              serviceId: svc.id,
+                              title: (!prev.title || prev.title.endsWith('Service')) ? `${svc.name} Service` : prev.title,
+                            }));
+                            if (errors.serviceId) setErrors((prev) => ({ ...prev, serviceId: '' }));
+                          }}
+                          className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer ${
+                            form.serviceId === svc.id
+                              ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-950/40 shadow-xs'
+                              : 'border-surface-200 dark:border-surface-300 hover:border-surface-300 bg-white dark:bg-surface-200'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-bold text-surface-900">{svc.name}</p>
+                            <span className="text-xs font-bold text-primary-600 dark:text-primary-400">
+                              ₹{svc.basePrice || svc.price || 249}
+                            </span>
+                          </div>
+                          {svc.description && (
+                            <p className="text-xs text-surface-500 mt-1 line-clamp-1">{svc.description}</p>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
               {errors.serviceId && <p className="text-sm text-danger-600">{errors.serviceId}</p>}

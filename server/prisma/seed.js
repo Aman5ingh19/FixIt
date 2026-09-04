@@ -251,6 +251,52 @@ async function seed() {
         categoryId: categories[4].id,
       },
     }),
+    // Painting
+    prisma.service.create({
+      data: {
+        name: 'Interior Wall Painting',
+        slug: 'interior-painting',
+        description: 'Full home interior wall painting, primer, 2-coat paint & smooth finish',
+        basePrice: 1999,
+        categoryId: categories[5].id,
+      },
+    }),
+    prisma.service.create({
+      data: {
+        name: 'Exterior Weatherproof Painting',
+        slug: 'exterior-painting',
+        description: 'Durable weather-resistant exterior wall painting and surface protection',
+        basePrice: 2999,
+        categoryId: categories[5].id,
+      },
+    }),
+    prisma.service.create({
+      data: {
+        name: 'Designer Wall & Texture Painting',
+        slug: 'wall-texture-painting',
+        description: 'Designer accent wall textures, stencil patterns, and premium luxury finish',
+        basePrice: 1499,
+        categoryId: categories[5].id,
+      },
+    }),
+    prisma.service.create({
+      data: {
+        name: 'Waterproofing & Damp Treatment',
+        slug: 'waterproofing-treatment',
+        description: 'Wall seepage repair, anti-damp treatment, and leak prevention coating',
+        basePrice: 899,
+        categoryId: categories[5].id,
+      },
+    }),
+    prisma.service.create({
+      data: {
+        name: 'Patch Repair & Spot Touch-up',
+        slug: 'wall-touchup-painting',
+        description: 'Nail hole filling, drywall plaster patch repair, and spot color matching',
+        basePrice: 499,
+        categoryId: categories[5].id,
+      },
+    }),
   ]);
 
   console.log('  ✓ Services created');
