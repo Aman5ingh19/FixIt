@@ -24,11 +24,15 @@ function createApp() {
   }));
 
   app.use(cors({
-    origin: config.cors.origins,
+    origin: (origin, callback) => {
+      // Allow requests from any origin (reflection) so deployed frontends (Vercel, Render, Netlify, localhost) are never blocked
+      callback(null, true);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   }));
+  app.options('*', cors());
 
   // ── Request ID & Sanitization ──
   app.use(requestId);

@@ -67,10 +67,18 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {}, { withCredentials: true });
-        const { accessToken } = response.data.data;
+        const storedRefreshToken = localStorage.getItem('refreshToken');
+        const response = await axios.post(
+          `${API_BASE_URL}/auth/refresh`,
+          { refreshToken: storedRefreshToken },
+          { withCredentials: true }
+        );
+        const { accessToken, refreshToken: newRefreshToken } = response.data.data;
 
         localStorage.setItem('accessToken', accessToken);
+        if (newRefreshToken) {
+          localStorage.setItem('refreshToken', newRefreshToken);
+        }
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
         processQueue(null, accessToken);
@@ -80,6 +88,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         // Redirect to login will be handled by AuthContext
         window.dispatchEvent(new CustomEvent('auth:logout'));
         return Promise.reject(refreshError);

@@ -57,7 +57,9 @@ export function AuthProvider({ children }) {
     const payload = response.data || response;
     const userData = payload.user || payload;
     const accessToken = payload.accessToken || response.accessToken;
+    const refreshToken = payload.refreshToken || response.refreshToken;
     if (accessToken) localStorage.setItem('accessToken', accessToken);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     localStorage.removeItem('isGuest');
     setUser(userData);
     setIsGuest(false);
@@ -78,7 +80,9 @@ export function AuthProvider({ children }) {
     const payload = response.data || response;
     const newUser = payload.user || payload;
     const accessToken = payload.accessToken || response.accessToken;
+    const refreshToken = payload.refreshToken || response.refreshToken;
     if (accessToken) localStorage.setItem('accessToken', accessToken);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     localStorage.removeItem('isGuest');
     setUser(newUser);
     setIsGuest(false);
@@ -102,6 +106,7 @@ export function AuthProvider({ children }) {
     setUser(null);
     setIsGuest(false);
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('isGuest');
     navigate('/login');
     toast.success('Logged out successfully');

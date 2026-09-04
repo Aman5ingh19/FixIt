@@ -15,6 +15,7 @@ const authController = {
       createdResponse(res, {
         user: result.user,
         accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
       }, 'Registration successful');
     } catch (error) {
       next(error);
@@ -38,6 +39,7 @@ const authController = {
       successResponse(res, {
         user: result.user,
         accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
       }, 'Login successful');
     } catch (error) {
       next(error);
@@ -64,6 +66,7 @@ const authController = {
       successResponse(res, {
         user: result.user,
         accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
       }, 'Token refreshed');
     } catch (error) {
       next(error);

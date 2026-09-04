@@ -38,10 +38,11 @@ function verifyRefreshToken(token) {
  */
 function setRefreshTokenCookie(res, token) {
   const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+  const isProduction = config.env === 'production' || process.env.NODE_ENV === 'production';
   res.cookie('refreshToken', token, {
     httpOnly: true,
-    secure: config.env === 'production',
-    sameSite: config.env === 'production' ? 'strict' : 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     maxAge,
     path: '/api/auth/refresh',
   });
@@ -51,10 +52,11 @@ function setRefreshTokenCookie(res, token) {
  * Clear the refresh token cookie.
  */
 function clearRefreshTokenCookie(res) {
+  const isProduction = config.env === 'production' || process.env.NODE_ENV === 'production';
   res.clearCookie('refreshToken', {
     httpOnly: true,
-    secure: config.env === 'production',
-    sameSite: config.env === 'production' ? 'strict' : 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/api/auth/refresh',
   });
 }
