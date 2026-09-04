@@ -321,12 +321,12 @@ export default function HowToUsePage() {
         </div>
 
         {/* Steps */}
-        <Card className="border-amber-200 dark:border-amber-800/50 bg-amber-50/30 dark:bg-amber-900/10 space-y-4">
+        <Card className="border-amber-300 dark:border-amber-600 bg-amber-50 dark:bg-[#2a1f00] space-y-4">
 
           {/* Quick Steps */}
           <div className="space-y-2">
             <p className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">📋 Step-by-Step Payment Flow</p>
-            <ol className="space-y-2 text-sm text-surface-700 dark:text-surface-300">
+            <ol className="space-y-2 text-sm text-surface-800 dark:text-amber-100">
               <li className="flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">1</span>
                 <span>Login as <strong>Customer</strong> → go to <strong>Active Requests</strong> or <strong>History</strong></span>
@@ -341,17 +341,17 @@ export default function HowToUsePage() {
               </li>
               <li className="flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">4</span>
-                <span>On the OTP screen → enter <code className="font-mono font-bold bg-amber-100 dark:bg-amber-800/60 px-1 rounded">1234</code> → Payment marked <strong className="text-emerald-600">PAID ✓</strong></span>
+                <span>On the OTP screen → enter <code className="font-mono font-bold bg-amber-200 dark:bg-amber-700 text-amber-900 dark:text-white px-1.5 rounded">1234</code> → Payment marked <strong className="text-emerald-500">PAID ✓</strong></span>
               </li>
             </ol>
           </div>
 
-          <div className="border-t border-amber-200 dark:border-amber-800/50 pt-4 space-y-3">
+          <div className="border-t border-amber-300 dark:border-amber-600 pt-4 space-y-3">
             {/* Cards */}
             <p className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">✅ Test Card Credentials (Success)</p>
-            <div className="overflow-x-auto rounded-xl border border-amber-200 dark:border-amber-800/50">
+            <div className="overflow-x-auto rounded-xl border border-amber-300 dark:border-amber-600">
               <table className="w-full text-xs">
-                <thead className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
+                <thead className="bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100">
                   <tr>
                     <th className="text-left px-3 py-2 font-bold">Card Type</th>
                     <th className="text-left px-3 py-2 font-bold">Card Number</th>
@@ -360,18 +360,18 @@ export default function HowToUsePage() {
                     <th className="text-left px-3 py-2 font-bold">OTP</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-amber-100 dark:divide-amber-800/30 bg-white dark:bg-surface-800/40">
+                <tbody className="divide-y divide-amber-200 dark:divide-amber-700 bg-white dark:bg-[#1e1600]">
                   {[
                     { type: '💳 Visa', num: '4111 1111 1111 1111', exp: 'Any future', cvv: 'Any 3', otp: '1234' },
                     { type: '💳 Mastercard', num: '5267 3181 8797 5449', exp: 'Any future', cvv: 'Any 3', otp: '1234' },
                     { type: '💳 Rupay', num: '6073 8490 0000 0001', exp: 'Any future', cvv: 'Any 3', otp: '1234' },
                   ].map((row) => (
-                    <tr key={row.num} className="text-surface-700 dark:text-surface-300">
-                      <td className="px-3 py-2 font-semibold whitespace-nowrap">{row.type}</td>
-                      <td className="px-3 py-2"><code className="font-mono font-bold select-all">{row.num}</code></td>
-                      <td className="px-3 py-2 text-surface-500">{row.exp}</td>
-                      <td className="px-3 py-2 text-surface-500">{row.cvv}</td>
-                      <td className="px-3 py-2"><code className="font-mono font-bold text-emerald-600 select-all">{row.otp}</code></td>
+                    <tr key={row.num} className="text-surface-900 dark:text-amber-50 hover:bg-amber-50 dark:hover:bg-amber-900/30 transition-colors">
+                      <td className="px-3 py-2.5 font-bold whitespace-nowrap">{row.type}</td>
+                      <td className="px-3 py-2.5"><code className="font-mono font-bold select-all text-primary-700 dark:text-amber-200 bg-primary-50 dark:bg-amber-900/50 px-1.5 py-0.5 rounded">{row.num}</code></td>
+                      <td className="px-3 py-2.5 text-surface-600 dark:text-amber-200/70">{row.exp}</td>
+                      <td className="px-3 py-2.5 text-surface-600 dark:text-amber-200/70">{row.cvv}</td>
+                      <td className="px-3 py-2.5"><code className="font-mono font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/40 px-1.5 py-0.5 rounded select-all">{row.otp}</code></td>
                     </tr>
                   ))}
                 </tbody>
@@ -380,30 +380,30 @@ export default function HowToUsePage() {
 
             {/* UPI + Netbanking */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-white dark:bg-surface-800/40 rounded-xl border border-amber-200 dark:border-amber-800/50 p-3 space-y-1.5">
-                <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">📱 UPI (Success)</p>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-surface-500">UPI ID</span>
-                  <code className="font-mono font-bold text-surface-800 dark:text-surface-200 select-all bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded">success@razorpay</code>
+              <div className="bg-amber-50 dark:bg-[#1e1600] rounded-xl border border-amber-300 dark:border-amber-600 p-3 space-y-2">
+                <p className="text-[11px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">📱 UPI (Success)</p>
+                <div className="flex items-center justify-between text-xs gap-2">
+                  <span className="text-surface-600 dark:text-amber-200/70 shrink-0">UPI ID</span>
+                  <code className="font-mono font-bold text-primary-700 dark:text-amber-200 select-all bg-white dark:bg-amber-900/50 border border-amber-200 dark:border-amber-700 px-2 py-1 rounded-lg">success@razorpay</code>
                 </div>
               </div>
-              <div className="bg-white dark:bg-surface-800/40 rounded-xl border border-amber-200 dark:border-amber-800/50 p-3 space-y-1.5">
-                <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">🏦 Netbanking</p>
-                <p className="text-xs text-surface-600 dark:text-surface-400">Select any bank → Dummy bank page opens → Click <strong>"Success"</strong></p>
+              <div className="bg-amber-50 dark:bg-[#1e1600] rounded-xl border border-amber-300 dark:border-amber-600 p-3 space-y-2">
+                <p className="text-[11px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">🏦 Netbanking</p>
+                <p className="text-xs text-surface-700 dark:text-amber-100">Select any bank → Dummy bank page opens → Click <strong className="text-amber-800 dark:text-amber-300">"Success"</strong></p>
               </div>
             </div>
 
             {/* Failure cards */}
-            <div className="bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-200 dark:border-red-800/40 p-3 space-y-1.5">
-              <p className="text-[11px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">❌ Failure Simulation Cards</p>
+            <div className="bg-red-50 dark:bg-[#1f0000] rounded-xl border border-red-300 dark:border-red-700 p-3 space-y-2">
+              <p className="text-[11px] font-bold text-red-700 dark:text-red-400 uppercase tracking-wider">❌ Failure Simulation Cards</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div className="flex justify-between items-center">
-                  <code className="font-mono text-red-700 dark:text-red-400 select-all">4000 0000 0000 0002</code>
-                  <span className="text-surface-500">Payment Declined</span>
+                <div className="flex justify-between items-center gap-2">
+                  <code className="font-mono font-bold text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/50 px-2 py-1 rounded-lg select-all">4000 0000 0000 0002</code>
+                  <span className="text-surface-600 dark:text-red-200/70 shrink-0">Payment Declined</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <code className="font-mono text-red-700 dark:text-red-400 select-all">4000 0000 0000 9995</code>
-                  <span className="text-surface-500">Insufficient Funds</span>
+                <div className="flex justify-between items-center gap-2">
+                  <code className="font-mono font-bold text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/50 px-2 py-1 rounded-lg select-all">4000 0000 0000 9995</code>
+                  <span className="text-surface-600 dark:text-red-200/70 shrink-0">Insufficient Funds</span>
                 </div>
               </div>
             </div>
