@@ -4,7 +4,7 @@ import {
   ArrowLeft, ArrowRight, Upload, X, MapPin, FileText,
   CheckCircle2, Image as ImageIcon, Wrench, Camera, Link2, Sparkles,
   Eye, Plus, FileQuestion, AlertCircle, CreditCard, ShieldCheck,
-  Laptop, Wind, Zap, Droplets, Package, Paintbrush
+  Laptop, Wind, Zap, Droplets, Package, Paintbrush, RotateCcw
 } from 'lucide-react';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import { Button, Input, Card, Badge } from '../../components/common';
@@ -40,35 +40,69 @@ const getCategoryIcon = (slugOrName = '') => {
   return Wrench;
 };
 
+const DRAFT_STORAGE_KEY = 'fixit_create_request_draft';
+
+const loadDraft = () => {
+  try {
+    const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+};
+
 export default function CreateRequestPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const prefillParam = location.state?.prefillService || queryParams.get('category') || queryParams.get('service') || '';
 
-  const [step, setStep] = useState(0);
+  // ── Restore saved draft if user previously left or refreshed ──
+  const initialDraft = useRef(loadDraft()).current;
+
+  const [step, setStep] = useState(() => (typeof initialDraft?.step === 'number' ? initialDraft.step : 0));
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [services, setServices] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(() => initialDraft?.selectedCategory || null);
 
   // Upload state supporting both File objects and direct URLs
-  const [uploadedItems, setUploadedItems] = useState([]); // Array of { type: 'file' | 'url', file?: File, url: string, name: string, size?: string }
+  const [uploadedItems, setUploadedItems] = useState(() => initialDraft?.urlItems || []);
   const [urlModalOpen, setUrlModalOpen] = useState(false);
   const [inputUrl, setInputUrl] = useState('');
   const [previewModalUrl, setPreviewModalUrl] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [hasDraft, setHasDraft] = useState(!!initialDraft);
 
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
 
-  const [form, setForm] = useState({
-    serviceId: '',
-    title: prefillParam ? `${prefillParam} Service` : '',
-    description: '',
-    priority: 0,
-    location: { address: '', city: '', state: '', zipCode: '', country: 'India' },
-    imageUrls: [],
+  const [form, setForm] = useState(() => {
+    if (initialDraft?.form) {
+      return {
+        serviceId: initialDraft.form.serviceId || '',
+        title: initialDraft.form.title || (prefillParam ? `${prefillParam} Service` : ''),
+        description: initialDraft.form.description || '',
+        priority: typeof initialDraft.form.priority === 'number' ? initialDraft.form.priority : 0,
+        location: {
+          address: initialDraft.form.location?.address || '',
+          city: initialDraft.form.location?.city || '',
+          state: initialDraft.form.location?.state || '',
+          zipCode: initialDraft.form.location?.zipCode || '',
+          country: initialDraft.form.location?.country || 'India',
+        },
+        imageUrls: [],
+      };
+    }
+    return {
+      serviceId: '',
+      title: prefillParam ? `${prefillParam} Service` : '',
+      description: '',
+      priority: 0,
+      location: { address: '', city: '', state: '', zipCode: '', country: 'India' },
+      imageUrls: [],
+    };
   });
   const [errors, setErrors] = useState({});
 
@@ -77,7 +111,8 @@ export default function CreateRequestPage() {
       const cats = res.data?.categories || [];
       setCategories(cats);
       const prefill = prefillParam;
-      if (prefill && cats.length > 0) {
+      // If user came with explicit prefill from URL and there is no draft category selected, use prefill
+      if (prefill && cats.length > 0 && !selectedCategory) {
         const matched = cats.find((c) =>
           c.name.toLowerCase().includes(prefill.toLowerCase()) ||
           c.slug?.toLowerCase().includes(prefill.toLowerCase())
@@ -87,7 +122,7 @@ export default function CreateRequestPage() {
         }
       }
     }).catch(() => {});
-  }, [location.state, location.search, prefillParam]);
+  }, [location.state, location.search, prefillParam, selectedCategory]);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -96,6 +131,71 @@ export default function CreateRequestPage() {
         .catch(() => {});
     }
   }, [selectedCategory]);
+
+  // ── Auto-save progress to localStorage on any form or step change ──
+  useEffect(() => {
+    const hasAnyInput =
+      step > 0 ||
+      selectedCategory ||
+      form.serviceId ||
+      (form.title && form.title !== `${prefillParam} Service`) ||
+      form.description ||
+      form.location.address ||
+      uploadedItems.length > 0;
+
+    if (!hasAnyInput) return;
+
+    try {
+      const urlItems = uploadedItems
+        .filter((i) => i.type === 'url')
+        .map((i) => ({
+          type: 'url',
+          url: i.url,
+          name: i.name,
+          format: i.format,
+          size: i.size,
+        }));
+
+      const draftData = {
+        step,
+        selectedCategory,
+        form: {
+          serviceId: form.serviceId,
+          title: form.title,
+          description: form.description,
+          priority: form.priority,
+          location: form.location,
+        },
+        urlItems,
+        savedAt: Date.now(),
+      };
+
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draftData));
+      setHasDraft(true);
+    } catch {
+      // Ignore private mode / storage quota errors
+    }
+  }, [step, selectedCategory, form, uploadedItems, prefillParam]);
+
+  const handleDiscardDraft = () => {
+    try {
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+    } catch {}
+    setHasDraft(false);
+    setStep(0);
+    setSelectedCategory(null);
+    setUploadedItems([]);
+    setForm({
+      serviceId: '',
+      title: prefillParam ? `${prefillParam} Service` : '',
+      description: '',
+      priority: 0,
+      location: { address: '', city: '', state: '', zipCode: '', country: 'India' },
+      imageUrls: [],
+    });
+    setErrors({});
+    toast.success('Draft reset. You can start fresh.');
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -253,6 +353,12 @@ export default function CreateRequestPage() {
       const res = await requestApi.create({ ...form, imageUrls: allImageUrls });
       const createdRequest = res.data?.request;
 
+      // Clear autosaved draft on successful submission
+      try {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+        setHasDraft(false);
+      } catch {}
+
       toast.success('Service request created successfully!');
 
       if (shouldPayNow && createdRequest?.id) {
@@ -287,10 +393,30 @@ export default function CreateRequestPage() {
   return (
     <DashboardLayout>
       <div className="max-w-3xl mx-auto space-y-6 animate-fade-in pb-12">
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-surface-900">New Service Request</h1>
-          <p className="text-surface-500 mt-1">Tell us what needs fixing</p>
+        {/* Header with Autosave Status */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-surface-900">New Service Request</h1>
+            <p className="text-surface-500 mt-0.5">Tell us what needs fixing</p>
+          </div>
+
+          {hasDraft && (
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Progress Auto-saved
+              </span>
+              <button
+                type="button"
+                onClick={handleDiscardDraft}
+                className="inline-flex items-center gap-1 text-xs text-surface-500 hover:text-danger-600 transition-colors cursor-pointer px-2 py-1 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-200 font-medium"
+                title="Discard saved draft and start fresh"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset Form</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Progress Steps */}
