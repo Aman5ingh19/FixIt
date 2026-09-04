@@ -2,6 +2,8 @@
 
 > **A Production-Grade Full-Stack Service Booking & Repair Network** connecting customers with background-verified, certified technicians (Electrical, Plumbing, HVAC, Carpentry, Electronics, and Home Appliances). Powered by **Razorpay Payment Gateway (Test/Sandbox Mode)** with HMAC-SHA256 cryptographic verification, bidirectional **Socket.IO** real-time dispatch & chat, multi-source media uploads, and end-to-end job status tracking.
 
+🌐 **Live Demo:** [https://fixit-aman.vercel.app](https://fixit-aman.vercel.app) &nbsp;|&nbsp; 🖥️ **Backend API:** [https://fixit-dk08.onrender.com](https://fixit-dk08.onrender.com)
+
 ---
 
 ## 🏗️ Architecture & Tech Stack
@@ -29,6 +31,8 @@ Cloudinary (Media Storage) + Redis/Upstash (Cache) + Socket.IO (Live Chat & Aler
 | **Real-Time Layer**| Socket.IO | Bidirectional WebSocket engine for live chat & instant dispatch |
 | **File Uploads** | Multer + Cloudinary | Universal image formats (JPEG, PNG, WebP, GIF, SVG, BMP, HEIC) |
 | **Caching & Rate** | Redis / Upstash | Distributed session caching & reverse proxy rate limiters |
+| **Frontend Deploy** | Vercel | Auto-deploy from GitHub with SPA rewrites & API proxy |
+| **Backend Deploy** | Render | Managed Node.js cloud server with environment secrets |
 
 ---
 
@@ -39,18 +43,22 @@ Cloudinary (Media Storage) + Redis/Upstash (Cache) + Socket.IO (Live Chat & Aler
 - **Active Job Center**: Filter by `ALL`, `PENDING`, `ACCEPTED`, `COMPLETED` with realtime status updates.
 - **Live Chat Modal**: Instant real-time Socket.IO messaging with the assigned technician with persistent chat cache.
 - **Service History & Invoices**: Detailed repair receipts, time logs, and technician rating reviews.
+- **⭐ Star Rating & Review System**: After a job is completed, customer can leave a 1–5 star rating with a written comment for the technician. Review is displayed on the request detail page and contributes to the technician's live average rating.
+- **Razorpay Payments**: Pay for completed service requests directly within the app (Test/Sandbox mode).
 
 ### 🔧 Technician Workspace
 - **Smart Auto-Dispatch**: Direct job allocations for electrical, plumbing, HVAC, appliances, and electronics.
-- **Assigned Jobs Manager**: Accept or decline tickets, transition statuses (`Start Job` &rarr; `Mark Complete`), and coordinate live with customers.
+- **Assigned Jobs Manager**: Accept or decline tickets, transition statuses (`Start Job` → `Mark Complete`), and coordinate live with customers.
 - **Earnings & Rating Dashboard**: Live tracking of completed jobs, total revenue (₹10,000+ stat metrics), and client reviews.
 - **Custom Trade Avatars**: Profile customization with industry-specific avatars (Electrician, Plumber, HVAC Expert, Appliance Tech, Electronics Pro, Lead Technician).
+- **Review Notifications**: Instant notification when a customer leaves a star review for a completed job.
 
 ### 🛡️ Super Admin Control Center & Operations
 - **KPI Metrics & Analytics**: Platform revenue analytics, active request volumes, and technician verification queue.
 - **Technician Verification**: Government ID & certificate inspection with one-click approve/reject actions.
-- **Global Ticket Management**: Oversee all service requests across cities, with capability to reassign or resolve issues.
+- **Global Ticket Management**: Oversee all service requests across cities, with **Inspect** button to view full request detail (including customer review, payment, technician, and timeline).
 - **Security & Activity Audit**: Comprehensive audit logs capturing IP addresses, endpoints, timestamps, and user agents.
+- **Review Visibility**: Admin can view the customer's submitted review (stars + comment) on any request detail page.
 
 ### 🌓 Ultra High-Contrast Dark & Light Themes
 - Custom CSS design tokens tailored for crisp contrast in both sunny outdoor and dark environment conditions.
@@ -67,7 +75,7 @@ Cloudinary (Media Storage) + Redis/Upstash (Cache) + Socket.IO (Live Chat & Aler
 ### 2. Clone & Install
 
 ```bash
-git clone https://github.com/yourusername/FixIt.git
+git clone https://github.com/Aman5ingh19/FixIt.git
 cd FixIt
 
 # Install backend dependencies
@@ -118,6 +126,8 @@ npm run db:seed
 cd ..
 ```
 
+> ✅ The server also **auto-seeds** demo accounts on first startup if the database is empty — no manual step needed on fresh deployments.
+
 ### 5. Start Development Servers
 
 Run both servers concurrently:
@@ -163,19 +173,20 @@ FixIt/
 │   │   │   └── layouts/        # DashboardLayout, Sidebar, Topbar, AuthLayout
 │   │   ├── contexts/           # AuthContext, SocketContext, LanguageContext
 │   │   ├── pages/
-│   │   │   ├── admin/          # Dashboard, Technicians, Requests, ActivityLog
+│   │   │   ├── admin/          # Dashboard, Technicians, Requests, Payments, ActivityLog
 │   │   │   ├── auth/           # LoginPage, RegisterPage
-│   │   │   ├── customer/       # Dashboard, CreateRequest, ActiveRequests, Detail, History
+│   │   │   ├── customer/       # Dashboard, CreateRequest, ActiveRequests, Detail, History, ReviewPage
 │   │   │   ├── landing/        # LandingPage
 │   │   │   ├── shared/         # AboutPage, HowToUsePage, NotificationsPage, ProfilePage, SettingsPage
 │   │   │   └── technician/     # Dashboard, AvailableRequestsPage, AssignedJobsPage
-│   │   └── services/           # Axios API clients & WebSocket handlers
+│   │   └── services/           # Axios API clients (auth, request, review, technician, payment)
+│   ├── vercel.json             # Vercel deploy config & API proxy rewrites
 │   └── package.json
 │
 ├── server/                     # Node.js + Express.js REST API
 │   ├── prisma/
 │   │   ├── schema.prisma       # Database schema (Users, Requests, TechProfiles, Reviews, Chats)
-│   │   └── seed.js             # Initial database seeder
+│   │   └── seed.js             # Initial database seeder (auto-runs on fresh deploy)
 │   ├── src/
 │   │   ├── config/             # Database, Redis, Socket, Multer, Logger, Cloudinary
 │   │   ├── controllers/        # Auth, Request, Technician, Review, Notification, Upload
@@ -186,7 +197,8 @@ FixIt/
 │   │   └── validators/         # Zod request validation schemas
 │   └── package.json
 │
-├── docker-compose.yml          # Container orchestration
+├── docker-compose.yml          # Container orchestration (local dev)
+├── vercel.json                 # Root Vercel project config
 └── README.md                   # Project documentation
 ```
 
@@ -207,6 +219,8 @@ FixIt/
 - `GET  /api/requests/:id` — Fetch complete request details, technician info & timeline
 - `POST /api/requests/:id/cancel` — Cancel an open service request
 - `POST /api/requests/:id/confirm` — Confirm completion and finalize job
+- `GET  /api/requests` — Admin: fetch all requests across the platform
+- `GET  /api/requests/stats` — Admin: KPI totals (users, technicians, requests, completions)
 
 ### 🔧 Technician Workflows (`/api/technicians`)
 - `GET  /api/technicians/profile` — Fetch technician stats, rating & earnings
@@ -214,6 +228,11 @@ FixIt/
 - `GET  /api/technicians/available` — Fetch nearby open requests for acceptance
 - `POST /api/technicians/jobs/:id/accept` — Accept assigned repair ticket
 - `POST /api/technicians/jobs/:id/status` — Update job status (`IN_PROGRESS` / `COMPLETED`)
+
+### ⭐ Reviews (`/api/reviews`)
+- `POST /api/reviews` — Customer: submit star rating + comment for a completed request
+- `GET  /api/reviews/technician/:id` — Public: fetch all reviews for a specific technician
+- `GET  /api/reviews` — Admin: fetch all platform reviews
 
 ### 💳 Payments & Razorpay (`/api/payments`)
 - `GET  /api/payments/config` — Fetch public Razorpay key ID & active payment mode
@@ -231,7 +250,7 @@ FixIt features a production-grade, secure **Razorpay Payment Gateway** with back
 
 ### 🧪 Test Mode (Sandbox Simulation)
 - **Zero-Friction Testing**: No real bank transactions occur. The platform supports simulated payments (UPI, Debit/Credit Card, Netbanking) with instant transaction ID generation and server-side signature verification.
-- **Payment Lifecycle**: `PENDING` &rarr; `PAID` (or `FAILED` / `REFUNDED`).
+- **Payment Lifecycle**: `PENDING` → `PAID` (or `FAILED` / `REFUNDED`).
 - **Customer Portal**: `/customer/payments` tracks all receipts and lets users pay pending service requests with one click.
 - **Admin Control**: `/admin/payments` provides a platform-wide revenue dashboard and searchable transaction audit log.
 
@@ -239,7 +258,7 @@ FixIt features a production-grade, secure **Razorpay Payment Gateway** with back
 To open the official Razorpay branded checkout popup in Test Mode:
 1. Sign up for free at **[dashboard.razorpay.com](https://dashboard.razorpay.com)**.
 2. In the top navbar, toggle the switch from *Live Mode* to **"Test Mode"**.
-3. Navigate to **Account & Settings &rarr; API Keys &rarr; Generate Key**.
+3. Navigate to **Account & Settings → API Keys → Generate Key**.
 4. Copy your credentials into `server/.env`:
    ```env
    RAZORPAY_KEY_ID=rzp_test_yourKeyId
@@ -252,8 +271,8 @@ To open the official Razorpay branded checkout popup in Test Mode:
 When you are ready to accept real money in production:
 1. Complete your KYC on the **Razorpay Dashboard**.
 2. Toggle the dashboard switch to **"Live Mode"**.
-3. Generate **Live API Keys** under **Account & Settings &rarr; API Keys**.
-4. Update your production environment variables (e.g. on AWS, Railway, or Render):
+3. Generate **Live API Keys** under **Account & Settings → API Keys**.
+4. Update your production environment variables (e.g. on Render):
    ```env
    NODE_ENV=production
    RAZORPAY_KEY_ID=rzp_live_yourLiveKeyId
@@ -261,15 +280,32 @@ When you are ready to accept real money in production:
    RAZORPAY_WEBHOOK_SECRET=yourLiveWebhookSecret
    ```
 5. Set up your Webhook URL in Razorpay Dashboard pointing to:
-   `https://api.yourdomain.com/api/payments/webhook`
+   `https://fixit-dk08.onrender.com/api/payments/webhook`
    Subscribed events: `payment.captured`, `payment.failed`, `refund.processed`.
 6. No frontend or code changes required — the platform automatically adapts to Live credentials securely!
+
+---
+
+## ☁️ Deployment
+
+### Frontend — Vercel
+- Connected to GitHub (`main` branch) — auto-deploys on every push.
+- `vercel.json` contains SPA rewrites (all routes → `index.html`) and API proxy (`/api/*` → Render backend).
+- No environment variables needed on Vercel — the production build hardcodes the Render backend URL.
+
+### Backend — Render
+- Deployed as a **Web Service** from the `server/` directory.
+- Build command: `npm install && npx prisma generate`
+- Start command: `node src/server.js`
+- Environment variables set directly in Render Dashboard (DATABASE_URL, JWT secrets, Razorpay keys, Cloudinary, Redis).
+- Server **auto-runs Prisma migrations and seeds demo data** on first startup if the database is empty.
 
 ---
 
 ## 👨‍💻 Author & Credits
 
 - **Platform Architect & Developer:** **Aman Singh**
+- **GitHub:** [github.com/Aman5ingh19](https://github.com/Aman5ingh19)
 
 - **Designed for:** Scalable, reliable, on-demand home & appliance repair network across India.
 
