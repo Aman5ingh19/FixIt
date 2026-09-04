@@ -231,22 +231,24 @@ export default function RequestDetailPage() {
               </Card>
             )}
 
-            {/* Actions */}
-            <Card>
-              <h3 className="text-sm font-semibold text-surface-900 mb-3">Actions</h3>
-              <div className="space-y-2">
-                {request.status === 'COMPLETED' && !request.review && (
-                  <Button fullWidth variant="accent" icon={Star} onClick={() => navigate(`/customer/requests/${id}/review`)}>
-                    Leave a Review
-                  </Button>
-                )}
-                {canCancel && (
-                  <Button fullWidth variant="danger" icon={XCircle} onClick={() => setCancelOpen(true)}>
-                    Cancel Request
-                  </Button>
-                )}
-              </div>
-            </Card>
+            {/* Actions — only for customers */}
+            {user?.role === 'CUSTOMER' && (canCancel || (request.status === 'COMPLETED' && !request.review)) && (
+              <Card>
+                <h3 className="text-sm font-semibold text-surface-900 mb-3">Actions</h3>
+                <div className="space-y-2">
+                  {request.status === 'COMPLETED' && !request.review && (
+                    <Button fullWidth variant="accent" icon={Star} onClick={() => navigate(`/customer/requests/${id}/review`)}>
+                      Leave a Review
+                    </Button>
+                  )}
+                  {canCancel && (
+                    <Button fullWidth variant="danger" icon={XCircle} onClick={() => setCancelOpen(true)}>
+                      Cancel Request
+                    </Button>
+                  )}
+                </div>
+              </Card>
+            )}
 
             {/* Payment Section */}
             <Card className={request.payment?.status === 'PAID' ? 'border-emerald-500/30 bg-emerald-50/10' : 'border-primary-500/20 bg-primary-50/10'}>
