@@ -17,14 +17,37 @@ import toast from 'react-hot-toast';
 
 const STEPS = ['Service', 'Details', 'Images', 'Location', 'Review'];
 
-// Curated sample demonstration problem photos
+// Curated sample demonstration problem photos across all 6 service categories
 const SAMPLE_PRESETS = [
+  // HVAC
   { label: 'AC Coil & Leakage', url: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop&q=80', tag: 'HVAC' },
+  { label: 'Compressor Ice Freeze', url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80', tag: 'HVAC' },
+  { label: 'AC Outdoor Unit Dust', url: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80', tag: 'HVAC' },
+
+  // Electrical
   { label: 'Circuit Breaker Trip', url: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&auto=format&fit=crop&q=80', tag: 'Electrical' },
+  { label: 'Burnt Socket & Spark', url: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=80', tag: 'Electrical' },
+  { label: 'Ceiling Fan Wiring', url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80', tag: 'Electrical' },
+
+  // Plumbing
   { label: 'Pipe Water Drain Leak', url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&auto=format&fit=crop&q=80', tag: 'Plumbing' },
+  { label: 'Sink & Basin Drain Clog', url: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800&auto=format&fit=crop&q=80', tag: 'Plumbing' },
+  { label: 'Geyser Valve Seepage', url: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=800&auto=format&fit=crop&q=80', tag: 'Plumbing' },
+
+  // Electronics
   { label: 'Motherboard Breakdown', url: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800&auto=format&fit=crop&q=80', tag: 'Electronics' },
+  { label: 'Cracked Phone Screen', url: 'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=800&auto=format&fit=crop&q=80', tag: 'Electronics' },
+  { label: 'Smart TV Display Distortion', url: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800&auto=format&fit=crop&q=80', tag: 'Electronics' },
+
+  // Appliances
   { label: 'Appliance Motor Noise', url: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&auto=format&fit=crop&q=80', tag: 'Appliances' },
+  { label: 'Washing Machine Drum Jam', url: 'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=800&auto=format&fit=crop&q=80', tag: 'Appliances' },
+  { label: 'Refrigerator Ice Frost', url: 'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=800&auto=format&fit=crop&q=80', tag: 'Appliances' },
+
+  // Painting
   { label: 'Wall Damp & Paint Peel', url: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&auto=format&fit=crop&q=80', tag: 'Painting' },
+  { label: 'Exterior Wall Cracks', url: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80', tag: 'Painting' },
+  { label: 'Ceiling Seepage Stains', url: 'https://images.unsplash.com/photo-1595844730298-b960ff98fee0?w=800&auto=format&fit=crop&q=80', tag: 'Painting' },
 ];
 
 const getCategoryIcon = (slugOrName = '') => {
@@ -74,6 +97,7 @@ export default function CreateRequestPage() {
   const [previewModalUrl, setPreviewModalUrl] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [hasDraft, setHasDraft] = useState(!!initialDraft);
+  const [presetFilter, setPresetFilter] = useState('All');
 
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
@@ -710,21 +734,44 @@ export default function CreateRequestPage() {
               )}
 
               {/* Sample Issue Presets (Quick attach) */}
-              <div className="pt-2 border-t border-surface-200 dark:border-surface-300 space-y-2.5">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-surface-600">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Quick Demo Photos (Click to attach sample breakdown image):</span>
+              <div className="pt-3 border-t border-surface-200 dark:border-surface-300 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-surface-900 dark:text-slate-200">
+                    <Sparkles className="w-4 h-4 text-amber-500" />
+                    <span>Quick Demo Photos (Click to attach sample breakdown image):</span>
+                  </div>
+                  {/* Category Filter Tabs */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] touch-scroll-x">
+                    {['All', 'HVAC', 'Electrical', 'Plumbing', 'Electronics', 'Appliances', 'Painting'].map((filterTag) => (
+                      <button
+                        key={filterTag}
+                        type="button"
+                        onClick={() => setPresetFilter(filterTag)}
+                        className={`px-2.5 py-0.5 rounded-full font-bold transition-all cursor-pointer whitespace-nowrap ${
+                          presetFilter === filterTag
+                            ? 'bg-blue-600 text-white shadow-xs'
+                            : 'bg-surface-100 dark:bg-slate-800 text-surface-600 dark:text-slate-300 hover:bg-surface-200 dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        {filterTag}
+                      </button>
+                    ))}
+                  </div>
                 </div>
+
                 <div className="flex flex-wrap gap-2">
-                  {SAMPLE_PRESETS.map((preset) => (
+                  {SAMPLE_PRESETS.filter((p) => presetFilter === 'All' || p.tag === presetFilter).map((preset) => (
                     <button
                       key={preset.label}
                       type="button"
                       onClick={() => handleAttachPreset(preset)}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-surface-100 dark:bg-surface-200 hover:bg-primary-50 dark:hover:bg-primary-950/40 text-surface-700 dark:text-surface-300 hover:text-primary-700 border border-surface-200 dark:border-surface-300 text-xs font-medium transition-all cursor-pointer"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 shadow-2xs hover:shadow-xs text-xs font-semibold transition-all cursor-pointer group"
                     >
-                      <Plus className="w-3 h-3 text-primary-600" />
+                      <Plus className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 group-hover:scale-125 transition-transform shrink-0" />
                       <span>{preset.label}</span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                        {preset.tag}
+                      </span>
                     </button>
                   ))}
                 </div>
