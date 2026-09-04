@@ -23,14 +23,13 @@ function auditLogger(resource) {
         activityLogRepository.create({
           userId: req.user.id,
           action,
-          resource,
-          resourceId: req.params?.id || null,
-          metadata: {
+          entity: resource || 'System',
+          entityId: req.params?.id || null,
+          details: {
             statusCode: res.statusCode,
             body: sanitizeBody(req.body),
           },
           ipAddress: req.ip || req.connection?.remoteAddress,
-          userAgent: req.get('user-agent'),
         }).catch((err) => {
           logger.error('Audit log failed', { error: err.message, action });
         });

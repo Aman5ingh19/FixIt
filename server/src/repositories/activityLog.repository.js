@@ -1,16 +1,16 @@
 const prisma = require('../config/database');
 
 const activityLogRepository = {
-  async create({ userId, action, resource, resourceId, metadata, ipAddress, userAgent }) {
+  async create({ userId, action, entity, entityId, details, ipAddress, resource, resourceId, metadata }) {
     return prisma.activityLog.create({
       data: {
         userId,
         action,
-        resource,
-        resourceId,
-        metadata: metadata || {},
+        // Support both naming conventions (entity/entityId and resource/resourceId)
+        entity: entity || resource || 'System',
+        entityId: entityId || resourceId,
+        details: details || metadata || {},
         ipAddress,
-        userAgent,
       },
     });
   },
