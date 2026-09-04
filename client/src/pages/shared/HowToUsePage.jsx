@@ -214,6 +214,202 @@ export default function HowToUsePage() {
           </div>
         </div>
       </Card>
+
+      {/* ── Demo Login Guide ── */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
+            <Users className="w-4 h-4 text-primary-600" />
+          </div>
+          <div>
+            <h2 className="text-lg font-extrabold text-surface-900">⚡ Quick Demo Logins</h2>
+            <p className="text-xs text-surface-500">Use these pre-seeded accounts to explore every role instantly</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Admin */}
+          <Card className="border-purple-200 dark:border-purple-800/50 bg-purple-50/40 dark:bg-purple-950/20 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">👑</span>
+              <div>
+                <p className="font-bold text-surface-900 text-sm">Admin</p>
+                <p className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold uppercase tracking-wider">Super Administrator</p>
+              </div>
+            </div>
+            <div className="space-y-1.5 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-surface-500">Email</span>
+                <code className="font-mono font-bold text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-700 px-1.5 py-0.5 rounded select-all text-[11px]">admin@fixit.com</code>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-surface-500">Password</span>
+                <code className="font-mono font-bold text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-700 px-1.5 py-0.5 rounded select-all text-[11px]">Password123!</code>
+              </div>
+            </div>
+            <div className="text-[10px] text-purple-600 dark:text-purple-400 space-y-0.5">
+              <p>✓ View all requests & revenue KPIs</p>
+              <p>✓ Approve / reject technicians</p>
+              <p>✓ Full audit log access</p>
+            </div>
+          </Card>
+
+          {/* Technician */}
+          <Card className="border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/40 dark:bg-emerald-950/20 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🔧</span>
+              <div>
+                <p className="font-bold text-surface-900 text-sm">Technician</p>
+                <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider">Verified Tech Pro</p>
+              </div>
+            </div>
+            <div className="space-y-1.5 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-surface-500">Email</span>
+                <code className="font-mono font-bold text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-700 px-1.5 py-0.5 rounded select-all text-[11px]">tech@fixit.com</code>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-surface-500">Password</span>
+                <code className="font-mono font-bold text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-700 px-1.5 py-0.5 rounded select-all text-[11px]">Password123!</code>
+              </div>
+            </div>
+            <div className="text-[10px] text-emerald-600 dark:text-emerald-400 space-y-0.5">
+              <p>✓ Accept / reject incoming jobs</p>
+              <p>✓ Update job status live</p>
+              <p>✓ View ratings & earnings</p>
+            </div>
+          </Card>
+
+          {/* Customer */}
+          <Card className="border-blue-200 dark:border-blue-800/50 bg-blue-50/40 dark:bg-blue-950/20 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">👤</span>
+              <div>
+                <p className="font-bold text-surface-900 text-sm">Customer</p>
+                <p className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wider">Demo User</p>
+              </div>
+            </div>
+            <div className="space-y-1.5 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-surface-500">Email</span>
+                <code className="font-mono font-bold text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-700 px-1.5 py-0.5 rounded select-all text-[11px]">customer@fixit.com</code>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-surface-500">Password</span>
+                <code className="font-mono font-bold text-surface-800 dark:text-surface-200 bg-surface-100 dark:bg-surface-700 px-1.5 py-0.5 rounded select-all text-[11px]">Password123!</code>
+              </div>
+            </div>
+            <div className="text-[10px] text-blue-600 dark:text-blue-400 space-y-0.5">
+              <p>✓ Create service requests</p>
+              <p>✓ Live chat with technician</p>
+              <p>✓ Pay & leave reviews</p>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* ── Razorpay Test Mode Guide ── */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+            <CreditCard className="w-4 h-4 text-amber-600" />
+          </div>
+          <div>
+            <h2 className="text-lg font-extrabold text-surface-900">💳 How to Pay — Razorpay Test Mode</h2>
+            <p className="text-xs text-surface-500">No real money charged — use these sandbox credentials in the popup</p>
+          </div>
+        </div>
+
+        {/* Steps */}
+        <Card className="border-amber-200 dark:border-amber-800/50 bg-amber-50/30 dark:bg-amber-900/10 space-y-4">
+
+          {/* Quick Steps */}
+          <div className="space-y-2">
+            <p className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">📋 Step-by-Step Payment Flow</p>
+            <ol className="space-y-2 text-sm text-surface-700 dark:text-surface-300">
+              <li className="flex items-start gap-2.5">
+                <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <span>Login as <strong>Customer</strong> → go to <strong>Active Requests</strong> or <strong>History</strong></span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <span>Open any completed request → click <strong>⚡ Pay with Razorpay</strong></span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <span>In the Razorpay popup → choose <strong>Cards</strong> → enter test card below</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <span className="w-5 h-5 rounded-full bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">4</span>
+                <span>On the OTP screen → enter <code className="font-mono font-bold bg-amber-100 dark:bg-amber-800/60 px-1 rounded">1234</code> → Payment marked <strong className="text-emerald-600">PAID ✓</strong></span>
+              </li>
+            </ol>
+          </div>
+
+          <div className="border-t border-amber-200 dark:border-amber-800/50 pt-4 space-y-3">
+            {/* Cards */}
+            <p className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">✅ Test Card Credentials (Success)</p>
+            <div className="overflow-x-auto rounded-xl border border-amber-200 dark:border-amber-800/50">
+              <table className="w-full text-xs">
+                <thead className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
+                  <tr>
+                    <th className="text-left px-3 py-2 font-bold">Card Type</th>
+                    <th className="text-left px-3 py-2 font-bold">Card Number</th>
+                    <th className="text-left px-3 py-2 font-bold">Expiry</th>
+                    <th className="text-left px-3 py-2 font-bold">CVV</th>
+                    <th className="text-left px-3 py-2 font-bold">OTP</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-amber-100 dark:divide-amber-800/30 bg-white dark:bg-surface-800/40">
+                  {[
+                    { type: '💳 Visa', num: '4111 1111 1111 1111', exp: 'Any future', cvv: 'Any 3', otp: '1234' },
+                    { type: '💳 Mastercard', num: '5267 3181 8797 5449', exp: 'Any future', cvv: 'Any 3', otp: '1234' },
+                    { type: '💳 Rupay', num: '6073 8490 0000 0001', exp: 'Any future', cvv: 'Any 3', otp: '1234' },
+                  ].map((row) => (
+                    <tr key={row.num} className="text-surface-700 dark:text-surface-300">
+                      <td className="px-3 py-2 font-semibold whitespace-nowrap">{row.type}</td>
+                      <td className="px-3 py-2"><code className="font-mono font-bold select-all">{row.num}</code></td>
+                      <td className="px-3 py-2 text-surface-500">{row.exp}</td>
+                      <td className="px-3 py-2 text-surface-500">{row.cvv}</td>
+                      <td className="px-3 py-2"><code className="font-mono font-bold text-emerald-600 select-all">{row.otp}</code></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* UPI + Netbanking */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-white dark:bg-surface-800/40 rounded-xl border border-amber-200 dark:border-amber-800/50 p-3 space-y-1.5">
+                <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">📱 UPI (Success)</p>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-surface-500">UPI ID</span>
+                  <code className="font-mono font-bold text-surface-800 dark:text-surface-200 select-all bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded">success@razorpay</code>
+                </div>
+              </div>
+              <div className="bg-white dark:bg-surface-800/40 rounded-xl border border-amber-200 dark:border-amber-800/50 p-3 space-y-1.5">
+                <p className="text-[11px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">🏦 Netbanking</p>
+                <p className="text-xs text-surface-600 dark:text-surface-400">Select any bank → Dummy bank page opens → Click <strong>"Success"</strong></p>
+              </div>
+            </div>
+
+            {/* Failure cards */}
+            <div className="bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-200 dark:border-red-800/40 p-3 space-y-1.5">
+              <p className="text-[11px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">❌ Failure Simulation Cards</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div className="flex justify-between items-center">
+                  <code className="font-mono text-red-700 dark:text-red-400 select-all">4000 0000 0000 0002</code>
+                  <span className="text-surface-500">Payment Declined</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <code className="font-mono text-red-700 dark:text-red-400 select-all">4000 0000 0000 9995</code>
+                  <span className="text-surface-500">Insufficient Funds</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 
