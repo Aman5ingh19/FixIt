@@ -1,18 +1,36 @@
 const nodemailer = require('nodemailer');
 const logger = require('../config/logger');
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT || '587', 10),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  connectionTimeout: 10000,  // 10s — fail fast if SMTP unreachable
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
+const getTransporter = () => {
+  const isGmail =
+    (process.env.SMTP_HOST || '').includes('gmail') ||
+    (process.env.SMTP_USER || '').includes('@gmail.com');
+
+  if (isGmail) {
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
+
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587', 10),
+    secure: process.env.SMTP_PORT === '465',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+  });
+};
+
+const transporter = getTransporter();
 
 const emailService = {
   /**
