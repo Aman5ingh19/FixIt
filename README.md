@@ -254,6 +254,42 @@ FixIt features a production-grade, secure **Razorpay Payment Gateway** with back
 - **Customer Portal**: `/customer/payments` tracks all receipts and lets users pay pending service requests with one click.
 - **Admin Control**: `/admin/payments` provides a platform-wide revenue dashboard and searchable transaction audit log.
 
+### 🃏 Test Credentials for Razorpay Checkout (Sandbox)
+
+When the **Razorpay payment popup** opens during a demo, use the following **test credentials** — no real money is charged:
+
+#### ✅ Successful Payment — Test Cards
+
+| Card Type | Card Number | Expiry | CVV | OTP |
+| :--- | :--- | :--- | :--- | :--- |
+| **Visa (Success)** | `4111 1111 1111 1111` | Any future date | Any 3 digits | `1234` |
+| **Mastercard (Success)** | `5267 3181 8797 5449` | Any future date | Any 3 digits | `1234` |
+| **Rupay (Success)** | `6073 8490 0000 0001` | Any future date | Any 3 digits | `1234` |
+
+> 💡 **OTP:** Always enter `1234` on the simulated bank OTP screen.
+
+#### ❌ Failed Payment — Test Cards (to simulate failure)
+
+| Card Number | Expected Result |
+| :--- | :--- |
+| `4000 0000 0000 0002` | Payment Declined |
+| `4000 0000 0000 9995` | Insufficient Funds |
+
+#### 📱 UPI (Success)
+| Field | Value |
+| :--- | :--- |
+| **UPI ID** | `success@razorpay` |
+
+#### 🏦 Netbanking
+Select **any bank** from the list → You will be redirected to a dummy bank page → Click **"Success"**.
+
+#### 📋 Quick Demo Steps
+1. Login as **Customer** (`customer@fixit.com` / `Password123!`)
+2. Open a completed service request from **Active Requests** or **History**
+3. Click **"⚡ Pay with Razorpay"**
+4. In the popup → Choose **Card** → Enter `4111 1111 1111 1111`, any future date, any CVV
+5. Enter OTP `1234` → Payment marked **PAID** ✅
+
 ### 🔑 Adding Your Free Razorpay Test Keys (Recommended for Portfolio / Demos)
 To open the official Razorpay branded checkout popup in Test Mode:
 1. Sign up for free at **[dashboard.razorpay.com](https://dashboard.razorpay.com)**.
