@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const userRepository = require('../repositories/user.repository');
 const refreshTokenRepository = require('../repositories/refreshToken.repository');
+const passwordResetTokenRepository = require('../repositories/passwordResetToken.repository');
+const emailService = require('../utils/email');
 const {
   generateAccessToken,
   generateRefreshToken,
@@ -11,6 +13,7 @@ const {
   AuthenticationError,
   ConflictError,
   NotFoundError,
+  ValidationError,
 } = require('../utils/errors');
 const logger = require('../config/logger');
 
@@ -186,6 +189,73 @@ const authService = {
     await refreshTokenRepository.revokeAllByUser(userId);
 
     logger.info('Password changed', { userId });
+  },
+
+  /**
+   * Forgot password — generate a reset token and send it via email.
+   * Always responds 200 (don't leak whether email is registered).
+   */
+  async forgotPassword(email) {
+    const user = await userRepository.findByEmail(email);
+    if (!user || !user.isActive) {
+      // Silently succeed to avoid user enumeration
+      logger.info('Forgot password: email not found or inactive', { email });
+      return;
+    }
+
+    // Generate a cryptographically secure token
+    const rawToken = uuidv4().replace(/-/g, '') + uuidv4().replace(/-/g, '');
+
+    // 15-minute expiry
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    await passwordResetTokenRepository.create({
+      userId: user.id,
+      token: rawToken,
+      expiresAt,
+    });
+
+    await emailService.sendPasswordResetEmail(user.email, user.firstName, rawToken);
+
+    logger.info('Password reset email sent', { userId: user.id, email: user.email });
+  },
+
+  /**
+   * Reset password — validate the token and update the password.
+   */
+  async resetPassword(token, newPassword) {
+    if (!token) {
+      throw new ValidationError('Reset token is required');
+    }
+
+    const record = await passwordResetTokenRepository.findByToken(token);
+
+    if (!record) {
+      throw new AuthenticationError('Invalid or expired reset link. Please request a new one.');
+    }
+
+    if (record.usedAt) {
+      throw new AuthenticationError('This reset link has already been used. Please request a new one.');
+    }
+
+    if (record.expiresAt < new Date()) {
+      throw new AuthenticationError('This reset link has expired (15 min limit). Please request a new one.');
+    }
+
+    const user = record.user;
+    if (!user || !user.isActive) {
+      throw new AuthenticationError('Account not found or deactivated.');
+    }
+
+    // Hash new password and update user
+    const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
+    await userRepository.update(user.id, { passwordHash });
+
+    // Mark token used & revoke all refresh tokens to force re-login
+    await passwordResetTokenRepository.markUsed(token);
+    await refreshTokenRepository.revokeAllByUser(user.id);
+
+    logger.info('Password reset successful', { userId: user.id });
   },
 
   // ── Private helpers ──

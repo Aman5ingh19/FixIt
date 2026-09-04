@@ -1,11 +1,160 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, Sparkles, User, Wrench, Heart } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, X, CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import AuthLayout from '../../components/layouts/AuthLayout';
 import { Button } from '../../components/common';
+import authService from '../../services/auth.service';
 import toast from 'react-hot-toast';
 
+// ── Forgot Password Modal ──────────────────────────────────────────────────────
+function ForgotPasswordModal({ onClose }) {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await authService.forgotPassword(email.trim().toLowerCase());
+      setSent(true);
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+        'Something went wrong. Please try again.'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    /* Backdrop */
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden animate-slide-up">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60">
+              <Lock className="w-4 h-4 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Forgot Password?</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">We'll email you a reset link</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-5">
+          {sent ? (
+            /* Success State */
+            <div className="text-center py-4 space-y-4">
+              <div className="flex justify-center">
+                <div className="w-16 h-16 rounded-2xl bg-green-50 dark:bg-green-950/40 flex items-center justify-center">
+                  <CheckCircle2 className="w-8 h-8 text-green-500" />
+                </div>
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">Check your inbox!</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  If <span className="font-semibold text-blue-600 dark:text-blue-400">{email}</span> is registered,
+                  you'll receive a password reset link within a minute.
+                  <br /><br />
+                  The link expires in <strong className="text-slate-700 dark:text-slate-200">15 minutes</strong>.
+                  Check your spam folder if you don't see it.
+                </p>
+              </div>
+              <button
+                onClick={onClose}
+                className="mt-2 w-full h-9 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors cursor-pointer"
+              >
+                Back to Sign In
+              </button>
+            </div>
+          ) : (
+            /* Form State */
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Enter your registered email address and we'll send you a secure link to reset your password.
+              </p>
+              <div className="space-y-1.5">
+                <label htmlFor="fp-email" className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <input
+                    id="fp-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); setError(''); }}
+                    placeholder="you@example.com"
+                    autoFocus
+                    autoComplete="email"
+                    className={`w-full pl-9 pr-3 h-10 rounded-xl border text-sm text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      error ? 'border-red-400 dark:border-red-500 focus:ring-red-400' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                    }`}
+                  />
+                </div>
+                {error && (
+                  <p className="text-[11px] text-red-500 animate-slide-up">{error}</p>
+                )}
+              </div>
+
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-[2] h-9 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Sending…
+                    </>
+                  ) : (
+                    'Send Reset Link'
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Login Page ─────────────────────────────────────────────────────────────
 export default function LoginPage() {
   const { login, continueAsGuest } = useAuth();
   const location = useLocation();
@@ -13,6 +162,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: '', password: '', rememberMe: false });
   const [errors, setErrors] = useState({});
+  const [showForgotModal, setShowForgotModal] = useState(false);
 
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -137,7 +287,7 @@ export default function LoginPage() {
               </label>
               <button
                 type="button"
-                onClick={() => toast('Password reset link will be sent to registered email upon request.')}
+                onClick={() => setShowForgotModal(true)}
                 className="text-[11px] font-medium text-primary-600 hover:text-primary-700 hover:underline shrink-0 cursor-pointer"
               >
                 Forgot password?
@@ -237,6 +387,9 @@ export default function LoginPage() {
           <span className="font-black text-surface-900 dark:text-surface-900 tracking-wide">Aman Singh</span>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotModal && <ForgotPasswordModal onClose={() => setShowForgotModal(false)} />}
     </AuthLayout>
   );
 }

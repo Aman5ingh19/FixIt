@@ -89,15 +89,16 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  technicianProfile TechnicianProfile?
-  serviceRequests   ServiceRequest[]
-  sentMessages      Message[]          @relation("SentMessages")
-  receivedMessages  Message[]          @relation("ReceivedMessages")
-  notifications     Notification[]
-  reviewsAuthored   Review[]           @relation("ReviewAuthor")
-  reviewsReceived   Review[]           @relation("ReviewSubject")
-  refreshTokens     RefreshToken[]
-  activityLogs      ActivityLog[]
+  technicianProfile   TechnicianProfile?
+  serviceRequests     ServiceRequest[]
+  sentMessages        Message[]          @relation("SentMessages")
+  receivedMessages    Message[]          @relation("ReceivedMessages")
+  notifications       Notification[]
+  reviewsAuthored     Review[]           @relation("ReviewAuthor")
+  reviewsReceived     Review[]           @relation("ReviewSubject")
+  refreshTokens       RefreshToken[]
+  activityLogs        ActivityLog[]
+  passwordResetTokens PasswordResetToken[]
 
   @@index([email])
   @@index([role])
@@ -463,4 +464,25 @@ model RefreshToken {
   @@index([token])
   @@index([expiresAt])
   @@map("refresh_tokens")
+}
+
+// ──────────────────────────────────────
+// Password Reset Token
+// ──────────────────────────────────────
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
 }

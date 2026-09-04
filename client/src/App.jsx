@@ -9,6 +9,7 @@ import RoleGuard from './components/guards/RoleGuard';
 const LandingPage = lazy(() => import('./pages/landing/LandingPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
+const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
 
 // Customer (Eagerly loaded for instant transitions during booking & payment)
 import CustomerDashboard from './pages/customer/CustomerDashboard';
@@ -66,6 +67,7 @@ function AppRoutes() {
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/login" element={isAuthenticated ? <Navigate to={getDefaultRoute()} replace /> : <LoginPage />} />
           <Route path="/register" element={isAuthenticated ? <Navigate to={getDefaultRoute()} replace /> : <RegisterPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/how-to-use" element={<HowToUsePage />} />
 

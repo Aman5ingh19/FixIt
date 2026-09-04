@@ -143,6 +143,32 @@ const authController = {
       next(error);
     }
   },
+
+  /**
+   * POST /api/auth/forgot-password
+   */
+  async forgotPassword(req, res, next) {
+    try {
+      await authService.forgotPassword(req.body.email);
+      // Always 200 to avoid user enumeration
+      successResponse(res, null, 'If an account with that email exists, a password reset link has been sent.');
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /**
+   * POST /api/auth/reset-password
+   */
+  async resetPassword(req, res, next) {
+    try {
+      const { token, newPassword } = req.body;
+      await authService.resetPassword(token, newPassword);
+      successResponse(res, null, 'Password reset successfully. Please log in with your new password.');
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = authController;
