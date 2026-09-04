@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const { Resend } = require('resend');
 const logger = require('../config/logger');
 
 const emailService = {
@@ -76,29 +75,7 @@ const emailService = {
       </html>
     `;
 
-    // 1. If RESEND_API_KEY is configured, try Resend
-    if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY.trim()) {
-      try {
-        const resend = new Resend(process.env.RESEND_API_KEY.trim());
-        const from = process.env.RESEND_FROM || 'FixIt Support <onboarding@resend.dev>';
-        const result = await resend.emails.send({
-          from,
-          to: [toEmail],
-          subject: '🔐 Reset Your FixIt Password',
-          html: htmlContent,
-        });
-
-        if (!result.error) {
-          logger.info('Password reset email sent via Resend', { to: toEmail, id: result.data?.id });
-          return result.data;
-        }
-        logger.warn('Resend returned error, trying fallback', { error: result.error?.message });
-      } catch (resendError) {
-        logger.warn('Resend threw error, trying fallback', { error: resendError.message });
-      }
-    }
-
-    // 2. If BREVO_API_KEY is configured, send via Brevo HTTPS REST API (Supports any recipient email)
+    // 1. If BREVO_API_KEY is configured, send via Brevo HTTPS REST API (Supports any recipient email)
     if (process.env.BREVO_API_KEY && process.env.BREVO_API_KEY.trim()) {
       try {
         const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
