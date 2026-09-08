@@ -206,42 +206,42 @@ export default function LoginPage() {
   };
 
   return (
-    <AuthLayout>
-      <div className="space-y-4">
+    <AuthLayout maxWidth="max-w-[370px]">
+      <div className="space-y-3">
         {/* Header */}
         <div className="space-y-0.5">
-          <h2 className="text-xl font-extrabold text-surface-900 dark:text-surface-900 tracking-tight">
+          <h2 className="text-lg font-extrabold text-surface-900 dark:text-surface-900 tracking-tight">
             Welcome back
           </h2>
-          <p className="text-xs text-surface-500 dark:text-surface-600">
+          <p className="text-[11px] text-surface-500 dark:text-surface-600 leading-tight">
             Sign in to manage service requests or technician jobs.
           </p>
         </div>
 
         {/* Compact Quick Demo Credentials */}
-        <div className="p-2.5 rounded-xl bg-surface-100 dark:bg-surface-200/60 border border-surface-200 dark:border-surface-300">
-          <p className="text-[10px] font-bold text-surface-500 dark:text-surface-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+        <div className="p-2 rounded-lg bg-surface-100 dark:bg-surface-200/60 border border-surface-200 dark:border-surface-300">
+          <p className="text-[9.5px] font-bold text-surface-500 dark:text-surface-400 uppercase tracking-wider mb-1 flex items-center gap-1">
             <span>⚡</span> Quick Demo Logins
           </p>
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className="grid grid-cols-3 gap-1">
             <button
               type="button"
               onClick={() => setForm({ email: 'admin@fixit.com', password: 'Password123!', rememberMe: true })}
-              className="px-1.5 py-1.5 rounded-lg bg-white dark:bg-surface-200 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/40 text-[11px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
+              className="px-1 py-1 rounded-md bg-white dark:bg-surface-200 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/40 text-[10px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
             >
               👑 Admin
             </button>
             <button
               type="button"
               onClick={() => setForm({ email: 'tech@fixit.com', password: 'Password123!', rememberMe: true })}
-              className="px-1.5 py-1.5 rounded-lg bg-white dark:bg-surface-200 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[11px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
+              className="px-1 py-1 rounded-md bg-white dark:bg-surface-200 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[10px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
             >
               🔧 Technician
             </button>
             <button
               type="button"
               onClick={() => setForm({ email: 'customer@fixit.com', password: 'Password123!', rememberMe: true })}
-              className="px-1.5 py-1.5 rounded-lg bg-white dark:bg-surface-200 border border-blue-200 dark:border-blue-800/80 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[11px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
+              className="px-1 py-1 rounded-md bg-white dark:bg-surface-200 border border-blue-200 dark:border-blue-800/80 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[10px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
             >
               👤 Customer
             </button>
@@ -249,15 +249,15 @@ export default function LoginPage() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-3" noValidate>
+        <form onSubmit={handleSubmit} className="space-y-2.5" noValidate>
           {/* Email */}
           <div className="space-y-1">
-            <label htmlFor="email" className="block text-[11px] font-bold text-surface-700 uppercase tracking-wider">
+            <label htmlFor="email" className="block text-[10px] font-bold text-surface-700 uppercase tracking-wider">
               Email Address
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-surface-400">
-                <Mail className="w-4 h-4" />
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-surface-400">
+                <Mail className="w-3.5 h-3.5" />
               </div>
               <input
                 id="email"
@@ -268,34 +268,34 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 autoComplete="email"
                 className={`
-                  w-full pl-9 pr-3 h-10 rounded-xl border bg-white dark:bg-surface-200 text-xs sm:text-sm text-surface-900 placeholder:text-surface-400
+                  w-full pl-8 pr-2.5 h-8.5 rounded-lg border bg-white dark:bg-surface-200 text-xs text-surface-900 placeholder:text-surface-400
                   transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
                   ${errors.email ? 'border-danger-400 focus:ring-danger-400' : 'border-surface-200 dark:border-surface-300 hover:border-surface-300'}
                 `}
               />
             </div>
             {errors.email && (
-              <p className="text-[11px] text-danger-600 animate-slide-up mt-0.5">{errors.email}</p>
+              <p className="text-[10px] text-danger-600 animate-slide-up mt-0.5">{errors.email}</p>
             )}
           </div>
 
           {/* Password */}
           <div className="space-y-1">
             <div className="flex items-center justify-between gap-2">
-              <label htmlFor="password" className="block text-[11px] font-bold text-surface-700 uppercase tracking-wider">
+              <label htmlFor="password" className="block text-[10px] font-bold text-surface-700 uppercase tracking-wider">
                 Password
               </label>
               <button
                 type="button"
                 onClick={() => setShowForgotModal(true)}
-                className="text-[11px] font-medium text-primary-600 hover:text-primary-700 hover:underline shrink-0 cursor-pointer"
+                className="text-[10px] font-semibold text-primary-600 hover:text-primary-700 hover:underline shrink-0 cursor-pointer"
               >
                 Forgot password?
               </button>
             </div>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-surface-400">
-                <Lock className="w-4 h-4" />
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-surface-400">
+                <Lock className="w-3.5 h-3.5" />
               </div>
               <input
                 id="password"
@@ -306,7 +306,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 autoComplete="current-password"
                 className={`
-                  w-full pl-9 pr-9 h-10 rounded-xl border bg-white dark:bg-surface-200 text-xs sm:text-sm text-surface-900 placeholder:text-surface-400
+                  w-full pl-8 pr-8 h-8.5 rounded-lg border bg-white dark:bg-surface-200 text-xs text-surface-900 placeholder:text-surface-400
                   transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
                   ${errors.password ? 'border-danger-400 focus:ring-danger-400' : 'border-surface-200 dark:border-surface-300 hover:border-surface-300'}
                 `}
@@ -314,20 +314,20 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-surface-400 hover:text-surface-600 transition-colors cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-surface-400 hover:text-surface-600 transition-colors cursor-pointer"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-[11px] text-danger-600 animate-slide-up mt-0.5">{errors.password}</p>
+              <p className="text-[10px] text-danger-600 animate-slide-up mt-0.5">{errors.password}</p>
             )}
           </div>
 
           {/* Remember me */}
           <div className="flex items-center pt-0.5">
-            <label className="flex items-center gap-2 text-xs text-surface-600 cursor-pointer">
+            <label className="flex items-center gap-1.5 text-[11px] text-surface-600 cursor-pointer select-none">
               <input
                 type="checkbox"
                 name="rememberMe"
@@ -335,7 +335,7 @@ export default function LoginPage() {
                 onChange={handleChange}
                 className="w-3.5 h-3.5 rounded text-primary-600 border-surface-300 focus:ring-primary-500 cursor-pointer"
               />
-              <span className="text-xs">Remember me on this device</span>
+              <span>Remember me on this device</span>
             </label>
           </div>
 
@@ -344,18 +344,18 @@ export default function LoginPage() {
             type="submit"
             loading={loading}
             fullWidth
-            size="md"
-            className="h-10 font-bold shadow-xs mt-1 text-sm"
+            size="sm"
+            className="h-8.5 font-bold shadow-xs mt-0.5 text-xs rounded-lg"
           >
             Sign In
           </Button>
 
           {/* Divider */}
-          <div className="relative my-2.5">
+          <div className="relative my-1.5">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-surface-200 dark:border-surface-300/80" />
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase">
+            <div className="relative flex justify-center text-[9px] uppercase">
               <span className="bg-white dark:bg-[#151F32] px-2 text-surface-400 font-medium">or</span>
             </div>
           </div>
@@ -364,14 +364,14 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={continueAsGuest}
-            className="w-full h-10 rounded-xl border border-surface-200 dark:border-surface-300 bg-surface-50 dark:bg-surface-200 hover:bg-surface-100 dark:hover:bg-surface-300 text-surface-800 dark:text-surface-900 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+            className="w-full h-8.5 rounded-lg border border-surface-200 dark:border-surface-300 bg-surface-50 dark:bg-surface-200 hover:bg-surface-100 dark:hover:bg-surface-300 text-surface-800 dark:text-surface-900 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
           >
             Continue as Guest
           </button>
         </form>
 
         {/* Footer Link */}
-        <p className="text-center text-xs text-surface-500 dark:text-surface-400 pt-0.5">
+        <p className="text-center text-[11px] text-surface-500 dark:text-surface-400 pt-0.5">
           Don't have an account?{' '}
           <Link
             to="/register"
@@ -382,7 +382,7 @@ export default function LoginPage() {
         </p>
 
         {/* ── Built by - Aman Singh Signature ── */}
-        <div className="pt-3 border-t border-surface-200/80 dark:border-surface-300/60 flex items-center justify-center gap-1.5 text-xs text-surface-500 dark:text-surface-400">
+        <div className="pt-2 border-t border-surface-200/80 dark:border-surface-300/60 flex items-center justify-center gap-1 text-[11px] text-surface-500 dark:text-surface-400">
           <span>Built by —</span>
           <span className="font-black text-surface-900 dark:text-surface-900 tracking-wide">Aman Singh</span>
         </div>
