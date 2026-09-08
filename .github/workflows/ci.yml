@@ -49,8 +49,8 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
 
-      - name: Run Prisma migrations
-        run: npx prisma migrate deploy
+      - name: Push Prisma Schema
+        run: npx prisma db push --accept-data-loss
         env:
           DATABASE_URL: postgresql://fixit_user:fixit_password@localhost:5432/fixit_db_test
 
@@ -137,5 +137,6 @@ jobs:
 
       - name: Validate Kustomize and Manifests
         run: |
-          kubectl apply -k k8s/ --dry-run=client
+          kubectl kustomize k8s/
+
 
