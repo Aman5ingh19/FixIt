@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { ClipboardList, Search, ChevronRight, MapPin, Clock, User } from 'lucide-react';
+import { ClipboardList, Search, ChevronRight, MapPin, Clock, User, MessageSquare } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
-import { Card, Badge, EmptyState, Pagination, Input } from '../../components/common';
+import { Card, Badge, EmptyState, Pagination, Input, Modal, Button } from '../../components/common';
 import { TableSkeleton } from '../../components/common/Skeleton';
 import ErrorState from '../../components/common/ErrorState';
+import ChatPanel from '../../components/chat/ChatPanel';
 import requestApi from '../../services/request.api';
 
 const STATUSES = ['ALL', 'PENDING', 'MATCHING', 'ASSIGNED', 'ACCEPTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
@@ -17,6 +18,7 @@ export default function AdminRequestsPage() {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [chatRequest, setChatRequest] = useState(null);
 
   const fetchRequests = async () => {
     setLoading(true);
@@ -48,7 +50,7 @@ export default function AdminRequestsPage() {
       <div className="space-y-6 animate-fade-in">
         <div>
           <h1 className="text-2xl font-bold text-surface-900">All Requests</h1>
-          <p className="text-surface-500 mt-1">Manage all service requests across the platform</p>
+          <p className="text-surface-500 mt-1">Manage all service requests and live chat conversations across the platform</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
@@ -72,7 +74,7 @@ export default function AdminRequestsPage() {
         </div>
 
         {loading ? (
-          <TableSkeleton rows={5} cols={5} />
+          <TableSkeleton rows={5} cols={6} />
         ) : error ? (
           <ErrorState message={error} onRetry={fetchRequests} />
         ) : requests.length === 0 ? (
@@ -80,7 +82,7 @@ export default function AdminRequestsPage() {
         ) : (
           <div className="bg-white dark:bg-[#151F32] rounded-2xl border border-surface-200 dark:border-surface-300 overflow-hidden shadow-xs">
             <div className="table-responsive">
-              <table className="w-full text-sm min-w-[800px]">
+              <table className="w-full text-sm min-w-[850px]">
                 <thead>
                   <tr className="bg-surface-50 dark:bg-[#111827] text-surface-600 dark:text-surface-700 text-left border-b border-surface-200 dark:border-surface-300">
                     <th className="px-4 py-3 font-semibold">Request</th>
@@ -89,6 +91,7 @@ export default function AdminRequestsPage() {
                     <th className="px-4 py-3 font-semibold">Status</th>
                     <th className="px-4 py-3 font-semibold">Technician</th>
                     <th className="px-4 py-3 font-semibold">Created</th>
+                    <th className="px-4 py-3 font-semibold text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-surface-100 dark:divide-surface-300">
@@ -102,7 +105,7 @@ export default function AdminRequestsPage() {
                             <p className="text-xs text-surface-400">{req.location?.city}</p>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-surface-600">
+                        <td className="px-4 py-3 text-surface-600 font-medium">
                           {req.customer?.firstName} {req.customer?.lastName}
                         </td>
                         <td className="px-4 py-3 text-surface-600">{req.service?.name}</td>
@@ -115,6 +118,17 @@ export default function AdminRequestsPage() {
                         <td className="px-4 py-3 text-surface-400 text-xs">
                           {formatDistanceToNow(new Date(req.createdAt), { addSuffix: true })}
                         </td>
+                        <td className="px-4 py-3 text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            icon={MessageSquare}
+                            onClick={() => setChatRequest(req)}
+                            className="text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-950/40"
+                          >
+                            Chat
+                          </Button>
+                        </td>
                       </tr>
                     );
                   })}
@@ -125,6 +139,21 @@ export default function AdminRequestsPage() {
         )}
 
         {pagination && <Pagination pagination={pagination} onPageChange={setPage} />}
+
+        {/* Live Chat Modal for Admin */}
+        {chatRequest && (
+          <Modal isOpen={!!chatRequest} onClose={() => setChatRequest(null)} size="md">
+            <div className="h-[480px] -m-6 rounded-2xl overflow-hidden">
+              <ChatPanel
+                requestId={chatRequest.id}
+                otherUser={chatRequest.assignments?.[0]?.technician?.user || chatRequest.customer}
+                customer={chatRequest.customer}
+                technician={chatRequest.assignments?.[0]?.technician}
+                onClose={() => setChatRequest(null)}
+              />
+            </div>
+          </Modal>
+        )}
       </div>
     </DashboardLayout>
   );

@@ -62,8 +62,8 @@ export function SocketProvider({ children }) {
     socketRef.current?.emit('chat:leave', requestId);
   }, []);
 
-  const sendMessage = useCallback((requestId, message, type = 'text') => {
-    socketRef.current?.emit('chat:message', { requestId, message, type });
+  const sendMessage = useCallback((requestId, message, type = 'text', meta = {}) => {
+    socketRef.current?.emit('chat:message', { requestId, message, type, ...meta });
   }, []);
 
   const sendTyping = useCallback((requestId) => {

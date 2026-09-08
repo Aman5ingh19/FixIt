@@ -51,9 +51,11 @@ function initSocketIO(server) {
     });
 
     socket.on('chat:message', (data) => {
-      const { requestId, message, type = 'text' } = data;
+      const { requestId, message, type = 'text', senderName, senderRole } = data;
       const payload = {
         senderId: socket.userId,
+        senderRole: senderRole || socket.userRole || 'CUSTOMER',
+        senderName: senderName || data.senderName || 'User',
         requestId,
         message,
         type,
@@ -61,7 +63,7 @@ function initSocketIO(server) {
       };
       // Broadcast to everyone in the chat room (including sender)
       io.to(`chat:${requestId}`).emit('chat:message', payload);
-      logger.debug('Chat message sent', { requestId, senderId: socket.userId });
+      logger.debug('Chat message sent', { requestId, senderId: socket.userId, senderRole: payload.senderRole });
     });
 
     socket.on('chat:typing', (data) => {
