@@ -4,15 +4,15 @@
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://fix-it-nu-sable.vercel.app)
 [![Backend API](https://img.shields.io/badge/Backend_API-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://fixit-dk08.onrender.com)
-[![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js_20-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
-[![Prisma](https://img.shields.io/badge/Prisma_ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
-[![Razorpay](https://img.shields.io/badge/Razorpay-Payments-02042B?style=for-the-badge&logo=razorpay&logoColor=3395FF)](https://razorpay.com/)
+[![Docker](https://img.shields.io/badge/Docker-Containers-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-K8s-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Message_Queue-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)](https://www.rabbitmq.com/)
+[![Apache Kafka](https://img.shields.io/badge/Apache_Kafka-Event_Stream-231F20?style=for-the-badge&logo=apachekafka&logoColor=white)](https://kafka.apache.org/)
+[![n8n](https://img.shields.io/badge/n8n-Workflow_Automation-EA4B71?style=for-the-badge&logo=n8n&logoColor=white)](https://n8n.io/)
+[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/Aman5ingh19/FixIt/actions)
 
 <p align="center">
-  <strong>A Production-Grade Full-Stack Service Booking & Repair Network</strong> connecting customers with background-verified, certified technicians (Electrical, Plumbing, HVAC, Carpentry, Electronics, and Home Appliances).
+  <strong>An Enterprise Distributed Full-Stack Service Booking & Repair Network</strong> with Real-Time WebSockets, Razorpay Payments, RabbitMQ Task Queues with DLQ, Apache Kafka Event Streaming, n8n Automation Workflows, Docker & Kubernetes Orchestration, and Automated GitHub Actions CI/CD.
 </p>
 
 🌐 **Live Demo:** [https://fix-it-nu-sable.vercel.app](https://fix-it-nu-sable.vercel.app) &nbsp;|&nbsp; 🖥️ **Backend API:** [https://fixit-dk08.onrender.com](https://fixit-dk08.onrender.com)
@@ -25,42 +25,66 @@
 
 - 🛡️ **Role-Based Access Control (RBAC):** Strict multi-tenant security separating Customer, Certified Technician, and Super Admin domains with granular route guards.
 - ⚡ **Real-Time WebSocket Engine:** Bidirectional Socket.IO architecture for instant job dispatch, live customer-technician chat, and real-time review alerts.
-- 💳 **Cryptographic Payment Lifecycle:** End-to-end Razorpay sandbox integration with server-side HMAC-SHA256 signature verification and automated status state-machines.
-- 🔐 **Token-Based Auth & Recovery:** Dual JWT token rotation (Access + HttpOnly Refresh) paired with Brevo HTTPS REST API for single-use 15-minute password resets.
-- 📸 **Multi-Source Diagnostic Uploads:** Cloudinary-backed uploads supporting live camera capture, device files, external URLs, and 10+ real-world appliance breakdown presets.
-- 🚀 **High-Availability Cloud Stack:** Serverless Neon PostgreSQL (connection pooled), Redis/Upstash session cache, Vercel frontend, and Render backend.
+- 🐇 **RabbitMQ Task Queues & Dead Letter Queues (DLQ):** Resilient asynchronous worker engine with dead-letter exchange (`fixit.dlx`) for transactional email delivery, real-time push dispatches, and webhook forwarding.
+- ⚡ **Apache Kafka Distributed Event Streaming (KRaft Mode):** High-throughput event-driven backbone streaming request lifecycle, payment verifications, and audit telemetry (`fixit.request.events`, `fixit.user.events`).
+- 🔄 **n8n Workflow Automation Engine:** Automated event-driven webhooks for instant technician onboarding alerts, emergency job escalation, payment receipts sync, and low-rating customer support tickets.
+- ☸️ **Cloud-Native Kubernetes & Docker Orchestration:** Production manifests with Horizontal Pod Autoscaling (HPA), Kustomize overlays, multi-stage non-root container builds, and unified Docker Compose environments.
+- 🚀 **End-to-End CI/CD Pipeline:** Automated GitHub Actions workflows for linting, database migrations, unit testing with PostgreSQL containers, and multi-arch Docker image packaging.
 
 ---
 
 ## 🏗️ Architecture & Tech Stack
 
 ```text
-React 18 (Vite 5 + TailwindCSS + Lucide Icons)
-      ↓ (Axios + Real-time Socket.IO Client)
-Node.js + Express.js Modular REST API
-      ↓ (JWT Auth + bcrypt + RBAC + Zod Validation)
-Prisma ORM (Connection Pooler & Type-safe Queries)
-      ↓
-Neon PostgreSQL (Cloud Serverless Database)
-      ↓
-Cloudinary (Media CDN) + Redis/Upstash (Cache) + Brevo (HTTPS Email) + Razorpay (Payments)
+                               ┌────────────────────────────────────────────────┐
+                               │           GitHub Actions CI/CD Pipeline        │
+                               │  [1. Lint/Test → 2. Docker Build → 3. K8s CD]  │
+                               └───────────────────────┬────────────────────────┘
+                                                       │
+                                                       ▼
+                      ┌──────────────────────────────────────────────────────────┐
+                      │              Kubernetes / Docker Compose                 │
+                      │                                                          │
+                      │   ┌────────────────┐               ┌─────────────────┐   │
+                      │   │  React Client  │ ───(HTTP)───► │  Express Server │   │
+                      │   │  (Vite+Nginx)  │               │   (REST API)    │   │
+                      │   └────────────────┘               └───┬─────────┬───┘   │
+                      │                                        │         │       │
+                      │        ┌───────────────────────────────┘         │       │
+                      │        ▼                                         ▼       │
+                      │ ┌──────────────┐                          ┌────────────┐ │
+                      │ │   RabbitMQ   │ (Task Queues)            │   Kafka    │ │ (Event Sourcing)
+                      │ └──────┬───────┘                          └─────┬──────┘ │
+                      │        │                                        │        │
+                      │   Async Workers                            Stream Ingest │
+                      │  (Email, Push, DLQ)                       (Telemetry/KPI)│
+                      │        │                                        │        │
+                      │        └──────────────┐        ┌────────────────┘        │
+                      │                       ▼        ▼                         │
+                      │                 ┌──────────────┐                         │
+                      │                 │     n8n      │ (Automation Workflows)  │
+                      │                 │  (Webhooks)  │ (Slack, CRM, Sheets)    │
+                      │                 └──────────────┘                         │
+                      └──────────────────────────────────────────────────────────┘
 ```
 
 | Layer / Component | Technology / Library | Description |
 | :--- | :--- | :--- |
 | **Frontend Framework** | React 18, Vite 5, TailwindCSS | High-performance SPA with custom theme tokens & responsive design |
-| **UI Components & Icons**| Lucide React | Clean, scalable modern SVG icons across all portals |
 | **Backend REST API** | Node.js 20+, Express.js | Modular Controller-Service-Repository clean architecture |
+| **Message Broker (Queues)**| **RabbitMQ 3 (Management + DLQ)** | Asynchronous background workers, email dispatch, notification push & dead-letter queue |
+| **Event Streaming** | **Apache Kafka 3.7 (KRaft)** | High-throughput distributed event streaming for order lifecycle & audit streams |
+| **Workflow Automation**| **n8n** | Event-driven automation workflows for alerts, escalations, CRM & invoice sync |
+| **Containerization** | **Docker & Docker Compose** | Multi-container environment with profiles (`infra`, `app`, `full`) and health checks |
+| **Orchestration** | **Kubernetes (K8s) & HPA** | Production Deployments, StatefulSets, Services, Ingress, Autoscalers & Kustomize |
+| **CI/CD Pipeline** | **GitHub Actions** | Automated linting, testing with PostgreSQL services, Docker Buildx image packaging |
 | **Database** | **Neon PostgreSQL** (Cloud) | Fully managed serverless relational database with pooling |
 | **ORM & Migrations** | Prisma ORM | Type-safe models, automated migrations, relational joins & seeding |
 | **Authentication** | JWT + bcryptjs (12 rounds) | Short-lived access tokens + rotating refresh tokens in PostgreSQL |
-| **Password Recovery** | **Brevo REST API** / Nodemailer | Transactional email delivery over HTTPS Port 443 with token expiry |
 | **Payment Gateway** | **Razorpay SDK** (Sandbox/Live) | Order creation, HMAC-SHA256 signature verification & webhooks |
 | **Real-Time Engine** | **Socket.IO** | Room-based chat channels, live typing, and instant status dispatch |
 | **Media & CDN** | Multer + Cloudinary | Multi-format image storage (JPEG, PNG, WebP, GIF, SVG, BMP, HEIC) |
 | **Caching & Rate Limit** | Redis / Upstash | Distributed session caching & reverse proxy rate limiters |
-| **Validation** | Zod | Comprehensive schema-level payload validation on all endpoints |
-| **Deployment** | Vercel (Client) + Render (API) | Continuous deployment from GitHub with automated builds |
 
 ---
 
@@ -202,6 +226,10 @@ Password for all pre-seeded accounts: **`Password123!`**
 
 ```text
 FixIt/
+├── .github/
+│   └── workflows/
+│       └── ci.yml              # GitHub Actions CI/CD Pipeline (Lint, Test, Docker, K8s)
+│
 ├── client/                     # React 18 SPA Frontend
 │   ├── public/                 # Static assets & brand favicon
 │   ├── src/
@@ -210,36 +238,78 @@ FixIt/
 │   │   │   ├── guards/         # ProtectedRoute & RoleGuard
 │   │   │   └── layouts/        # DashboardLayout, Sidebar, Topbar, AuthLayout
 │   │   ├── contexts/           # AuthContext, SocketContext, LanguageContext
-│   │   ├── pages/
-│   │   │   ├── admin/          # Dashboard, Technicians, Requests, Payments, ActivityLog
-│   │   │   ├── auth/           # LoginPage, RegisterPage, ResetPasswordPage
-│   │   │   ├── customer/       # Dashboard, CreateRequest, ActiveRequests, Detail, History, ReviewPage
-│   │   │   ├── landing/        # LandingPage
-│   │   │   ├── shared/         # AboutPage, HowToUsePage, NotificationsPage, ProfilePage, SettingsPage
-│   │   │   └── technician/     # Dashboard, AvailableRequestsPage, AssignedJobsPage
+│   │   ├── pages/              # Customer, Technician, Admin, Auth, Landing, Shared
 │   │   └── services/           # Axios API clients (auth, request, review, technician, payment)
-│   ├── vercel.json             # Vercel deploy config & API proxy rewrites
+│   ├── Dockerfile              # Multi-stage production container build
+│   ├── nginx.conf              # Production Nginx reverse proxy with SPA rewrites
 │   └── package.json
 │
 ├── server/                     # Node.js + Express.js REST API
 │   ├── prisma/
-│   │   ├── schema.prisma       # Database schema (Users, PasswordResetTokens, Requests, TechProfiles, Reviews, Chats)
-│   │   └── seed.js             # Initial database seeder (auto-runs on fresh deploy)
+│   │   ├── schema.prisma       # Database schema (Users, Requests, TechProfiles, Reviews, Chats)
+│   │   └── seed.js             # Initial database seeder
 │   ├── src/
-│   │   ├── config/             # Database, Redis, Socket, Multer, Logger, Cloudinary
+│   │   ├── config/             # DB, Redis, RabbitMQ (DLQ), Kafka (KRaft), Socket, Cloudinary
 │   │   ├── controllers/        # Auth, Request, Technician, Review, Notification, Upload
 │   │   ├── middleware/         # AuthGuard, RBAC, RateLimiter, Security, ErrorHandler
-│   │   ├── repositories/       # Prisma query abstraction layer (user, passwordResetToken, etc.)
+│   │   ├── repositories/       # Prisma query abstraction layer
 │   │   ├── routes/             # Express API routes
-│   │   ├── services/           # Business logic, Auto-matching engine, Token generators, Auth service
-│   │   ├── utils/              # Email service (Brevo HTTP API + Gmail SMTP), JWT, Errors
+│   │   ├── services/           # Business logic, Matching, Kafka & RabbitMQ publishers
+│   │   ├── workers/            # RabbitMQ async workers (Notifications, Emails, Webhooks, Analytics)
 │   │   └── validators/         # Zod request validation schemas
+│   ├── Dockerfile              # Multi-stage Node.js Alpine container with non-root security
 │   └── package.json
 │
-├── docker-compose.yml          # Container orchestration (local dev)
-├── vercel.json                 # Root Vercel project config
+├── k8s/                        # Kubernetes Production Manifests
+│   ├── client.yaml             # Client Deployment & Service
+│   ├── server.yaml             # Server Deployment & Service
+│   ├── rabbitmq.yaml           # RabbitMQ StatefulSet & Service
+│   ├── kafka.yaml              # Apache Kafka KRaft StatefulSet & Service
+│   ├── n8n.yaml                # n8n Workflow Deployment & Service
+│   ├── postgres.yaml           # PostgreSQL StatefulSet & PersistentVolume
+│   ├── redis.yaml              # Redis StatefulSet & Service
+│   ├── hpa.yaml                # Horizontal Pod Autoscalers for Server & Client
+│   ├── ingress.yaml            # TLS Ingress routing rules
+│   └── kustomization.yaml      # Unified Kustomize bundle
+│
+├── n8n/
+│   └── workflows/              # Ready-to-import visual automation blueprints
+│       ├── technician-onboarding-alert.json
+│       ├── emergency-escalation.json
+│       ├── payment-receipt-sync.json
+│       └── low-rating-followup.json
+│
+├── docker-compose.yml          # Multi-container local orchestration
 └── README.md                   # Project documentation
 ```
+
+---
+
+## 🐳 Running Distributed Services with Docker
+
+```bash
+# 1. Start all infrastructure containers (Postgres, Redis, RabbitMQ, Kafka, n8n)
+docker compose up -d
+
+# 2. Start the entire platform (including Server & Client)
+docker compose --profile full up -d
+
+# 3. View container health & status
+docker compose ps
+
+# 4. Stop containers
+docker compose down
+```
+
+### 🌐 Local Service Dashboards
+
+| Service | Port | Local URL | Credentials |
+| :--- | :--- | :--- | :--- |
+| **RabbitMQ Management UI** | `15672` | [http://localhost:15672](http://localhost:15672) | `guest` / `guest` |
+| **n8n Automation Console** | `5678` | [http://localhost:5678](http://localhost:5678) | `admin` / `admin` |
+| **FixIt Client (Docker/Dev)**| `80` / `5173` | [http://localhost:5173](http://localhost:5173) | - |
+| **FixIt API Server** | `5000` | [http://localhost:5000/api/health](http://localhost:5000/api/health) | - |
+| **Apache Kafka (KRaft)** | `9092` | `localhost:9092` | - |
 
 ---
 
