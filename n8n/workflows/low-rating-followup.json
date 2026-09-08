@@ -1,0 +1,77 @@
+{
+  "name": "FixIt - Low Rating CS Escalation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "review-feedback",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.body.data.rating }}",
+              "operation": "smallerEqual",
+              "value2": 3
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Rating <= 3 Stars?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "escalationAlert",
+              "value": "=⚠️ *Customer Dissatisfaction Alert (<3 Stars)*\n⭐ Rating: {{ $json.body.data.rating }}/5\n💬 Comment: \"{{ $json.body.data.comment }}\"\n🆔 Request ID: {{ $json.body.data.requestId }}\n👉 Priority customer support outreach required."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3",
+      "name": "Format Support Ticket",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [680, 250]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Rating <= 3 Stars?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rating <= 3 Stars?": {
+      "main": [
+        [
+          {
+            "node": "Format Support Ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

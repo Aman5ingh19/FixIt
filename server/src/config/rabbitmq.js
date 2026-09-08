@@ -10,10 +10,13 @@ const QUEUES = {
   EMAILS: 'fixit.emails',
   MATCHING: 'fixit.matching',
   ANALYTICS: 'fixit.analytics',
+  WEBHOOKS: 'fixit.webhooks',
+  DLQ: 'fixit.dlq',
 };
 
 const EXCHANGES = {
   EVENTS: 'fixit.events',
+  DLX: 'fixit.dlx',
 };
 
 async function initRabbitMQ() {
@@ -26,23 +29,41 @@ async function initRabbitMQ() {
     connection = await amqplib.connect(config.rabbitmq.url);
     channel = await connection.createChannel();
 
-    // Declare exchange
+    // 1. Declare Dead Letter Exchange & Queue
+    await channel.assertExchange(EXCHANGES.DLX, 'direct', { durable: true });
+    await channel.assertQueue(QUEUES.DLQ, { durable: true });
+    await channel.bindQueue(QUEUES.DLQ, EXCHANGES.DLX, 'dead-letter');
+
+    // 2. Declare Primary Events Topic Exchange
     await channel.assertExchange(EXCHANGES.EVENTS, 'topic', { durable: true });
 
-    // Declare queues
-    for (const queue of Object.values(QUEUES)) {
-      await channel.assertQueue(queue, { durable: true });
+    // 3. Declare queues with DLX routing
+    const queueOptions = {
+      durable: true,
+      deadLetterExchange: EXCHANGES.DLX,
+      deadLetterRoutingKey: 'dead-letter',
+    };
+
+    for (const [key, queue] of Object.entries(QUEUES)) {
+      if (key !== 'DLQ') {
+        await channel.assertQueue(queue, queueOptions);
+      }
     }
 
-    // Bind queues to exchange with routing keys
+    // 4. Bind queues to exchange with routing keys
     await channel.bindQueue(QUEUES.NOTIFICATIONS, EXCHANGES.EVENTS, 'request.*');
     await channel.bindQueue(QUEUES.NOTIFICATIONS, EXCHANGES.EVENTS, 'technician.*');
+    await channel.bindQueue(QUEUES.NOTIFICATIONS, EXCHANGES.EVENTS, 'review.*');
     await channel.bindQueue(QUEUES.EMAILS, EXCHANGES.EVENTS, 'email.*');
+    await channel.bindQueue(QUEUES.EMAILS, EXCHANGES.EVENTS, 'auth.reset_password');
     await channel.bindQueue(QUEUES.MATCHING, EXCHANGES.EVENTS, 'request.created');
+    await channel.bindQueue(QUEUES.WEBHOOKS, EXCHANGES.EVENTS, 'request.*');
+    await channel.bindQueue(QUEUES.WEBHOOKS, EXCHANGES.EVENTS, 'payment.*');
+    await channel.bindQueue(QUEUES.WEBHOOKS, EXCHANGES.EVENTS, 'technician.registered');
     await channel.bindQueue(QUEUES.ANALYTICS, EXCHANGES.EVENTS, '#');
 
-    // Prefetch for fair dispatch
-    await channel.prefetch(1);
+    // Prefetch for fair load balancing
+    await channel.prefetch(10);
 
     connection.on('error', (err) => {
       logger.error('RabbitMQ connection error', { error: err.message });
@@ -52,10 +73,10 @@ async function initRabbitMQ() {
       logger.warn('RabbitMQ connection closed');
     });
 
-    logger.info('✓ RabbitMQ connected');
+    logger.info('✓ RabbitMQ connected & configured with DLX/DLQ');
     return { connection, channel };
   } catch (error) {
-    logger.warn('⚠ RabbitMQ not available — running without message queue', { error: error.message });
+    logger.warn('⚠ RabbitMQ not available — running in fallback mode', { error: error.message });
     return { connection: null, channel: null };
   }
 }

@@ -3,6 +3,8 @@ const technicianRepository = require('../repositories/technician.repository');
 const notificationRepository = require('../repositories/notification.repository');
 const { parsePagination, parseSort } = require('../utils/pagination');
 const { NotFoundError, AppError, AuthorizationError } = require('../utils/errors');
+const { publishEvent } = require('../config/rabbitmq');
+const { produceEvent, TOPICS } = require('../config/kafka');
 const logger = require('../config/logger');
 
 // Valid status transitions
@@ -31,6 +33,24 @@ const requestService = {
     });
 
     logger.info('Service request created', { requestId: request.id, customerId, serviceId: data.serviceId });
+
+    // Publish to RabbitMQ & Kafka for async consumers and n8n workflows
+    publishEvent('request.created', {
+      requestId: request.id,
+      customerId,
+      serviceId: data.serviceId,
+      title: data.title,
+      priority: data.priority,
+      city: data.location?.city,
+    });
+
+    produceEvent(TOPICS.REQUEST_EVENTS, 'REQUEST_CREATED', {
+      requestId: request.id,
+      customerId,
+      serviceId: data.serviceId,
+      title: data.title,
+      priority: data.priority,
+    });
 
     // Auto-match: find suitable technicians and move to MATCHING
     await this._autoMatchTechnicians(request);
@@ -110,6 +130,22 @@ const requestService = {
 
     logger.info('Request status updated', { requestId, from: request.status, to: newStatus, userId });
 
+    // Publish to RabbitMQ & Kafka
+    publishEvent(`request.${newStatus.toLowerCase()}`, {
+      requestId,
+      from: request.status,
+      to: newStatus,
+      customerId: request.customerId,
+      title: request.title,
+    });
+
+    produceEvent(TOPICS.REQUEST_EVENTS, `REQUEST_${newStatus}`, {
+      requestId,
+      from: request.status,
+      to: newStatus,
+      customerId: request.customerId,
+    });
+
     // Notify customer of status change
     await notificationRepository.create({
       userId: request.customerId,
@@ -134,6 +170,18 @@ const requestService = {
     if (!cancellable.includes(request.status)) {
       throw new AppError('This request can no longer be cancelled', 400, 'CANNOT_CANCEL');
     }
+
+    publishEvent('request.cancelled', {
+      requestId,
+      customerId: request.customerId,
+      cancelReason,
+    });
+
+    produceEvent(TOPICS.REQUEST_EVENTS, 'REQUEST_CANCELLED', {
+      requestId,
+      customerId: request.customerId,
+      cancelReason,
+    });
 
     return requestRepository.updateStatus(requestId, 'CANCELLED', {
       cancelledAt: new Date(),

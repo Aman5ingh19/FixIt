@@ -1,0 +1,77 @@
+{
+  "name": "FixIt - Emergency Request Escalation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "emergency-escalation",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.body.data.priority }}",
+              "operation": "largerEqual",
+              "value2": 2
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Is Urgent Priority?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "urgentNotification",
+              "value": "=🔥 *URGENT EMERGENCY SERVICE REQUEST*\n📋 Title: {{ $json.body.data.title }}\n📍 City: {{ $json.body.data.city }}\n⏱️ Created: {{ $json.body.timestamp }}\n👉 Dispatch immediately from Admin portal"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3",
+      "name": "Format Emergency Alert",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [680, 250]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Is Urgent Priority?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Urgent Priority?": {
+      "main": [
+        [
+          {
+            "node": "Format Emergency Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

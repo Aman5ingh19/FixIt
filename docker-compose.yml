@@ -107,17 +107,24 @@ services:
       PORT: 5000
       DATABASE_URL: postgresql://${POSTGRES_USER:-fixit_user}:${POSTGRES_PASSWORD:-fixit_password}@postgres:5432/${POSTGRES_DB:-fixit_db}
       REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_CLIENT_ID: fixit-server
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your-access-secret}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-refresh-secret}
-      CORS_ORIGINS: http://localhost,http://client
+      CORS_ORIGINS: http://localhost,http://client,http://localhost:5173
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     restart: unless-stopped
     profiles:
       - full
+      - app
 
   # ── FixIt Client (Nginx) ──
   client:
@@ -132,6 +139,7 @@ services:
     restart: unless-stopped
     profiles:
       - full
+      - app
 
 volumes:
   postgres_data:

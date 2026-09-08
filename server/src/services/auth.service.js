@@ -45,6 +45,30 @@ const authService = {
 
     logger.info('User registered', { userId: user.id, email: user.email, role: user.role });
 
+    // Publish registration event
+    try {
+      const { publishEvent } = require('../config/rabbitmq');
+      const { produceEvent, TOPICS } = require('../config/kafka');
+      
+      if (user.role === 'TECHNICIAN') {
+        publishEvent('technician.registered', {
+          userId: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+        });
+      }
+
+      produceEvent(TOPICS.USER_EVENTS, 'USER_REGISTERED', {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+      });
+    } catch {
+      // Non-blocking fallback
+    }
+
     // Generate tokens
     const tokens = await this._generateTokenPair(user);
 

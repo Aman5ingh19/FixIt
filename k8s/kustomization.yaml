@@ -9,6 +9,10 @@ resources:
   - secret.yaml
   - postgres.yaml
   - redis.yaml
+  - rabbitmq.yaml
+  - kafka.yaml
+  - n8n.yaml
   - server.yaml
   - client.yaml
+  - hpa.yaml
   - ingress.yaml

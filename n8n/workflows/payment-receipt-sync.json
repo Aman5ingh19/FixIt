@@ -1,0 +1,76 @@
+{
+  "name": "FixIt - Payment & Invoice Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "payment-sync",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.event }}",
+              "value2": "payment.success"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Is Payment Success?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "invoiceSummary",
+              "value": "=💳 *Payment Confirmed - FixIt Invoice*\n💰 Amount: ₹{{ $json.body.data.amount }}\n🆔 Order ID: {{ $json.body.data.razorpayOrderId }}\n💳 Payment ID: {{ $json.body.data.razorpayPaymentId }}\n🕒 Processed At: {{ $json.body.timestamp }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3",
+      "name": "Format Receipt Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [680, 250]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Is Payment Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Payment Success?": {
+      "main": [
+        [
+          {
+            "node": "Format Receipt Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -175,6 +175,28 @@ const paymentService = {
       razorpayPaymentId,
     });
 
+    // Publish payment success event to RabbitMQ & Kafka for receipt sync / n8n
+    try {
+      const { publishEvent } = require('../config/rabbitmq');
+      const { produceEvent, TOPICS } = require('../config/kafka');
+      publishEvent('payment.success', {
+        paymentId: payment.id,
+        requestId,
+        amount: payment.amount,
+        razorpayOrderId,
+        razorpayPaymentId,
+        customerId: payment.request?.customerId,
+      });
+      produceEvent(TOPICS.REQUEST_EVENTS, 'PAYMENT_SUCCESS', {
+        paymentId: payment.id,
+        requestId,
+        amount: payment.amount,
+        razorpayPaymentId,
+      });
+    } catch {
+      // Non-blocking fallback
+    }
+
     // Send Real-time notification to Customer
     if (payment.request?.customerId) {
       await notificationRepository.create({

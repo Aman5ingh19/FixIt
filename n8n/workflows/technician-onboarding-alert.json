@@ -1,0 +1,76 @@
+{
+  "name": "FixIt - Technician Onboarding Alert",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "technician-onboarding",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.event }}",
+              "value2": "technician.registered"
+            }
+          ]
+        }
+      },
+      "id": "2",
+      "name": "Is Technician Registered?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "alertMessage",
+              "value": "=🚨 *New Technician Registered on FixIt!*\n👤 Name: {{ $json.body.data.name }}\n📧 Email: {{ $json.body.data.email }}\n🔧 Experience: {{ $json.body.data.experienceYears }} years\n🆔 Verification Status: PENDING\n👉 Inspect at: http://localhost:5173/admin/technicians"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3",
+      "name": "Format Alert Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [680, 250]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Is Technician Registered?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Technician Registered?": {
+      "main": [
+        [
+          {
+            "node": "Format Alert Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
