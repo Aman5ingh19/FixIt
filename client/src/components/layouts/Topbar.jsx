@@ -221,16 +221,6 @@ export default function Topbar({ onMenuClick }) {
 
         {/* Right: Actions / User Profile */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 24/7 Help & Support Button */}
-          <button
-            onClick={() => setHelpOpen(true)}
-            className="relative w-9 h-9 flex items-center justify-center rounded-xl text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-surface-100 dark:hover:bg-surface-200 transition-all cursor-pointer group"
-            title="Help & 24/7 Support"
-            aria-label="Help & Support"
-          >
-            <LifeBuoy className="w-4.5 h-4.5 text-primary-600 dark:text-primary-400 group-hover:rotate-45 transition-transform" />
-          </button>
-
           {/* Sun / Moon Theme Toggle */}
           <ThemeToggle />
 
