@@ -16,11 +16,14 @@ import {
   ClipboardList,
   FileText,
   X,
+  LifeBuoy,
+  MessageSquareHeart,
+  HelpCircle,
 } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { ThemeToggle } from '../common';
+import { ThemeToggle, HelpSupportModal, FeedbackModal } from '../common';
 import notificationApi from '../../services/notification.api';
 
 export default function Topbar({ onMenuClick }) {
@@ -33,6 +36,8 @@ export default function Topbar({ onMenuClick }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const dropdownRef = useRef(null);
   const searchRef = useRef(null);
 
@@ -216,6 +221,16 @@ export default function Topbar({ onMenuClick }) {
 
         {/* Right: Actions / User Profile */}
         <div className="flex items-center gap-2 shrink-0">
+          {/* 24/7 Help & Support Button */}
+          <button
+            onClick={() => setHelpOpen(true)}
+            className="relative w-9 h-9 flex items-center justify-center rounded-xl text-surface-600 dark:text-surface-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-surface-100 dark:hover:bg-surface-200 transition-all cursor-pointer group"
+            title="Help & 24/7 Support"
+            aria-label="Help & Support"
+          >
+            <LifeBuoy className="w-4.5 h-4.5 text-primary-600 dark:text-primary-400 group-hover:rotate-45 transition-transform" />
+          </button>
+
           {/* Sun / Moon Theme Toggle */}
           <ThemeToggle />
 
@@ -347,6 +362,42 @@ export default function Topbar({ onMenuClick }) {
                           <p className="text-[11px] text-surface-500 dark:text-surface-400 truncate">System &amp; preference controls</p>
                         </div>
                       </Link>
+
+                      {/* 24/7 Help & Support Modal Trigger */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          setHelpOpen(true);
+                        }}
+                        className="flex items-center gap-3 w-full p-2.5 rounded-2xl hover:bg-surface-100 dark:hover:bg-surface-200/80 transition-all group text-left cursor-pointer"
+                      >
+                        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <LifeBuoy className="w-4.5 h-4.5" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-surface-900">Help &amp; 24/7 Support</p>
+                          <p className="text-[11px] text-surface-500 dark:text-surface-400 truncate">Helpline, chat &amp; tickets</p>
+                        </div>
+                      </button>
+
+                      {/* Give Feedback Modal Trigger */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          setFeedbackOpen(true);
+                        }}
+                        className="flex items-center gap-3 w-full p-2.5 rounded-2xl hover:bg-surface-100 dark:hover:bg-surface-200/80 transition-all group text-left cursor-pointer"
+                      >
+                        <div className="w-9 h-9 rounded-xl bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <MessageSquareHeart className="w-4.5 h-4.5" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-surface-900">Share Feedback</p>
+                          <p className="text-[11px] text-surface-500 dark:text-surface-400 truncate">Rate experience &amp; ideas</p>
+                        </div>
+                      </button>
                     </div>
 
                     {/* Sign Out Button */}
@@ -400,6 +451,12 @@ export default function Topbar({ onMenuClick }) {
           )}
         </div>
       )}
+
+      {/* Help & 24/7 Support Modal */}
+      <HelpSupportModal isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
+
+      {/* Feedback Modal */}
+      <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </header>
   );
 }

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -24,7 +25,10 @@ import {
   Info,
   HelpCircle,
   CreditCard,
+  MessageSquareHeart,
+  LifeBuoy,
 } from 'lucide-react';
+import { FeedbackModal, HelpSupportModal } from '../common';
 
 const adminNavSections = [
   {
@@ -52,6 +56,13 @@ const adminNavSections = [
       { label: 'About FixIt',     path: '/admin/about',         icon: Info, badge: null },
     ],
   },
+  {
+    title: 'Support & Feedback',
+    items: [
+      { label: 'Feedback',        path: '#feedback',            icon: MessageSquareHeart, badge: 'Share', isFeedback: true },
+      { label: 'Help & Contact',  path: '#help',                icon: HelpCircle, badge: '24/7', isHelp: true },
+    ],
+  },
 ];
 
 const technicianNavSections = [
@@ -76,6 +87,13 @@ const technicianNavSections = [
     items: [
       { label: 'How to Use',     path: '/technician/how-to-use',    icon: BookOpen },
       { label: 'About FixIt',    path: '/technician/about',         icon: Info },
+    ],
+  },
+  {
+    title: 'Support & Feedback',
+    items: [
+      { label: 'Feedback',       path: '#feedback',                 icon: MessageSquareHeart, badge: 'Share', isFeedback: true },
+      { label: 'Help & Contact', path: '#help',                     icon: HelpCircle, badge: '24/7', isHelp: true },
     ],
   },
 ];
@@ -106,12 +124,22 @@ const customerNavSections = [
       { label: 'About FixIt',    path: '/customer/about',         icon: Info },
     ],
   },
+  {
+    title: 'Support & Feedback',
+    items: [
+      { label: 'Feedback',       path: '#feedback',                 icon: MessageSquareHeart, badge: 'Share', isFeedback: true },
+      { label: 'Help & Contact', path: '#help',                     icon: HelpCircle, badge: '24/7', isHelp: true },
+    ],
+  },
 ];
 
 export default function Sidebar({ isOpen, collapsed, onClose, onToggleCollapse }) {
   const { user, logout } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
+
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const navSections =
     user?.role === 'ADMIN'
@@ -121,129 +149,216 @@ export default function Sidebar({ isOpen, collapsed, onClose, onToggleCollapse }
       : customerNavSections;
 
   return (
-    <aside
-      className={`
-        fixed top-0 left-0 h-full z-50
-        bg-white dark:bg-[#111827]
-        border-r border-surface-200 dark:border-surface-300
-        flex flex-col transition-all duration-300
-        ${isOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none lg:opacity-100 lg:pointer-events-auto'}
-        lg:translate-x-0
-        ${collapsed ? 'lg:w-20' : 'lg:w-64'}
-        w-72 max-w-[85vw] shadow-sm
-      `}
-    >
-      {/* ── Brand Header ── */}
-      <div className="flex items-center justify-between px-4 h-16 border-b border-surface-200 dark:border-surface-300 shrink-0">
-        <Link to="/" className="flex items-center gap-2.5 min-w-0 group">
-          <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shrink-0 shadow-xs group-hover:bg-primary-700 transition-colors">
-            <Wrench className="w-5 h-5 text-white" />
-          </div>
+    <>
+      <aside
+        className={`
+          fixed top-0 left-0 h-full z-50
+          bg-white dark:bg-[#111827]
+          border-r border-surface-200 dark:border-surface-300
+          flex flex-col transition-all duration-300
+          ${isOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none lg:opacity-100 lg:pointer-events-auto'}
+          lg:translate-x-0
+          ${collapsed ? 'lg:w-20' : 'lg:w-64'}
+          w-72 max-w-[85vw] shadow-sm
+        `}
+      >
+        {/* ── Brand Header ── */}
+        <div className="flex items-center justify-between px-4 h-16 border-b border-surface-200 dark:border-surface-300 shrink-0">
+          <Link to="/" className="flex items-center gap-2.5 min-w-0 group">
+            <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shrink-0 shadow-xs group-hover:bg-primary-700 transition-colors">
+              <Wrench className="w-5 h-5 text-white" />
+            </div>
+            {!collapsed && (
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-xl font-bold text-surface-900 tracking-tight truncate">FixIt</span>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-800 uppercase tracking-wide">
+                  {user?.role === 'ADMIN' ? 'Admin' : 'Pro'}
+                </span>
+              </div>
+            )}
+          </Link>
+
+          {/* Mobile close */}
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-200 lg:hidden shrink-0 transition-colors cursor-pointer"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          {/* Desktop collapse toggle */}
+          <button
+            onClick={onToggleCollapse}
+            className="hidden lg:flex p-1.5 rounded-lg text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-200 transition-colors shrink-0 cursor-pointer"
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {/* ── Navigation Links ── */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
+          {navSections.map((section) => {
+            const sectionKey = section.title.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            const translatedSectionTitle = t(sectionKey, section.title);
+
+            return (
+              <div key={section.title} className="space-y-1">
+                {!collapsed && (
+                  <p className="px-3 text-[11px] font-bold text-surface-400 dark:text-surface-500 uppercase tracking-wider mb-2">
+                    {translatedSectionTitle}
+                  </p>
+                )}
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  const itemKey = item.label.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                  const translatedLabel = t(itemKey, item.label);
+
+                  if (item.isFeedback) {
+                    return (
+                      <button
+                        key={item.label}
+                        type="button"
+                        onClick={() => {
+                          onClose?.();
+                          setFeedbackOpen(true);
+                        }}
+                        className={`
+                          flex items-center gap-3 w-full px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold
+                          text-surface-600 hover:bg-surface-100 dark:hover:bg-surface-200/80 hover:text-surface-900
+                          transition-all duration-150 group cursor-pointer text-left
+                          ${collapsed ? 'lg:justify-center lg:px-2' : ''}
+                        `}
+                        title={collapsed ? translatedLabel : undefined}
+                      >
+                        <Icon className="w-4.5 h-4.5 shrink-0 text-amber-500 group-hover:scale-110 transition-transform" />
+                        {!collapsed && (
+                          <div className="flex-1 flex items-center justify-between min-w-0">
+                            <span className="truncate">{translatedLabel}</span>
+                            {item.badge && (
+                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+                                {item.badge}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  }
+
+                  if (item.isHelp) {
+                    return (
+                      <button
+                        key={item.label}
+                        type="button"
+                        onClick={() => {
+                          onClose?.();
+                          setHelpOpen(true);
+                        }}
+                        className={`
+                          flex items-center gap-3 w-full px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold
+                          text-surface-600 hover:bg-surface-100 dark:hover:bg-surface-200/80 hover:text-surface-900
+                          transition-all duration-150 group cursor-pointer text-left
+                          ${collapsed ? 'lg:justify-center lg:px-2' : ''}
+                        `}
+                        title={collapsed ? translatedLabel : undefined}
+                      >
+                        <Icon className="w-4.5 h-4.5 shrink-0 text-primary-500 group-hover:scale-110 transition-transform" />
+                        {!collapsed && (
+                          <div className="flex-1 flex items-center justify-between min-w-0">
+                            <span className="truncate">{translatedLabel}</span>
+                            {item.badge && (
+                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary-50 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800">
+                                {item.badge}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      onClick={onClose}
+                      className={`
+                        flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold
+                        transition-all duration-150 group
+                        ${
+                          isActive
+                            ? 'bg-primary-600 text-white shadow-sm'
+                            : 'text-surface-600 hover:bg-surface-100 dark:hover:bg-surface-200/80 hover:text-surface-900'
+                        }
+                        ${collapsed ? 'lg:justify-center lg:px-2' : ''}
+                      `}
+                      title={collapsed ? translatedLabel : undefined}
+                    >
+                      <Icon
+                        className={`w-4.5 h-4.5 shrink-0 ${
+                          isActive ? 'text-white' : 'text-surface-400 group-hover:text-surface-600 dark:group-hover:text-surface-300'
+                        }`}
+                      />
+                      {!collapsed && (
+                        <div className="flex-1 flex items-center justify-between min-w-0">
+                          <span className="truncate">{translatedLabel}</span>
+                          {item.badge && !isActive && (
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                              {item.badge}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </NavLink>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </nav>
+
+        {/* ── Footer Profile & Logout ── */}
+        <div className="border-t border-surface-200 dark:border-surface-300 p-3 shrink-0 space-y-2">
           {!collapsed && (
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-xl font-bold text-surface-900 tracking-tight truncate">FixIt</span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-800 uppercase tracking-wide">
-                {user?.role === 'ADMIN' ? 'Admin' : 'Pro'}
-              </span>
+            <div className="p-2.5 rounded-2xl bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-blue-500/10 border border-primary-200/60 dark:border-primary-800/40 flex items-center justify-between">
+              <div className="min-w-0">
+                <p className="text-[11px] font-bold text-surface-900 dark:text-white truncate">Need immediate help?</p>
+                <p className="text-[10px] text-surface-500 truncate">24x7 Helpline: +91 98765 43210</p>
+              </div>
+              <button
+                onClick={() => setHelpOpen(true)}
+                className="px-2 py-1 rounded-xl bg-primary-600 text-white text-[10px] font-bold hover:bg-primary-700 transition-colors shrink-0 shadow-xs cursor-pointer"
+              >
+                Help
+              </button>
             </div>
           )}
-        </Link>
 
-        {/* Mobile close */}
-        <button
-          onClick={onClose}
-          className="p-1.5 rounded-lg text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-200 lg:hidden shrink-0 transition-colors cursor-pointer"
-          aria-label="Close menu"
-        >
-          <X className="w-5 h-5" />
-        </button>
+          <button
+            onClick={logout}
+            className={`
+              flex items-center gap-3 w-full px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold
+              text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-950/30
+              border border-transparent hover:border-danger-100 dark:hover:border-danger-900/40
+              transition-all duration-150 cursor-pointer
+              ${collapsed ? 'lg:justify-center lg:px-2' : ''}
+            `}
+            title={collapsed ? t('sign_out', 'Sign Out') : undefined}
+          >
+            <LogOut className="w-4.5 h-4.5 shrink-0" />
+            {!collapsed && <span>{t('sign_out', 'Sign Out')}</span>}
+          </button>
+        </div>
+      </aside>
 
-        {/* Desktop collapse toggle */}
-        <button
-          onClick={onToggleCollapse}
-          className="hidden lg:flex p-1.5 rounded-lg text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-200 transition-colors shrink-0 cursor-pointer"
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-        </button>
-      </div>
+      {/* Feedback Modal */}
+      <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
 
-      {/* ── Navigation Links ── */}
-      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
-        {navSections.map((section) => {
-          const sectionKey = section.title.toLowerCase().replace(/[^a-z0-9]/g, '_');
-          const translatedSectionTitle = t(sectionKey, section.title);
-
-          return (
-            <div key={section.title} className="space-y-1">
-              {!collapsed && (
-                <p className="px-3 text-[11px] font-bold text-surface-400 dark:text-surface-500 uppercase tracking-wider mb-2">
-                  {translatedSectionTitle}
-                </p>
-              )}
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.path;
-                const itemKey = item.label.toLowerCase().replace(/[^a-z0-9]/g, '_');
-                const translatedLabel = t(itemKey, item.label);
-
-                return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    onClick={onClose}
-                    className={`
-                      flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold
-                      transition-all duration-150 group
-                      ${
-                        isActive
-                          ? 'bg-primary-600 text-white shadow-sm'
-                          : 'text-surface-600 hover:bg-surface-100 dark:hover:bg-surface-200/80 hover:text-surface-900'
-                      }
-                      ${collapsed ? 'lg:justify-center lg:px-2' : ''}
-                    `}
-                    title={collapsed ? translatedLabel : undefined}
-                  >
-                    <Icon
-                      className={`w-4.5 h-4.5 shrink-0 ${
-                        isActive ? 'text-white' : 'text-surface-400 group-hover:text-surface-600 dark:group-hover:text-surface-300'
-                      }`}
-                    />
-                    {!collapsed && (
-                      <div className="flex-1 flex items-center justify-between min-w-0">
-                        <span className="truncate">{translatedLabel}</span>
-                        {item.badge && !isActive && (
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </NavLink>
-                );
-              })}
-            </div>
-          );
-        })}
-      </nav>
-
-      {/* ── Footer Profile & Logout ── */}
-      <div className="border-t border-surface-200 dark:border-surface-300 p-3 shrink-0">
-        <button
-          onClick={logout}
-          className={`
-            flex items-center gap-3 w-full px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold
-            text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-950/30
-            border border-transparent hover:border-danger-100 dark:hover:border-danger-900/40
-            transition-all duration-150 cursor-pointer
-            ${collapsed ? 'lg:justify-center lg:px-2' : ''}
-          `}
-          title={collapsed ? t('sign_out', 'Sign Out') : undefined}
-        >
-          <LogOut className="w-4.5 h-4.5 shrink-0" />
-          {!collapsed && <span>{t('sign_out', 'Sign Out')}</span>}
-        </button>
-      </div>
-    </aside>
+      {/* Help & Support Modal */}
+      <HelpSupportModal isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
+    </>
   );
 }

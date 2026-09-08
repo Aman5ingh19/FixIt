@@ -12,3 +12,5 @@ export { default as Spinner, PageSpinner } from './Spinner';
 export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as AuthRequiredModal } from './AuthRequiredModal';
 export { default as ThemeToggle } from './ThemeToggle';
+export { default as FeedbackModal } from './FeedbackModal';
+export { default as HelpSupportModal } from './HelpSupportModal';
