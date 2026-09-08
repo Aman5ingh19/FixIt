@@ -26,6 +26,21 @@ export default function ChatPanel({ requestId, otherUser, customer, technician, 
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
+  // Derive resolved names and IDs for customer & technician
+  const custName = customer
+    ? `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || 'Customer'
+    : (otherUser?.role === 'CUSTOMER' ? `${otherUser.firstName || ''} ${otherUser.lastName || ''}`.trim() : 'Customer');
+
+  const custId = customer?.id || (otherUser?.role === 'CUSTOMER' ? otherUser.id : null);
+
+  const techName = technician?.user
+    ? `${technician.user.firstName || ''} ${technician.user.lastName || ''}`.trim()
+    : technician?.firstName
+    ? `${technician.firstName} ${technician.lastName || ''}`.trim()
+    : (otherUser?.role === 'TECHNICIAN' ? `${otherUser.firstName || ''} ${otherUser.lastName || ''}`.trim() : 'Technician');
+
+  const techId = technician?.user?.id || technician?.userId || technician?.id || (otherUser?.role === 'TECHNICIAN' ? otherUser.id : null);
+
   // 2. Join socket room on mount
   useEffect(() => {
     if (!requestId) return;
@@ -51,7 +66,6 @@ export default function ChatPanel({ requestId, otherUser, customer, technician, 
     const unsub1 = on('chat:message', (data) => {
       if (data.requestId === requestId) {
         setMessages((prev) => {
-          // Avoid duplicate if sent by me within 5 seconds with same content
           const isDuplicate = prev.some(
             (m) =>
               (m.id && data.id && m.id === data.id) ||
@@ -140,73 +154,124 @@ export default function ChatPanel({ requestId, otherUser, customer, technician, 
   // Helper to determine message sender metadata & role badge
   const resolveSender = (msg) => {
     const isMe = Boolean(user?.id && msg.senderId === user?.id);
+
     let role = msg.senderRole;
     let name = msg.senderName;
 
-    // Check against customer and technician props
-    const isTechId = technician && (
-      msg.senderId === technician.id ||
-      msg.senderId === technician.userId ||
-      msg.senderId === technician.user?.id
-    );
-
-    const isCustId = customer && (
-      msg.senderId === customer.id ||
-      msg.senderId === customer.userId
-    );
-
-    if (!role) {
-      if (isMe) {
-        role = user?.role || 'CUSTOMER';
-      } else if (isTechId) {
-        role = 'TECHNICIAN';
-      } else if (isCustId) {
-        role = 'CUSTOMER';
-      } else if (otherUser?.role) {
-        role = otherUser.role;
-      } else if (otherUser?.id && msg.senderId === otherUser.id) {
-        role = otherUser.role || (user?.role === 'TECHNICIAN' ? 'CUSTOMER' : 'TECHNICIAN');
-      } else if (user?.role === 'TECHNICIAN') {
-        role = 'CUSTOMER';
-      } else if (user?.role === 'CUSTOMER') {
-        role = 'TECHNICIAN';
-      } else {
-        role = 'CUSTOMER';
-      }
+    if (isMe) {
+      return {
+        isMe: true,
+        role: user?.role || 'CUSTOMER',
+        name: `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'You',
+        isTechnician: user?.role === 'TECHNICIAN',
+        isCustomer: user?.role === 'CUSTOMER',
+        isAdmin: user?.role === 'ADMIN',
+      };
     }
 
-    if (!name) {
-      if (isMe) {
-        name = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || user?.name || (role === 'TECHNICIAN' ? 'Technician' : 'Customer');
-      } else if (isTechId) {
-        name = technician?.user ? `${technician.user.firstName} ${technician.user.lastName || ''}`.trim() : (technician.firstName ? `${technician.firstName} ${technician.lastName || ''}`.trim() : 'Technician');
-      } else if (isCustId) {
-        name = customer ? `${customer.firstName} ${customer.lastName || ''}`.trim() : 'Customer';
-      } else if (otherUser) {
-        name = `${otherUser.firstName || ''} ${otherUser.lastName || ''}`.trim() || otherUser.name || (role === 'TECHNICIAN' ? 'Technician' : 'Customer');
-      } else {
-        name = role === 'TECHNICIAN' ? 'Technician' : 'Customer';
-      }
+    // Explicit role attached from modern socket payload
+    if (role === 'TECHNICIAN') {
+      return {
+        isMe: false,
+        role: 'TECHNICIAN',
+        name: name || techName || 'Technician',
+        isTechnician: true,
+        isCustomer: false,
+        isAdmin: false,
+      };
+    }
+    if (role === 'CUSTOMER') {
+      return {
+        isMe: false,
+        role: 'CUSTOMER',
+        name: name || custName || 'Customer',
+        isTechnician: false,
+        isCustomer: true,
+        isAdmin: false,
+      };
+    }
+    if (role === 'ADMIN') {
+      return {
+        isMe: false,
+        role: 'ADMIN',
+        name: name || 'Admin',
+        isTechnician: false,
+        isCustomer: false,
+        isAdmin: true,
+      };
+    }
+
+    // Historical messages without senderRole (deduce from IDs)
+    if (techId && msg.senderId === techId) {
+      return {
+        isMe: false,
+        role: 'TECHNICIAN',
+        name: techName || 'Technician',
+        isTechnician: true,
+        isCustomer: false,
+        isAdmin: false,
+      };
+    }
+
+    if (custId && msg.senderId === custId) {
+      return {
+        isMe: false,
+        role: 'CUSTOMER',
+        name: custName || 'Customer',
+        isTechnician: false,
+        isCustomer: true,
+        isAdmin: false,
+      };
+    }
+
+    // Role-context deduction if viewing as Technician or Customer
+    if (user?.role === 'TECHNICIAN') {
+      return {
+        isMe: false,
+        role: 'CUSTOMER',
+        name: custName || `${otherUser?.firstName || ''} ${otherUser?.lastName || ''}`.trim() || 'Customer',
+        isTechnician: false,
+        isCustomer: true,
+        isAdmin: false,
+      };
+    }
+
+    if (user?.role === 'CUSTOMER') {
+      return {
+        isMe: false,
+        role: 'TECHNICIAN',
+        name: techName || `${otherUser?.firstName || ''} ${otherUser?.lastName || ''}`.trim() || 'Technician',
+        isTechnician: true,
+        isCustomer: false,
+        isAdmin: false,
+      };
+    }
+
+    // Fallback for Admin when sender IDs are different
+    // Check first message in thread vs current message
+    const firstMsgSenderId = messages[0]?.senderId;
+    if (firstMsgSenderId && msg.senderId === firstMsgSenderId) {
+      return {
+        isMe: false,
+        role: 'TECHNICIAN',
+        name: techName || 'Technician',
+        isTechnician: true,
+        isCustomer: false,
+        isAdmin: false,
+      };
     }
 
     return {
-      isMe,
-      role,
-      name,
-      isTechnician: role === 'TECHNICIAN',
-      isCustomer: role === 'CUSTOMER',
-      isAdmin: role === 'ADMIN',
+      isMe: false,
+      role: 'CUSTOMER',
+      name: custName || 'Customer',
+      isTechnician: false,
+      isCustomer: true,
+      isAdmin: false,
     };
   };
 
-  // Determine other user role label
-  const otherRoleLabel = otherUser?.role === 'TECHNICIAN'
-    ? 'Technician'
-    : otherUser?.role === 'CUSTOMER'
-    ? 'Customer'
-    : (user?.role === 'TECHNICIAN' ? 'Customer' : user?.role === 'CUSTOMER' ? 'Technician' : 'User');
-
-  const otherIsTech = otherRoleLabel === 'Technician';
+  const isAdminView = user?.role === 'ADMIN';
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#111927] rounded-2xl border border-surface-200 dark:border-surface-300 overflow-hidden shadow-md">
@@ -222,43 +287,68 @@ export default function ChatPanel({ requestId, otherUser, customer, technician, 
               <ArrowLeft className="w-4 h-4" />
             </button>
           )}
-          <Avatar src={otherUser?.avatarUrl} name={`${otherUser?.firstName || otherRoleLabel} ${otherUser?.lastName || ''}`} size="sm" />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <p className="text-sm font-bold text-surface-900 dark:text-white truncate">
-                {otherUser?.firstName || otherRoleLabel} {otherUser?.lastName || ''}
-              </p>
-              <span
-                className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                  otherIsTech
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/40'
-                    : 'bg-blue-500/20 text-blue-600 dark:text-blue-300 border border-blue-500/40'
-                }`}
-              >
-                {otherIsTech ? (
-                  <>
-                    <Wrench className="w-2.5 h-2.5" /> Technician
-                  </>
-                ) : (
-                  <>
-                    <User className="w-2.5 h-2.5" /> Customer
-                  </>
-                )}
-              </span>
+
+          {isAdminView ? (
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-bold text-surface-900 dark:text-white flex items-center gap-1">
+                  👤 <span className="text-blue-600 dark:text-blue-400 font-semibold">{custName}</span>
+                </span>
+                <span className="text-xs text-surface-400 font-bold">↔</span>
+                <span className="text-xs font-bold text-surface-900 dark:text-white flex items-center gap-1">
+                  🛠️ <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{techName}</span>
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-600 dark:text-purple-300 border border-purple-500/40">
+                  🛡️ Admin View
+                </span>
+              </div>
+              <p className="text-[11px] text-surface-400 mt-0.5">Live coordination log for Request #{requestId?.slice(-6) || ''}</p>
             </div>
-            <p className="text-xs font-medium text-surface-500 dark:text-surface-400 flex items-center gap-1.5 mt-0.5">
-              {isOtherTyping ? (
-                <span className="text-primary-600 dark:text-primary-400 font-semibold animate-pulse">Typing...</span>
-              ) : connected ? (
-                <>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Active Now</span>
-                </>
-              ) : (
-                <span className="text-surface-400 dark:text-surface-500">Live Chat</span>
-              )}
-            </p>
-          </div>
+          ) : (
+            <>
+              <Avatar
+                src={user?.role === 'CUSTOMER' ? (technician?.user?.avatarUrl || otherUser?.avatarUrl) : (customer?.avatarUrl || otherUser?.avatarUrl)}
+                name={user?.role === 'CUSTOMER' ? techName : custName}
+                size="sm"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-sm font-bold text-surface-900 dark:text-white truncate">
+                    {user?.role === 'CUSTOMER' ? techName : custName}
+                  </p>
+                  <span
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                      user?.role === 'CUSTOMER'
+                        ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/40'
+                        : 'bg-blue-500/20 text-blue-600 dark:text-blue-300 border border-blue-500/40'
+                    }`}
+                  >
+                    {user?.role === 'CUSTOMER' ? (
+                      <>
+                        <Wrench className="w-2.5 h-2.5" /> Technician
+                      </>
+                    ) : (
+                      <>
+                        <User className="w-2.5 h-2.5" /> Customer
+                      </>
+                    )}
+                  </span>
+                </div>
+                <p className="text-xs font-medium text-surface-500 dark:text-surface-400 flex items-center gap-1.5 mt-0.5">
+                  {isOtherTyping ? (
+                    <span className="text-primary-600 dark:text-primary-400 font-semibold animate-pulse">Typing...</span>
+                  ) : connected ? (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Active Now</span>
+                    </>
+                  ) : (
+                    <span className="text-surface-400 dark:text-surface-500">Live Chat</span>
+                  )}
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -340,7 +430,7 @@ export default function ChatPanel({ requestId, otherUser, customer, technician, 
               <span className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce" />
               <span className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce [animation-delay:0.2s]" />
               <span className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce [animation-delay:0.4s]" />
-              <span className="ml-1 text-[11px] font-semibold text-surface-700 dark:text-surface-200">{otherUser?.firstName || 'User'} is typing...</span>
+              <span className="ml-1 text-[11px] font-semibold text-surface-700 dark:text-surface-200">{techName || custName || 'User'} is typing...</span>
             </div>
           </div>
         )}

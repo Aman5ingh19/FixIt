@@ -101,17 +101,17 @@ const requestRepository = {
         orderBy: orderBy || { createdAt: 'desc' },
         include: {
           service: { select: { name: true } },
-          customer: { select: { id: true, firstName: true, lastName: true, email: true } },
+          customer: { select: { id: true, firstName: true, lastName: true, email: true, avatarUrl: true } },
           location: { select: { city: true, state: true } },
           assignments: {
-            where: { status: 'ACCEPTED' },
             include: {
               technician: {
                 include: {
-                  user: { select: { firstName: true, lastName: true } },
+                  user: { select: { id: true, firstName: true, lastName: true, avatarUrl: true } },
                 },
               },
             },
+            orderBy: { assignedAt: 'desc' },
             take: 1,
           },
         },
