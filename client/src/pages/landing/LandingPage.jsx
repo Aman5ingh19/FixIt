@@ -20,9 +20,13 @@ import {
   Package,
   Settings,
   Paintbrush,
+  LifeBuoy,
+  MessageSquareHeart,
+  HelpCircle,
+  Phone,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Button, ThemeToggle } from '../../components/common';
+import { Button, ThemeToggle, FeedbackModal, HelpSupportModal } from '../../components/common';
 
 const servicesList = [
   {
@@ -142,6 +146,8 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const handleBookService = (serviceName = '') => {
     const targetUrl = serviceName
@@ -223,6 +229,30 @@ export default function LandingPage() {
                     </Link>
                   );
                 })}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    setHelpOpen(true);
+                  }}
+                  className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-semibold text-surface-700 rounded-xl hover:bg-surface-100 dark:hover:bg-surface-200 hover:text-primary-600 dark:hover:text-primary-400 transition-all text-left cursor-pointer"
+                >
+                  <LifeBuoy className="w-4.5 h-4.5 text-primary-500" />
+                  <span>Help &amp; 24/7 Support</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    setFeedbackOpen(true);
+                  }}
+                  className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-semibold text-surface-700 rounded-xl hover:bg-surface-100 dark:hover:bg-surface-200 hover:text-amber-600 dark:hover:text-amber-400 transition-all text-left cursor-pointer"
+                >
+                  <MessageSquareHeart className="w-4.5 h-4.5 text-amber-500" />
+                  <span>Share Feedback</span>
+                </button>
               </div>
 
               {/* Portals & Logins */}
@@ -337,11 +367,30 @@ export default function LandingPage() {
                 >
                   Join as Technician
                 </Link>
+                <button
+                  type="button"
+                  onClick={() => setHelpOpen(true)}
+                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-medium"
+                >
+                  <LifeBuoy className="w-4 h-4 text-primary-500" />
+                  <span>Help &amp; Support</span>
+                </button>
               </nav>
             </div>
 
             {/* ── Right: Sign In, Get Started, Theme Toggle, Settings ── */}
             <div className="hidden lg:flex items-center gap-3 shrink-0">
+              {/* Help Button */}
+              <button
+                type="button"
+                onClick={() => setHelpOpen(true)}
+                className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-slate-800/90 border border-surface-200/80 dark:border-slate-700/80 flex items-center justify-center text-primary-600 dark:text-primary-400 hover:bg-surface-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                title="24/7 Help & Support"
+                aria-label="24/7 Help & Support"
+              >
+                <LifeBuoy className="w-4.5 h-4.5" />
+              </button>
+
               {/* Sign In */}
               <Link to="/login">
                 <button
@@ -380,6 +429,14 @@ export default function LandingPage() {
 
             {/* Mobile right side: theme toggle + hamburger */}
             <div className="lg:hidden flex items-center gap-1.5 ml-auto">
+              <button
+                type="button"
+                onClick={() => setHelpOpen(true)}
+                className="w-9 h-9 rounded-xl bg-surface-100 dark:bg-slate-800 flex items-center justify-center text-primary-600 dark:text-primary-400"
+                aria-label="Help & Support"
+              >
+                <LifeBuoy className="w-4.5 h-4.5" />
+              </button>
               <div className="w-9 h-9 rounded-xl bg-surface-100 dark:bg-slate-800 flex items-center justify-center">
                 <ThemeToggle />
               </div>
@@ -436,6 +493,28 @@ export default function LandingPage() {
               >
                 Join as Technician
               </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setHelpOpen(true);
+                }}
+                className="flex items-center gap-2.5 px-3 py-2.5 text-sm font-medium text-primary-600 dark:text-primary-400 rounded-xl hover:bg-surface-100 dark:hover:bg-surface-200 transition-colors text-left cursor-pointer"
+              >
+                <LifeBuoy className="w-4.5 h-4.5" />
+                <span>Help &amp; 24/7 Support</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setFeedbackOpen(true);
+                }}
+                className="flex items-center gap-2.5 px-3 py-2.5 text-sm font-medium text-amber-600 dark:text-amber-400 rounded-xl hover:bg-surface-100 dark:hover:bg-surface-200 transition-colors text-left cursor-pointer"
+              >
+                <MessageSquareHeart className="w-4.5 h-4.5" />
+                <span>Share Feedback</span>
+              </button>
             </nav>
 
             <div className="pt-2 border-t border-surface-200 dark:border-surface-300 flex flex-col gap-2">
@@ -710,10 +789,49 @@ export default function LandingPage() {
             <a href="#services" className="hover:text-primary-600 transition-colors">Services</a>
             <Link to="/how-to-use" className="hover:text-primary-600 transition-colors">How to Use</Link>
             <Link to="/about" className="hover:text-primary-600 transition-colors">About FixIt</Link>
+            <button
+              type="button"
+              onClick={() => setHelpOpen(true)}
+              className="hover:text-primary-600 transition-colors cursor-pointer text-xs font-medium text-surface-600"
+            >
+              Help &amp; Support
+            </button>
+            <button
+              type="button"
+              onClick={() => setFeedbackOpen(true)}
+              className="hover:text-primary-600 transition-colors cursor-pointer text-xs font-medium text-surface-600"
+            >
+              Feedback
+            </button>
             <Link to="/login" className="hover:text-primary-600 transition-colors">Sign In</Link>
           </div>
         </div>
       </footer>
+
+      {/* Floating Quick Help / Feedback Widget */}
+      <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5">
+        <button
+          type="button"
+          onClick={() => setFeedbackOpen(true)}
+          className="hidden sm:flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-white dark:bg-[#1E293B] text-surface-800 dark:text-white border border-surface-200 dark:border-surface-700 shadow-lg hover:shadow-xl hover:scale-105 transition-all text-xs font-bold cursor-pointer"
+        >
+          <MessageSquareHeart className="w-4 h-4 text-pink-500" />
+          <span>Feedback</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setHelpOpen(true)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-600/30 hover:scale-105 active:scale-95 transition-all text-xs font-bold cursor-pointer"
+          title="Need Help? Contact 24/7 Support"
+        >
+          <LifeBuoy className="w-4 h-4" />
+          <span>24/7 Help</span>
+        </button>
+      </div>
+
+      {/* Modals */}
+      <HelpSupportModal isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
+      <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>
   );
 }
