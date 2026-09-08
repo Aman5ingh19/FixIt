@@ -285,31 +285,34 @@ FixIt/
 
 ---
 
-## 🐳 Running Distributed Services with Docker
+## 🐳 Quick Docker Control Guide (Start & Stop Anytime)
+
+> [!TIP]
+> **On-Demand Microservices:** You do not need to keep Docker running 24/7. Turn it **ON** when coding or presenting live interview demos, and **STOP** it when done to free up RAM and battery.
 
 ```bash
-# 1. Start all infrastructure containers (Postgres, Redis, RabbitMQ, Kafka, n8n)
+# 🟢 1. START (Turn ON all distributed services — Postgres, Redis, RabbitMQ, Kafka, n8n)
 docker compose up -d
 
-# 2. Start the entire platform (including Server & Client)
-docker compose --profile full up -d
-
-# 3. View container health & status
+# 📊 2. CHECK STATUS (View running container health)
 docker compose ps
 
-# 4. Stop containers
+# 🔴 3. STOP (Turn OFF gracefully without losing data)
+docker compose stop
+
+# 🧹 4. RESET (Stop and remove containers if needed)
 docker compose down
 ```
 
-### 🌐 Local Service Dashboards
+### 🌐 Local Distributed Dashboards (Available when Docker is ON)
 
-| Service | Port | Local URL | Credentials |
-| :--- | :--- | :--- | :--- |
-| **RabbitMQ Management UI** | `15672` | [http://localhost:15672](http://localhost:15672) | `guest` / `guest` |
-| **n8n Automation Console** | `5678` | [http://localhost:5678](http://localhost:5678) | `admin` / `admin` |
-| **FixIt Client (Docker/Dev)**| `80` / `5173` | [http://localhost:5173](http://localhost:5173) | - |
-| **FixIt API Server** | `5000` | [http://localhost:5000/api/health](http://localhost:5000/api/health) | - |
-| **Apache Kafka (KRaft)** | `9092` | `localhost:9092` | - |
+| Service | Port | Local URL | Credentials | Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| 🐇 **RabbitMQ Dashboard** | `15672` | [http://localhost:15672](http://localhost:15672) | `guest` / `guest` | Live task queues, dead-letter monitoring |
+| 🔄 **n8n Automation Console** | `5678` | [http://localhost:5678](http://localhost:5678) | `admin` / `admin` | Visual webhook workflows & alert triggers |
+| ⚡ **Apache Kafka (KRaft)** | `9092` | `localhost:9092` | - | High-throughput distributed event broker |
+| 🗄️ **PostgreSQL 16** | `5432` | `localhost:5432` | `fixit_user` / `fixit_password` | Local relational database instance |
+| ⚡ **Redis 7** | `6379` | `localhost:6379` | - | In-memory cache & session store |
 
 ---
 
