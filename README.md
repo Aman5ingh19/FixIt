@@ -449,6 +449,19 @@ When you are ready to accept real money in production:
 
 ---
 
+## 🎯 Quick Architecture & Tech Summary (Why Each Tool is Used)
+
+| Technology | Role in FixIt Platform |
+| :--- | :--- |
+| 🐳 **Docker & Compose** | One-command local orchestration (`docker compose up -d`) running all 5 microservices without manual system installs. |
+| 🐇 **RabbitMQ + DLQ** | Asynchronous background workers for non-blocking email dispatch, live Socket.IO push alerts, and Dead Letter Queue retry failure isolation. |
+| ⚡ **Apache Kafka (KRaft)** | High-throughput distributed event streaming for service request lifecycle, payment verifications, and audit telemetry streams. |
+| 🔄 **n8n Workflow Automation** | Low-code event-driven webhook workflows (Technician onboarding alerts, emergency unassigned job escalation, CRM & invoice sync). |
+| ☸️ **Kubernetes (K8s)** | Production cloud orchestration with Horizontal Pod Autoscaling (HPA) scaling pods from 2 to 10 instances under heavy load. |
+| 🚀 **GitHub Actions CI/CD** | Automated pipeline running unit/integration tests with live PostgreSQL containers and building multi-arch Docker production images on push. |
+
+---
+
 ## 👨‍💻 Author & Credits
 
 - **Platform Architect & Developer:** **Aman Singh**
