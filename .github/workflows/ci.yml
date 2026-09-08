@@ -96,24 +96,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build Server Image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./server
-          file: ./server/Dockerfile
-          push: false
-          tags: fixit-server:${{ github.sha }},fixit-server:latest
+        run: docker build -t fixit-server:${{ github.sha }} ./server
 
       - name: Build Client Image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./client
-          file: ./client/Dockerfile
-          push: false
-          tags: fixit-client:${{ github.sha }},fixit-client:latest
+        run: docker build -t fixit-client:${{ github.sha }} ./client
 
   # ── Kubernetes Manifest Validation ──
   k8s-validate:
