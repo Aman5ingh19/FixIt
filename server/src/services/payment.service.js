@@ -120,7 +120,7 @@ const paymentService = {
    * Verify Razorpay Payment Signature on Backend.
    * Cryptographically verifies HMAC-SHA256 signature to prevent payment spoofing.
    */
-  async verifyRazorpayPayment({ requestId, razorpayOrderId, razorpayPaymentId, razorpaySignature, userId, role }) {
+  async verifyRazorpayPayment({ requestId, razorpayOrderId, razorpayPaymentId, razorpaySignature, userId, role, ipAddress }) {
     const payment = await paymentRepository.findByRequestId(requestId);
     if (!payment) {
       throw new NotFoundError('Payment record for this request');
@@ -219,6 +219,7 @@ const paymentService = {
       action: 'PAYMENT_VERIFIED',
       entity: 'Payment',
       entityId: payment.id,
+      ipAddress: ipAddress || '127.0.0.1',
       details: {
         requestId,
         amount: payment.amount,

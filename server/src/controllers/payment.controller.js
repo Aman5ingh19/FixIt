@@ -37,6 +37,7 @@ const paymentController = {
   async verifySignature(req, res, next) {
     try {
       const { requestId, razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
+      const clientIp = (req.headers['x-forwarded-for']?.split(',')[0] || req.ip || req.socket?.remoteAddress || '127.0.0.1').replace(/^::ffff:/, '');
       const payment = await paymentService.verifyRazorpayPayment({
         requestId,
         razorpayOrderId,
@@ -44,6 +45,7 @@ const paymentController = {
         razorpaySignature,
         userId: req.user.id,
         role: req.user.role,
+        ipAddress: clientIp,
       });
       successResponse(res, { payment }, 'Payment verified successfully');
     } catch (error) {

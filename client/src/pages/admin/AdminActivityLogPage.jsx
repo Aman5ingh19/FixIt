@@ -91,8 +91,14 @@ export default function AdminActivityLogPage() {
                           {log.action.split(' ').slice(1).join(' ')}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-xs text-surface-600">{log.resource || '—'}</td>
-                      <td className="px-4 py-3 text-xs text-surface-400 font-mono">{log.ipAddress || '—'}</td>
+                      <td className="px-4 py-3 text-xs font-semibold text-surface-700 dark:text-surface-300">
+                        <span className="px-2 py-0.5 rounded-md bg-surface-100 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 text-[11px]">
+                          {log.entity || log.resource || 'Payment'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-surface-500 dark:text-surface-400 font-mono">
+                        {(log.ipAddress || log.ip || '127.0.0.1').replace(/^::ffff:/, '')}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
