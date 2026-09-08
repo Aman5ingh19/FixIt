@@ -25,6 +25,8 @@
 
 - 🛡️ **Role-Based Access Control (RBAC):** Strict multi-tenant security separating Customer, Certified Technician, and Super Admin domains with granular route guards.
 - ⚡ **Real-Time WebSocket Engine:** Bidirectional Socket.IO architecture for instant job dispatch, live customer-technician chat, and real-time review alerts.
+- 💬 **24/7 Help & Support Center + Raise-a-Ticket System:** Built-in multimodal support hub with instant emergency hotline, email desk, live WhatsApp chat integration, interactive FAQ accordion, and direct ticket creation.
+- 🌟 **User Feedback & Sentiment Collector:** Interactive feedback modal with category tagging (General Experience, Service Quality, Bug Report, Feature Idea), dynamic 5-star rating descriptions, and detailed suggestions.
 - 🐇 **RabbitMQ Task Queues & Dead Letter Queues (DLQ):** Resilient asynchronous worker engine with dead-letter exchange (`fixit.dlx`) for transactional email delivery, real-time push dispatches, and webhook forwarding.
 - ⚡ **Apache Kafka Distributed Event Streaming (KRaft Mode):** High-throughput event-driven backbone streaming request lifecycle, payment verifications, and audit telemetry (`fixit.request.events`, `fixit.user.events`).
 - 🔄 **n8n Workflow Automation Engine:** Automated event-driven webhooks for instant technician onboarding alerts, emergency job escalation, payment receipts sync, and low-rating customer support tickets.
@@ -70,8 +72,8 @@
 
 | Layer / Component | Technology / Library | Description |
 | :--- | :--- | :--- |
-| **Frontend Framework** | React 18, Vite 5, TailwindCSS | High-performance SPA with custom theme tokens & responsive design |
-| **Backend REST API** | Node.js 20+, Express.js | Modular Controller-Service-Repository clean architecture |
+| **Frontend Framework** | React 18, Vite 5, TailwindCSS | High-performance SPA with custom theme tokens, compact responsive layouts & drawer navigation |
+| **Backend REST API** | Node.js 20+, Express.js | Modular Controller-Service-Repository clean architecture with input validation & audit logging |
 | **Message Broker (Queues)**| **RabbitMQ 3 (Management + DLQ)** | Asynchronous background workers, email dispatch, notification push & dead-letter queue |
 | **Event Streaming** | **Apache Kafka 3.7 (KRaft)** | High-throughput distributed event streaming for order lifecycle & audit streams |
 | **Workflow Automation**| **n8n** | Event-driven automation workflows for alerts, escalations, CRM & invoice sync |
@@ -80,9 +82,9 @@
 | **CI/CD Pipeline** | **GitHub Actions** | Automated linting, testing with PostgreSQL services, Docker Buildx image packaging |
 | **Database** | **Neon PostgreSQL** (Cloud) | Fully managed serverless relational database with pooling |
 | **ORM & Migrations** | Prisma ORM | Type-safe models, automated migrations, relational joins & seeding |
-| **Authentication** | JWT + bcryptjs (12 rounds) | Short-lived access tokens + rotating refresh tokens in PostgreSQL |
+| **Authentication** | JWT + bcryptjs (12 rounds) | Short-lived access tokens + rotating refresh tokens + 1-click Quick Demo Logins |
 | **Payment Gateway** | **Razorpay SDK** (Sandbox/Live) | Order creation, HMAC-SHA256 signature verification & webhooks |
-| **Real-Time Engine** | **Socket.IO** | Room-based chat channels, live typing, and instant status dispatch |
+| **Real-Time Engine** | **Socket.IO** | Room-based chat channels, live typing, technician-customer name badge header & instant dispatch |
 | **Media & CDN** | Multer + Cloudinary | Multi-format image storage (JPEG, PNG, WebP, GIF, SVG, BMP, HEIC) |
 | **Caching & Rate Limit** | Redis / Upstash | Distributed session caching & reverse proxy rate limiters |
 
@@ -99,6 +101,8 @@
 - **⭐ Star Rating & Review System**: After a job is completed, customer can leave a 1–5 star rating with a written comment for the technician. Review is displayed on the request detail page and contributes to the technician's live average rating.
 - **🔐 Secure Forgot & Reset Password Flow**: Automated transactional password recovery powered by Brevo REST API with single-use 15-minute cryptographically signed tokens.
 - **💳 Razorpay Payments**: Pay for completed service requests directly within the app (Test/Sandbox mode with simulated card, UPI & Netbanking).
+- **🆘 24/7 Help & Support Center**: Dedicated support hub accessible anytime with Hotline, WhatsApp, Email, FAQs, and ticket submission.
+- **💬 Feedback Hub**: Quick feedback modal accessible from top navigation and sidebars.
 
 ### 🔧 Technician Workspace
 - **Smart Auto-Dispatch**: Direct job allocations for electrical, plumbing, HVAC, appliances, and electronics.
@@ -111,12 +115,14 @@
 - **KPI Metrics & Analytics**: Platform revenue analytics, active request volumes, and technician verification queue.
 - **Technician Verification**: Government ID & certificate inspection with one-click approve/reject actions.
 - **Global Ticket Management**: Oversee all service requests across cities, with **Inspect** button to view full request detail (including customer review, payment, technician, and timeline).
+- **Live Chat Inspection**: Super Admin can inspect active chats with dedicated customer and technician identity badges.
 - **Security & Activity Audit**: Comprehensive audit logs capturing IP addresses, endpoints, timestamps, and user agents.
 - **Review Visibility**: Admin can view the customer's submitted review (stars + comment) on any request detail page.
 
 ### 🌓 Ultra High-Contrast Dark & Light Themes
 - Custom CSS design tokens tailored for crisp contrast in both sunny outdoor and dark environment conditions.
 - Smooth transitions with system theme auto-detection.
+- Compact and responsive design across desktop, tablet, and mobile displays with smooth scrolling drawers.
 
 ---
 
