@@ -177,27 +177,28 @@ export default function LandingPage() {
           />
 
           {/* Sidebar Panel */}
-          <aside className="relative w-72 sm:w-80 max-w-[85vw] h-full bg-white dark:bg-[#111827] border-r border-surface-200 dark:border-surface-300 p-4 sm:p-5 flex flex-col justify-between z-50 shadow-2xl animate-slide-left">
-            <div>
-              {/* Header: Brand + Close */}
-              <div className="flex items-center justify-between pb-4 border-b border-surface-200 dark:border-surface-300">
-                <Link to="/" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2.5 group">
-                  <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shadow-xs group-hover:bg-primary-700 transition-colors">
-                    <Wrench className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-xl font-bold text-surface-900 tracking-tight">FixIt</span>
-                </Link>
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="p-2 rounded-xl text-surface-400 hover:text-surface-700 dark:hover:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-200 transition-colors cursor-pointer"
-                  aria-label="Close Sidebar"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+          <aside className="relative w-72 sm:w-80 max-w-[85vw] h-full bg-white dark:bg-[#111827] border-r border-surface-200 dark:border-surface-300 p-4 sm:p-5 flex flex-col justify-between z-50 shadow-2xl animate-slide-left overflow-hidden">
+            {/* Header: Brand + Close */}
+            <div className="flex items-center justify-between pb-4 border-b border-surface-200 dark:border-surface-300 shrink-0">
+              <Link to="/" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2.5 group">
+                <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shadow-xs group-hover:bg-primary-700 transition-colors">
+                  <Wrench className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold text-surface-900 tracking-tight">FixIt</span>
+              </Link>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 rounded-xl text-surface-400 hover:text-surface-700 dark:hover:text-surface-300 hover:bg-surface-100 dark:hover:bg-surface-200 transition-colors cursor-pointer"
+                aria-label="Close Sidebar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
+            {/* Scrollable Navigation Body */}
+            <div className="flex-1 overflow-y-auto py-3 pr-1 space-y-4 overscroll-contain">
               {/* Navigation Links */}
-              <div className="py-4 space-y-1">
+              <div className="space-y-1">
                 <p className="px-3 text-[11px] font-bold text-surface-400 uppercase tracking-wider mb-2">Navigation</p>
                 {[
                   { href: '#services', label: 'Services', icon: Wrench, isHash: true },
@@ -278,7 +279,7 @@ export default function LandingPage() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="pt-4 border-t border-surface-200 dark:border-surface-300 space-y-3">
+            <div className="pt-3 border-t border-surface-200 dark:border-surface-300 space-y-2.5 shrink-0">
               <div className="flex items-center justify-between px-2">
                 <span className="text-xs font-semibold text-surface-500">Theme</span>
                 <ThemeToggle />
@@ -380,17 +381,6 @@ export default function LandingPage() {
 
             {/* ── Right: Sign In, Get Started, Theme Toggle, Settings ── */}
             <div className="hidden lg:flex items-center gap-3 shrink-0">
-              {/* Help Button */}
-              <button
-                type="button"
-                onClick={() => setHelpOpen(true)}
-                className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-slate-800/90 border border-surface-200/80 dark:border-slate-700/80 flex items-center justify-center text-primary-600 dark:text-primary-400 hover:bg-surface-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-                title="24/7 Help & Support"
-                aria-label="24/7 Help & Support"
-              >
-                <LifeBuoy className="w-4.5 h-4.5" />
-              </button>
-
               {/* Sign In */}
               <Link to="/login">
                 <button

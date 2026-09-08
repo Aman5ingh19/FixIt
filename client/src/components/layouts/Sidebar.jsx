@@ -198,7 +198,7 @@ export default function Sidebar({ isOpen, collapsed, onClose, onToggleCollapse }
         </div>
 
         {/* ── Navigation Links ── */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
+        <nav className="flex-1 overflow-y-auto overscroll-contain py-4 px-3 space-y-6">
           {navSections.map((section) => {
             const sectionKey = section.title.toLowerCase().replace(/[^a-z0-9]/g, '_');
             const translatedSectionTitle = t(sectionKey, section.title);
