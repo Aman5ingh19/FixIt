@@ -89,28 +89,28 @@ export default function FeedbackModal({ isOpen, onClose }) {
           <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="w-10 h-10" />
           </div>
-          <h3 className="text-xl font-extrabold text-surface-900 dark:text-white">Feedback Received!</h3>
-          <p className="text-sm text-surface-500 dark:text-surface-400 max-w-sm mx-auto">
+          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">Feedback Received!</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-300 max-w-sm mx-auto">
             Your insights directly shape the FixIt platform experience. We appreciate your time!
           </p>
         </div>
       ) : (
         <div className="space-y-6">
           {/* Header */}
-          <div className="flex items-center gap-3 border-b border-surface-200 dark:border-surface-300 pb-4">
-            <div className="w-10 h-10 rounded-2xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 pb-4">
+            <div className="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
               <MessageSquareHeart className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-surface-900 dark:text-white">Share Your Feedback</h2>
-              <p className="text-xs text-surface-500 dark:text-surface-400">Help us improve your experience with FixIt</p>
+              <h2 className="text-lg font-extrabold text-slate-900 dark:text-white">Share Your Feedback</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-300">Help us improve your experience with FixIt</p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Category Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-surface-700 dark:text-surface-300 uppercase tracking-wider">
+              <label className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
                 Feedback Category
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -123,11 +123,11 @@ export default function FeedbackModal({ isOpen, onClose }) {
                       type="button"
                       onClick={() => setCategory(cat.id)}
                       className={`
-                        flex items-center gap-2 p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer
+                        flex items-center gap-2 p-2.5 rounded-xl border text-left text-xs font-bold transition-all cursor-pointer
                         ${
                           isSelected
-                            ? 'border-primary-500 bg-primary-50 dark:bg-primary-950/50 text-primary-700 dark:text-primary-300 ring-2 ring-primary-500/20'
-                            : 'border-surface-200 dark:border-surface-300 hover:bg-surface-50 dark:hover:bg-surface-200 text-surface-700 dark:text-surface-300'
+                            ? 'border-blue-500 bg-blue-50 dark:bg-[#1E293B] text-blue-700 dark:text-blue-300 ring-2 ring-blue-500/30'
+                            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#111827] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
                         }
                       `}
                     >
@@ -140,8 +140,8 @@ export default function FeedbackModal({ isOpen, onClose }) {
             </div>
 
             {/* Star Rating */}
-            <div className="space-y-2 bg-surface-50 dark:bg-surface-200/50 p-4 rounded-2xl border border-surface-200 dark:border-surface-300 text-center">
-              <label className="text-xs font-bold text-surface-700 dark:text-surface-300 uppercase tracking-wider block mb-1">
+            <div className="space-y-2 bg-slate-50 dark:bg-[#1E293B] p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-center">
+              <label className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider block mb-1">
                 How would you rate your overall experience?
               </label>
               <div className="flex items-center justify-center gap-2 py-1">
@@ -158,31 +158,31 @@ export default function FeedbackModal({ isOpen, onClose }) {
                       className={`w-7 h-7 transition-colors ${
                         star <= (hoverRating || rating)
                           ? 'text-amber-400 fill-amber-400 drop-shadow-xs'
-                          : 'text-surface-300 dark:text-surface-600'
+                          : 'text-slate-300 dark:text-slate-600'
                       }`}
                     />
                   </button>
                 ))}
               </div>
-              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 transition-all">
+              <p className="text-xs font-bold text-amber-600 dark:text-amber-400 transition-all">
                 {RATING_LABELS[hoverRating || rating]}
               </p>
             </div>
 
             {/* Comments Textarea */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-surface-700 dark:text-surface-300 uppercase tracking-wider">
-                Your Comments & Suggestions
+              <label className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+                Your Comments &amp; Suggestions
               </label>
               <textarea
                 rows={4}
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 placeholder="What did you like? What can we do better? Let us know in detail..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-surface-200 dark:border-surface-300 bg-white dark:bg-[#162033] text-sm text-surface-900 dark:text-white placeholder:text-surface-400 dark:placeholder:text-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#111827] text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 maxLength={1000}
               />
-              <div className="flex justify-between items-center text-[11px] text-surface-400">
+              <div className="flex justify-between items-center text-[11px] text-slate-500 dark:text-slate-400">
                 <span>All feedback is reviewed by the FixIt core team.</span>
                 <span>{comments.length} / 1000</span>
               </div>

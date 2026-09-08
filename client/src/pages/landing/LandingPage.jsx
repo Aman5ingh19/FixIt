@@ -808,27 +808,6 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* Floating Quick Help / Feedback Widget */}
-      <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5">
-        <button
-          type="button"
-          onClick={() => setFeedbackOpen(true)}
-          className="hidden sm:flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-white dark:bg-[#1E293B] text-surface-800 dark:text-white border border-surface-200 dark:border-surface-700 shadow-lg hover:shadow-xl hover:scale-105 transition-all text-xs font-bold cursor-pointer"
-        >
-          <MessageSquareHeart className="w-4 h-4 text-pink-500" />
-          <span>Feedback</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setHelpOpen(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-600/30 hover:scale-105 active:scale-95 transition-all text-xs font-bold cursor-pointer"
-          title="Need Help? Contact 24/7 Support"
-        >
-          <LifeBuoy className="w-4 h-4" />
-          <span>24/7 Help</span>
-        </button>
-      </div>
-
       {/* Modals */}
       <HelpSupportModal isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
       <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />

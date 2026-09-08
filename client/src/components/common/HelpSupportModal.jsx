@@ -111,49 +111,52 @@ export default function HelpSupportModal({ isOpen, onClose }) {
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <div className="space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-surface-200 dark:border-surface-300 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-primary-100 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
               <LifeBuoy className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-surface-900 dark:text-white">Help &amp; Support Center</h2>
-              <p className="text-xs text-surface-500 dark:text-surface-400">24/7 dedicated platform assistance &amp; resolution</p>
+              <h2 className="text-lg font-extrabold text-slate-900 dark:text-white">Help &amp; Support Center</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-300">24/7 dedicated platform assistance &amp; resolution</p>
             </div>
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex rounded-xl bg-surface-100 dark:bg-surface-800 p-1 gap-1">
+        {/* Tab Navigation - High Contrast */}
+        <div className="flex rounded-2xl bg-slate-100 dark:bg-[#0d1525] p-1.5 gap-1.5 border border-slate-200 dark:border-slate-700/80">
           <button
             onClick={() => setActiveTab('contact')}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            className={`flex-1 py-2.5 px-3 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === 'contact'
-                ? 'bg-white dark:bg-[#162033] text-primary-600 dark:text-primary-400 shadow-xs'
-                : 'text-surface-600 dark:text-surface-400 hover:text-surface-900'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-[#1E293B] hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            📞 Contact Support
+            <span>📞</span>
+            <span>Contact Support</span>
           </button>
           <button
             onClick={() => setActiveTab('ticket')}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            className={`flex-1 py-2.5 px-3 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === 'ticket'
-                ? 'bg-white dark:bg-[#162033] text-primary-600 dark:text-primary-400 shadow-xs'
-                : 'text-surface-600 dark:text-surface-400 hover:text-surface-900'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-[#1E293B] hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            🎫 Raise a Ticket
+            <span>🎫</span>
+            <span>Raise a Ticket</span>
           </button>
           <button
             onClick={() => setActiveTab('faq')}
-            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+            className={`flex-1 py-2.5 px-3 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === 'faq'
-                ? 'bg-white dark:bg-[#162033] text-primary-600 dark:text-primary-400 shadow-xs'
-                : 'text-surface-600 dark:text-surface-400 hover:text-surface-900'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-[#1E293B] hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            ❓ Quick FAQs
+            <span>❓</span>
+            <span>Quick FAQs</span>
           </button>
         </div>
 
@@ -164,27 +167,27 @@ export default function HelpSupportModal({ isOpen, onClose }) {
               {/* Phone Channel */}
               <a
                 href="tel:+919876543210"
-                className="flex flex-col items-center text-center p-4 rounded-2xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-[#162033] hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-md transition-all group"
+                className="flex flex-col items-center text-center p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2642] hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-md transition-all group"
               >
-                <div className="w-11 h-11 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <div className="w-11 h-11 rounded-full bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform border border-emerald-200 dark:border-emerald-800">
                   <Phone className="w-5 h-5" />
                 </div>
-                <h4 className="text-xs font-bold text-surface-900 dark:text-white">Emergency Hotline</h4>
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Emergency Hotline</h4>
                 <p className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 font-mono">+91 98765 43210</p>
-                <span className="text-[10px] text-surface-400 mt-1">24x7 Instant Toll-Free</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-300 mt-1 font-medium">24x7 Instant Toll-Free</span>
               </a>
 
               {/* Email Channel */}
               <a
                 href="mailto:support@fixit.services?subject=Support%20Request"
-                className="flex flex-col items-center text-center p-4 rounded-2xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-[#162033] hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-md transition-all group"
+                className="flex flex-col items-center text-center p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2642] hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-md transition-all group"
               >
-                <div className="w-11 h-11 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <div className="w-11 h-11 rounded-full bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform border border-blue-200 dark:border-blue-800">
                   <Mail className="w-5 h-5" />
                 </div>
-                <h4 className="text-xs font-bold text-surface-900 dark:text-white">Email Helpdesk</h4>
-                <p className="text-xs font-semibold text-primary-600 dark:text-primary-400 mt-1">support@fixit.services</p>
-                <span className="text-[10px] text-surface-400 mt-1">&lt; 15 min response time</span>
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Email Helpdesk</h4>
+                <p className="text-xs font-bold text-blue-600 dark:text-blue-400 mt-1">support@fixit.services</p>
+                <span className="text-[11px] text-slate-500 dark:text-slate-300 mt-1 font-medium">&lt; 15 min response time</span>
               </a>
 
               {/* WhatsApp Support */}
@@ -192,23 +195,23 @@ export default function HelpSupportModal({ isOpen, onClose }) {
                 href="https://wa.me/919876543210?text=Hello%20FixIt%20Support,%20I%20need%20help%20with%20my%20service."
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-col items-center text-center p-4 rounded-2xl border border-surface-200 dark:border-surface-700 bg-white dark:bg-[#162033] hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-md transition-all group"
+                className="flex flex-col items-center text-center p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2642] hover:border-green-500 dark:hover:border-green-500 hover:shadow-md transition-all group"
               >
-                <div className="w-11 h-11 rounded-full bg-green-50 dark:bg-green-950/60 text-green-600 dark:text-green-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <div className="w-11 h-11 rounded-full bg-green-50 dark:bg-green-950/80 text-green-600 dark:text-green-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform border border-green-200 dark:border-green-800">
                   <MessageSquare className="w-5 h-5" />
                 </div>
-                <h4 className="text-xs font-bold text-surface-900 dark:text-white">WhatsApp Chat</h4>
-                <p className="text-xs font-semibold text-green-600 dark:text-green-400 mt-1">Instant Messaging</p>
-                <span className="text-[10px] text-surface-400 mt-1">Live Agents Online</span>
+                <h4 className="text-xs font-bold text-slate-900 dark:text-white">WhatsApp Chat</h4>
+                <p className="text-xs font-bold text-green-600 dark:text-green-400 mt-1">Instant Messaging</p>
+                <span className="text-[11px] text-slate-500 dark:text-slate-300 mt-1 font-medium">Live Agents Online</span>
               </a>
             </div>
 
             {/* Quick Assurance Box */}
-            <div className="p-4 rounded-2xl bg-primary-50/70 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800/60 flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-primary-600 dark:text-primary-400 shrink-0 mt-0.5" />
+            <div className="p-4 rounded-2xl bg-blue-50/80 dark:bg-[#16243d] border border-blue-200 dark:border-blue-700/60 flex items-start gap-3">
+              <ShieldCheck className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
               <div className="text-xs">
-                <p className="font-bold text-primary-900 dark:text-primary-200">100% Guaranteed Problem Resolution</p>
-                <p className="text-primary-700/80 dark:text-primary-300/80 mt-0.5">
+                <p className="font-bold text-blue-950 dark:text-white text-[13px]">100% Guaranteed Problem Resolution</p>
+                <p className="text-slate-700 dark:text-slate-200 mt-1 leading-relaxed">
                   FixIt provides dedicated customer dispute protection, emergency technician re-dispatch, and instant refunds for unfulfilled repairs.
                 </p>
               </div>
@@ -225,8 +228,8 @@ export default function HelpSupportModal({ isOpen, onClose }) {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-surface-900 dark:text-white">Ticket #{ticketResult} Created!</h3>
-                  <p className="text-xs text-surface-500 dark:text-surface-400 mt-1 max-w-sm mx-auto">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Ticket #{ticketResult} Created!</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-sm mx-auto">
                     Our customer success and operations desk is reviewing your ticket and will update you via notification &amp; email.
                   </p>
                 </div>
@@ -244,14 +247,14 @@ export default function HelpSupportModal({ isOpen, onClose }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {/* Issue Category */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-surface-700 dark:text-surface-300">Category</label>
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">Category</label>
                     <select
                       value={issueType}
                       onChange={(e) => setIssueType(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl border border-surface-200 dark:border-surface-300 bg-white dark:bg-[#162033] text-xs font-medium text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2642] text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       {ISSUE_CATEGORIES.map((cat) => (
-                        <option key={cat} value={cat}>
+                        <option key={cat} value={cat} className="bg-white dark:bg-[#111827] text-slate-900 dark:text-white">
                           {cat}
                         </option>
                       ))}
@@ -260,40 +263,40 @@ export default function HelpSupportModal({ isOpen, onClose }) {
 
                   {/* Priority */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-surface-700 dark:text-surface-300">Priority Level</label>
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">Priority Level</label>
                     <select
                       value={priority}
                       onChange={(e) => setPriority(e.target.value)}
-                      className="w-full px-3 py-2 rounded-xl border border-surface-200 dark:border-surface-300 bg-white dark:bg-[#162033] text-xs font-medium text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2642] text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                      <option value="Normal">Normal — Standard Inquiry</option>
-                      <option value="High">High — Urgent Attention</option>
-                      <option value="Urgent">Urgent — Live Job Impacted</option>
+                      <option value="Normal" className="bg-white dark:bg-[#111827] text-slate-900 dark:text-white">Normal — Standard Inquiry</option>
+                      <option value="High" className="bg-white dark:bg-[#111827] text-slate-900 dark:text-white">High — Urgent Attention</option>
+                      <option value="Urgent" className="bg-white dark:bg-[#111827] text-slate-900 dark:text-white">Urgent — Live Job Impacted</option>
                     </select>
                   </div>
                 </div>
 
                 {/* Subject */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-surface-700 dark:text-surface-300">Subject (Optional)</label>
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200">Subject (Optional)</label>
                   <input
                     type="text"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="e.g. Technician not arrived for Request #REQ-1234"
-                    className="w-full px-3 py-2 rounded-xl border border-surface-200 dark:border-surface-300 bg-white dark:bg-[#162033] text-xs text-surface-900 dark:text-white placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2642] text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 {/* Description */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-surface-700 dark:text-surface-300">Description of Issue</label>
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200">Description of Issue</label>
                   <textarea
                     rows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Provide details about the issue, booking ID, or problem encountered..."
-                    className="w-full px-3 py-2 rounded-xl border border-surface-200 dark:border-surface-300 bg-white dark:bg-[#162033] text-xs text-surface-900 dark:text-white placeholder:text-surface-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2642] text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
@@ -313,28 +316,28 @@ export default function HelpSupportModal({ isOpen, onClose }) {
 
         {/* TAB 3: FAQS */}
         {activeTab === 'faq' && (
-          <div className="space-y-2.5 animate-fade-in">
+          <div className="space-y-3 animate-fade-in">
             {FAQS.map((faq, i) => {
               const isOpenFaq = openFaq === i;
               return (
                 <div
                   key={i}
-                  className="rounded-2xl border border-surface-200 dark:border-surface-700 overflow-hidden bg-white dark:bg-[#162033] transition-all"
+                  className="rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden bg-white dark:bg-[#1A2642] transition-all shadow-xs"
                 >
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpenFaq ? null : i)}
-                    className="w-full px-4 py-3 flex items-center justify-between text-left text-xs font-bold text-surface-900 dark:text-white hover:bg-surface-50 dark:hover:bg-surface-700/30 transition-colors cursor-pointer"
+                    className="w-full px-4 py-3.5 flex items-center justify-between text-left text-xs sm:text-sm font-bold text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors cursor-pointer"
                   >
                     <span>{faq.q}</span>
                     <ChevronDown
-                      className={`w-4 h-4 text-surface-400 transition-transform duration-200 shrink-0 ${
-                        isOpenFaq ? 'rotate-180 text-primary-500' : ''
+                      className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${
+                        isOpenFaq ? 'rotate-180 text-blue-500' : ''
                       }`}
                     />
                   </button>
                   {isOpenFaq && (
-                    <div className="px-4 pb-3 pt-1 text-xs text-surface-600 dark:text-surface-300 border-t border-surface-100 dark:border-surface-700/60 leading-relaxed bg-surface-50/50 dark:bg-surface-800/20">
+                    <div className="px-4 pb-4 pt-2 text-xs sm:text-sm text-slate-800 dark:text-slate-100 border-t border-slate-200 dark:border-slate-700 leading-relaxed bg-slate-50 dark:bg-[#111827] font-medium">
                       {faq.a}
                     </div>
                   )}
