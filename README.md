@@ -298,7 +298,8 @@ FixIt/
 
 ```bash
 # 🟢 1. START (Turn ON all distributed services — Postgres, Redis, RabbitMQ, Kafka, n8n)
-docker compose up -d
+docker compose up -d --build
+
 
 # 📊 2. CHECK STATUS (View running container health)
 docker compose ps
@@ -308,7 +309,11 @@ docker compose stop
 
 # 🧹 4. RESET (Stop and remove containers if needed)
 docker compose down
+
+# 💾 5. PURGE & FREE DISK (Reclaim full storage by removing unused images, volumes & cache)
+docker system prune -a --volumes -f
 ```
+
 
 ### 🌐 Local Distributed Dashboards (Available when Docker is ON)
 
