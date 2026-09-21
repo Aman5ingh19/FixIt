@@ -275,6 +275,14 @@ const authService = {
       throw new AuthenticationError('Account not found or deactivated.');
     }
 
+    // Check if new password is the same as the current password
+    if (user.passwordHash) {
+      const isSamePassword = await bcrypt.compare(newPassword, user.passwordHash);
+      if (isSamePassword) {
+        throw new ValidationError('You already used that password. Please choose a new password.');
+      }
+    }
+
     // Hash new password and update user
     const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
     await userRepository.update(user.id, { passwordHash });

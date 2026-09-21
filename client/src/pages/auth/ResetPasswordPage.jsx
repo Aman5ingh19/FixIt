@@ -55,11 +55,22 @@ export default function ResetPasswordPage() {
       await authService.resetPassword(token, form.newPassword);
       setStatus('success');
     } catch (err) {
-      setStatus('error');
-      setErrorMessage(
+      const msg =
         err.response?.data?.message ||
-        'Failed to reset password. The link may have expired or already been used.'
-      );
+        'Failed to reset password. The link may have expired or already been used.';
+      
+      // If token itself is invalid or expired (401), show full error card
+      if (err.response?.status === 401) {
+        setStatus('error');
+        setErrorMessage(msg);
+      } else {
+        // Validation error (e.g. same password as old one): keep form open and show inline error
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: msg,
+        }));
+        setErrorMessage(msg);
+      }
     } finally {
       setLoading(false);
     }
@@ -144,6 +155,13 @@ export default function ResetPasswordPage() {
         {/* Form State */}
         {status === 'idle' && token && (
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+            {errorMessage && (
+              <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 flex items-start gap-2.5 text-xs text-red-600 dark:text-red-400 animate-slide-up">
+                <XCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
               Enter and confirm your new password below.
               Password must be at least 8 characters and include uppercase, lowercase, and a number.
