@@ -181,7 +181,7 @@ export default function LandingPage() {
             {/* Header: Brand + Close */}
             <div className="flex items-center justify-between pb-4 border-b border-surface-200 dark:border-surface-300 shrink-0">
               <Link to="/" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2.5 group">
-                <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shadow-xs group-hover:bg-primary-700 transition-colors">
+                <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-xs group-hover:bg-blue-700 transition-colors">
                   <Wrench className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-bold text-surface-900 tracking-tight">FixIt</span>
@@ -334,10 +334,10 @@ export default function LandingPage() {
                 aria-label="Open Navigation Sidebar"
                 title="Click to open menu"
               >
-                <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shadow-xs group-hover:bg-primary-700 group-active:scale-95 transition-all shrink-0">
+                <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-xs group-hover:bg-blue-700 group-active:scale-95 transition-all shrink-0">
                   <Wrench className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-extrabold text-surface-900 dark:text-white tracking-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                <span className="text-xl font-extrabold text-surface-900 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   FixIt
                 </span>
               </button>
@@ -346,32 +346,32 @@ export default function LandingPage() {
               <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
                 <a
                   href="#services"
-                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap"
+                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
                 >
                   Services
                 </a>
                 <Link
                   to="/how-to-use"
-                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap"
+                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
                 >
                   How It Works
                 </Link>
                 <Link
                   to="/about"
-                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap"
+                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
                 >
                   About
                 </Link>
                 <Link
                   to="/register?role=TECHNICIAN"
-                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap"
+                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
                 >
                   Join as Technician
                 </Link>
                 <button
                   type="button"
                   onClick={() => setHelpOpen(true)}
-                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-medium"
+                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-medium"
                 >
                   <LifeBuoy className="w-4 h-4 text-primary-500" />
                   <span>Help &amp; Support</span>
@@ -385,7 +385,7 @@ export default function LandingPage() {
               <Link to="/login">
                 <button
                   type="button"
-                  className="px-3.5 py-2 text-sm font-semibold text-surface-700 dark:text-slate-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors cursor-pointer whitespace-nowrap"
+                  className="px-3.5 py-2 text-sm font-semibold text-surface-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer whitespace-nowrap"
                 >
                   Sign In
                 </button>
@@ -395,7 +395,7 @@ export default function LandingPage() {
               <Link to="/register">
                 <button
                   type="button"
-                  className="px-5 py-2 text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer whitespace-nowrap"
+                  className="px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer whitespace-nowrap"
                 >
                   Get Started
                 </button>
@@ -547,7 +547,7 @@ export default function LandingPage() {
               {/* Main Headline (Compact & Balanced) */}
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] xl:text-[2.85rem] font-extrabold text-surface-900 leading-[1.18] tracking-tight">
                 Get Any Repair Done{' '}
-                <span className="text-primary-600 dark:text-primary-400 block sm:inline">
+                <span className="text-blue-600 dark:text-blue-400 block sm:inline">
                   Quickly &amp; Reliably
                 </span>
               </h1>

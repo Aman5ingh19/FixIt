@@ -165,7 +165,7 @@ export default function Sidebar({ isOpen, collapsed, onClose, onToggleCollapse }
         {/* ── Brand Header ── */}
         <div className="flex items-center justify-between px-4 h-16 border-b border-surface-200 dark:border-surface-300 shrink-0">
           <Link to="/" className="flex items-center gap-2.5 min-w-0 group">
-            <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shrink-0 shadow-xs group-hover:bg-primary-700 transition-colors">
+            <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-xs group-hover:bg-blue-700 transition-colors">
               <Wrench className="w-5 h-5 text-white" />
             </div>
             {!collapsed && (
