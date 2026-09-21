@@ -302,7 +302,6 @@ export default function ChatPanel({ requestId, otherUser, customer, technician, 
                   🛡️ Admin View
                 </span>
               </div>
-              <p className="text-[11px] text-surface-400 mt-0.5">Live coordination log for Request #{requestId?.slice(-6) || ''}</p>
             </div>
           ) : (
             <>
