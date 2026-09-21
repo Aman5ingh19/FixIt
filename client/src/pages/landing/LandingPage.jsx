@@ -540,7 +540,7 @@ export default function LandingPage() {
             <div className="text-center lg:text-left space-y-4 sm:space-y-4.5">
               {/* Trust Badge */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-surface-200 border border-primary-200 dark:border-primary-800 shadow-2xs text-xs font-semibold text-primary-700 dark:text-primary-300">
-                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-red-500 dark:text-red-400 shrink-0" />
                 <span>Trusted Local Service Professionals</span>
               </div>
 
