@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import api from './services/api';
 import { PageSpinner } from './components/common/Spinner';
 import ProtectedRoute from './components/guards/ProtectedRoute';
 import RoleGuard from './components/guards/RoleGuard';
@@ -44,6 +45,11 @@ import { AuthRequiredModal } from './components/common';
 
 function AppRoutes() {
   const { isAuthenticated, user, isGuest } = useAuth();
+
+  // Pre-warm the backend server on initial app load so login/reset actions are instant
+  useEffect(() => {
+    api.get('/health').catch(() => {});
+  }, []);
 
   const getDefaultRoute = () => {
     if (!user) return '/login';
