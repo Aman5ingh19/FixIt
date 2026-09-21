@@ -85,7 +85,7 @@ export default function PaymentHistoryPage() {
           <div>
             <div className="flex items-center gap-2.5">
               <h1 className="text-2xl font-black text-surface-900 tracking-tight">Payment History</h1>
-              <span className="text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
+              <span className="text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900/40 dark:text-primary-300">
                 Razorpay Sandbox
               </span>
             </div>
@@ -239,7 +239,7 @@ export default function PaymentHistoryPage() {
                       <Button
                         size="sm"
                         variant="primary"
-                        className="bg-blue-600 hover:bg-blue-700 font-bold"
+                        className="font-bold"
                         onClick={() => handlePayNow(p)}
                         loading={payingId === p.id}
                       >

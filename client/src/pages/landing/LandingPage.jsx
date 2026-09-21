@@ -270,10 +270,10 @@ export default function LandingPage() {
                 <Link
                   to="/login"
                   onClick={() => setSidebarOpen(false)}
-                  className="flex items-center justify-between px-3 py-2 text-xs font-bold text-surface-700 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/40 hover:text-blue-700 dark:hover:text-blue-300 transition-all"
+                  className="flex items-center justify-between px-3 py-2 text-xs font-bold text-surface-700 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-950/40 hover:text-primary-700 dark:hover:text-primary-300 transition-all"
                 >
                   <span className="flex items-center gap-2">👤 Customer Portal</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-semibold">Login</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 font-semibold">Login</span>
                 </Link>
               </div>
             </div>
@@ -334,10 +334,10 @@ export default function LandingPage() {
                 aria-label="Open Navigation Sidebar"
                 title="Click to open menu"
               >
-                <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-xs group-hover:bg-blue-700 group-active:scale-95 transition-all shrink-0">
+                <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center shadow-xs group-hover:bg-primary-700 group-active:scale-95 transition-all shrink-0">
                   <Wrench className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-extrabold text-surface-900 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                <span className="text-xl font-extrabold text-surface-900 dark:text-white tracking-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                   FixIt
                 </span>
               </button>
@@ -346,32 +346,32 @@ export default function LandingPage() {
               <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
                 <a
                   href="#services"
-                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
+                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap"
                 >
                   Services
                 </a>
                 <Link
                   to="/how-to-use"
-                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
+                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap"
                 >
                   How It Works
                 </Link>
                 <Link
                   to="/about"
-                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
+                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap"
                 >
                   About
                 </Link>
                 <Link
                   to="/register?role=TECHNICIAN"
-                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap"
+                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap"
                 >
                   Join as Technician
                 </Link>
                 <button
                   type="button"
                   onClick={() => setHelpOpen(true)}
-                  className="text-surface-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-medium"
+                  className="text-surface-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-medium"
                 >
                   <LifeBuoy className="w-4 h-4 text-primary-500" />
                   <span>Help &amp; Support</span>
@@ -385,7 +385,7 @@ export default function LandingPage() {
               <Link to="/login">
                 <button
                   type="button"
-                  className="px-3.5 py-2 text-sm font-semibold text-surface-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer whitespace-nowrap"
+                  className="px-3.5 py-2 text-sm font-semibold text-surface-700 dark:text-slate-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors cursor-pointer whitespace-nowrap"
                 >
                   Sign In
                 </button>
@@ -395,7 +395,7 @@ export default function LandingPage() {
               <Link to="/register">
                 <button
                   type="button"
-                  className="px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer whitespace-nowrap"
+                  className="px-5 py-2 text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 rounded-xl shadow-xs hover:shadow transition-all duration-150 cursor-pointer whitespace-nowrap"
                 >
                   Get Started
                 </button>
@@ -409,7 +409,7 @@ export default function LandingPage() {
               {/* Settings Button */}
               <Link
                 to={isAuthenticated ? `/${user?.role?.toLowerCase() || 'customer'}/settings` : '/login'}
-                className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-slate-800/90 border border-surface-200/80 dark:border-slate-700/80 flex items-center justify-center text-surface-700 dark:text-slate-200 hover:bg-surface-200 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="w-10 h-10 rounded-xl bg-surface-100 dark:bg-slate-800/90 border border-surface-200/80 dark:border-slate-700/80 flex items-center justify-center text-surface-700 dark:text-slate-200 hover:bg-surface-200 dark:hover:bg-slate-700 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 title="Settings"
                 aria-label="Settings"
               >
@@ -533,13 +533,13 @@ export default function LandingPage() {
       </header>
 
       {/* ── Hero Section (Compact & Responsive) ── */}
-      <section className="relative w-full pt-6 pb-10 sm:pt-10 sm:pb-14 lg:pt-12 lg:pb-16 bg-gradient-to-b from-blue-50/70 dark:from-blue-950/40 via-surface-50 to-surface-50">
+      <section className="relative w-full pt-6 pb-10 sm:pt-10 sm:pb-14 lg:pt-12 lg:pb-16 bg-gradient-to-b from-primary-50/70 dark:from-primary-950/40 via-surface-50 to-surface-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center">
             {/* Left Content */}
             <div className="text-center lg:text-left space-y-4 sm:space-y-4.5">
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-surface-200 border border-blue-200 dark:border-blue-800 shadow-2xs text-xs font-semibold text-blue-700 dark:text-blue-300">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white dark:bg-surface-200 border border-primary-200 dark:border-primary-800 shadow-2xs text-xs font-semibold text-primary-700 dark:text-primary-300">
                 <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                 <span>Trusted Local Service Professionals</span>
               </div>
@@ -547,7 +547,7 @@ export default function LandingPage() {
               {/* Main Headline (Compact & Balanced) */}
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] xl:text-[2.85rem] font-extrabold text-surface-900 leading-[1.18] tracking-tight">
                 Get Any Repair Done{' '}
-                <span className="text-blue-600 dark:text-blue-400 block sm:inline">
+                <span className="text-primary-600 dark:text-primary-400 block sm:inline">
                   Quickly &amp; Reliably
                 </span>
               </h1>

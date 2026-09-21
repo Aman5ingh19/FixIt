@@ -137,7 +137,10 @@ export default function HowToUsePage() {
                 : 'text-surface-600 hover:text-surface-900'
             }`}
           >
-            👤 For Customers
+            <span className="flex items-center gap-1.5">
+              <Users className="w-4 h-4" />
+              <span>For Customers</span>
+            </span>
           </button>
           <button
             type="button"
@@ -148,7 +151,10 @@ export default function HowToUsePage() {
                 : 'text-surface-600 hover:text-surface-900'
             }`}
           >
-            🔧 For Technicians
+            <span className="flex items-center gap-1.5">
+              <Wrench className="w-4 h-4" />
+              <span>For Technicians</span>
+            </span>
           </button>
           <button
             type="button"
@@ -159,7 +165,10 @@ export default function HowToUsePage() {
                 : 'text-surface-600 hover:text-surface-900'
             }`}
           >
-            👑 For Admins
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4" />
+              <span>For Admins</span>
+            </span>
           </button>
         </div>
       </div>
@@ -230,8 +239,10 @@ export default function HowToUsePage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Admin */}
           <Card className="border-purple-200 dark:border-purple-800/50 bg-purple-50/40 dark:bg-purple-950/20 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">👑</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
               <div>
                 <p className="font-bold text-surface-900 text-sm">Admin</p>
                 <p className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold uppercase tracking-wider">Super Administrator</p>
@@ -256,8 +267,10 @@ export default function HowToUsePage() {
 
           {/* Technician */}
           <Card className="border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/40 dark:bg-emerald-950/20 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">🔧</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                <Wrench className="w-4 h-4" />
+              </div>
               <div>
                 <p className="font-bold text-surface-900 text-sm">Technician</p>
                 <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider">Verified Tech Pro</p>
@@ -282,8 +295,10 @@ export default function HowToUsePage() {
 
           {/* Customer */}
           <Card className="border-blue-200 dark:border-blue-800/50 bg-blue-50/40 dark:bg-blue-950/20 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">👤</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                <Users className="w-4 h-4" />
+              </div>
               <div>
                 <p className="font-bold text-surface-900 text-sm">Customer</p>
                 <p className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wider">Demo User</p>

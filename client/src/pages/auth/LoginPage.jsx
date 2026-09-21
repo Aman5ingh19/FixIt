@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, X, CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, X, CheckCircle2, ArrowLeft, Loader2, Shield, Wrench, User } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import AuthLayout from '../../components/layouts/AuthLayout';
 import { Button } from '../../components/common';
@@ -85,7 +85,7 @@ function ForgotPasswordModal({ onClose }) {
               </div>
               <button
                 onClick={onClose}
-                className="mt-2 w-full h-9 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors cursor-pointer"
+                className="mt-2 w-full h-9 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors cursor-pointer"
               >
                 Back to Sign In
               </button>
@@ -112,7 +112,7 @@ function ForgotPasswordModal({ onClose }) {
                     placeholder="you@example.com"
                     autoFocus
                     autoComplete="email"
-                    className={`w-full pl-9 pr-3 h-10 rounded-xl border text-sm text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`w-full pl-9 pr-3 h-10 rounded-xl border text-sm text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 ${
                       error ? 'border-red-400 dark:border-red-500 focus:ring-red-400' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
                     }`}
                   />
@@ -134,7 +134,7 @@ function ForgotPasswordModal({ onClose }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-[2] h-9 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  className="flex-[2] h-9 rounded-xl bg-primary-600 hover:bg-primary-700 disabled:opacity-60 text-white text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
@@ -223,27 +223,30 @@ export default function LoginPage() {
           <p className="text-[9.5px] font-bold text-surface-500 dark:text-surface-400 uppercase tracking-wider mb-1 flex items-center gap-1">
             <span>⚡</span> Quick Demo Logins
           </p>
-          <div className="grid grid-cols-3 gap-1">
+          <div className="grid grid-cols-3 gap-1.5">
             <button
               type="button"
               onClick={() => setForm({ email: 'admin@fixit.com', password: 'Password123!', rememberMe: true })}
-              className="px-1 py-1 rounded-md bg-white dark:bg-surface-200 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/40 text-[10px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
+              className="px-2 py-1.5 rounded-md bg-white dark:bg-surface-200 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/40 text-[10px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs truncate"
             >
-              👑 Admin
+              <Shield className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0" />
+              <span>Admin</span>
             </button>
             <button
               type="button"
               onClick={() => setForm({ email: 'tech@fixit.com', password: 'Password123!', rememberMe: true })}
-              className="px-1 py-1 rounded-md bg-white dark:bg-surface-200 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[10px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
+              className="px-2 py-1.5 rounded-md bg-white dark:bg-surface-200 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[10px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs truncate"
             >
-              🔧 Technician
+              <Wrench className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span>Technician</span>
             </button>
             <button
               type="button"
               onClick={() => setForm({ email: 'customer@fixit.com', password: 'Password123!', rememberMe: true })}
-              className="px-1 py-1 rounded-md bg-white dark:bg-surface-200 border border-blue-200 dark:border-blue-800/80 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[10px] font-bold transition-all text-center cursor-pointer shadow-2xs truncate"
+              className="px-2 py-1.5 rounded-md bg-white dark:bg-surface-200 border border-blue-200 dark:border-blue-800/80 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[10px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs truncate"
             >
-              👤 Customer
+              <User className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+              <span>Customer</span>
             </button>
           </div>
         </div>

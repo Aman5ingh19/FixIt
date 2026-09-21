@@ -325,7 +325,7 @@ export default function RequestDetailPage() {
                   <Button
                     fullWidth
                     variant="primary"
-                    className="bg-blue-600 hover:bg-blue-700 font-bold shadow-md shadow-blue-600/20 py-2.5 flex items-center justify-center gap-2"
+                    className="bg-primary-600 hover:bg-primary-700 font-bold shadow-md shadow-primary-600/20 py-2.5 flex items-center justify-center gap-2"
                     onClick={handlePayNow}
                     loading={paying}
                   >

@@ -89,8 +89,8 @@ export default function ResetPasswordPage() {
         {/* Header */}
         <div className="space-y-0.5">
           <div className="flex items-center gap-2.5 mb-3">
-            <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60">
-              <ShieldCheck className="w-5 h-5 text-blue-600" />
+            <div className="p-2 rounded-xl bg-primary-50 dark:bg-primary-950/60">
+              <ShieldCheck className="w-5 h-5 text-primary-600" />
             </div>
             <div>
               <h2 className="text-xl font-extrabold text-surface-900 tracking-tight">
@@ -120,7 +120,7 @@ export default function ResetPasswordPage() {
             </div>
             <button
               onClick={() => navigate('/login')}
-              className="w-full h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors cursor-pointer"
+              className="w-full h-10 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-bold transition-colors cursor-pointer"
             >
               Go to Sign In
             </button>
@@ -145,7 +145,7 @@ export default function ResetPasswordPage() {
             </div>
             <Link
               to="/login"
-              className="block w-full h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors cursor-pointer flex items-center justify-center"
+              className="block w-full h-10 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-bold transition-colors cursor-pointer flex items-center justify-center"
             >
               Back to Sign In
             </Link>
@@ -239,7 +239,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-10 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-sm font-bold transition-colors cursor-pointer flex items-center justify-center gap-2 mt-2"
+              className="w-full h-10 rounded-xl bg-primary-600 hover:bg-primary-700 disabled:opacity-60 text-white text-sm font-bold transition-colors cursor-pointer flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
                 <>
@@ -252,7 +252,7 @@ export default function ResetPasswordPage() {
             </button>
 
             <p className="text-center text-xs text-slate-500 dark:text-slate-400">
-              <Link to="/login" className="text-blue-600 hover:underline font-medium">
+              <Link to="/login" className="text-primary-600 dark:text-primary-400 hover:underline font-medium">
                 ← Back to Sign In
               </Link>
             </p>

@@ -778,7 +778,7 @@ export default function CreateRequestPage() {
                         onClick={() => setPresetFilter(cat.id)}
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                           isActive
-                            ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-500/30'
+                            ? 'bg-primary-600 text-white shadow-sm ring-2 ring-primary-500/30'
                             : 'bg-surface-100 dark:bg-slate-800 text-surface-700 dark:text-slate-200 hover:bg-surface-200 dark:hover:bg-slate-700 hover:text-surface-900 dark:hover:text-white border border-surface-200/80 dark:border-slate-700'
                         }`}
                       >
@@ -787,7 +787,7 @@ export default function CreateRequestPage() {
                         <span
                           className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                             isActive
-                              ? 'bg-blue-500 text-white'
+                              ? 'bg-primary-500 text-white'
                               : 'bg-surface-200/80 dark:bg-slate-700 text-surface-600 dark:text-slate-300'
                           }`}
                         >
@@ -805,7 +805,7 @@ export default function CreateRequestPage() {
                       key={preset.label}
                       type="button"
                       onClick={() => handleAttachPreset(preset)}
-                      className="flex items-center gap-3 p-2.5 rounded-xl bg-white dark:bg-slate-800/90 hover:bg-blue-50/60 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-slate-700/90 hover:border-blue-400 dark:hover:border-blue-500 transition-all cursor-pointer group text-left shadow-2xs hover:shadow-sm"
+                      className="flex items-center gap-3 p-2.5 rounded-xl bg-white dark:bg-slate-800/90 hover:bg-primary-50/60 dark:hover:bg-primary-950/40 border border-slate-200 dark:border-slate-700/90 hover:border-primary-400 dark:hover:border-primary-500 transition-all cursor-pointer group text-left shadow-2xs hover:shadow-sm"
                     >
                       <img
                         src={preset.url}
@@ -815,7 +815,7 @@ export default function CreateRequestPage() {
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1.5">
-                          <span className="text-xs font-bold text-surface-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">
+                          <span className="text-xs font-bold text-surface-900 dark:text-slate-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 truncate">
                             {preset.label}
                           </span>
                           <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-surface-100 dark:bg-slate-700 text-surface-600 dark:text-slate-300 shrink-0">
@@ -826,7 +826,7 @@ export default function CreateRequestPage() {
                           {preset.desc}
                         </p>
                       </div>
-                      <div className="w-6 h-6 rounded-lg bg-surface-100 dark:bg-slate-700 group-hover:bg-blue-600 group-hover:text-white text-surface-500 dark:text-slate-300 flex items-center justify-center transition-colors shrink-0">
+                      <div className="w-6 h-6 rounded-lg bg-surface-100 dark:bg-slate-700 group-hover:bg-primary-600 group-hover:text-white text-surface-500 dark:text-slate-300 flex items-center justify-center transition-colors shrink-0">
                         <Plus className="w-3.5 h-3.5" />
                       </div>
                     </button>
@@ -849,33 +849,33 @@ export default function CreateRequestPage() {
             </div>
           )}
 
-          {/* Step 4: Review */}
+          {/* Step 4: Summary & Confirm */}
           {step === 4 && (
-            <div className="space-y-5 animate-slide-up">
-              <h2 className="text-lg font-semibold text-surface-900">Review &amp; Submit</h2>
-              <div className="space-y-3 divide-y divide-surface-200 dark:divide-surface-300 text-sm">
-                <div className="pt-2 flex justify-between">
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-bold text-surface-900">Review & Confirm</h3>
+                <p className="text-xs text-surface-500">Please verify your booking details before scheduling</p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-surface-100 dark:bg-surface-200/50 space-y-3 text-sm divide-y divide-surface-200 dark:divide-surface-300">
+                <div className="flex justify-between pb-2">
                   <span className="text-surface-500">Service:</span>
-                  <span className="font-bold text-surface-900">{selectedService?.name || 'Selected Service'}</span>
+                  <span className="font-bold text-surface-900">{selectedService?.name || 'Selected Repair Service'}</span>
                 </div>
                 <div className="pt-2 flex justify-between">
-                  <span className="text-surface-500">Title:</span>
-                  <span className="font-medium text-surface-900">{form.title}</span>
+                  <span className="text-surface-500">Issue Description:</span>
+                  <span className="font-medium text-surface-900 max-w-xs text-right truncate">{form.title}</span>
                 </div>
                 <div className="pt-2 flex justify-between">
-                  <span className="text-surface-500">Description:</span>
-                  <span className="font-medium text-surface-900 max-w-xs text-right truncate">{form.description}</span>
-                </div>
-                <div className="pt-2 flex justify-between">
-                  <span className="text-surface-500">Priority:</span>
-                  <Badge variant={form.priority === 2 ? 'danger' : form.priority === 1 ? 'warning' : 'primary'} size="sm">
-                    {form.priority === 2 ? 'Urgent' : form.priority === 1 ? 'High' : 'Normal'}
+                  <span className="text-surface-500">Priority Level:</span>
+                  <Badge variant={form.priority === 2 ? 'danger' : form.priority === 1 ? 'warning' : 'primary'}>
+                    {form.priority === 2 ? 'Urgent (Emergency)' : form.priority === 1 ? 'High' : 'Normal'}
                   </Badge>
                 </div>
                 <div className="pt-2 flex justify-between">
-                  <span className="text-surface-500">Address:</span>
+                  <span className="text-surface-500">Service Address:</span>
                   <span className="font-medium text-surface-900 text-right">
-                    {form.location.address}, {form.location.city}, {form.location.state} - {form.location.zipCode}
+                    {form.location?.address || form.address || 'Address provided'}, {form.location?.city || form.city || ''}
                   </span>
                 </div>
                 <div className="pt-2 flex justify-between">
@@ -885,13 +885,13 @@ export default function CreateRequestPage() {
 
                 {/* Pricing Estimate Card */}
                 <div className="pt-3">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-200 dark:border-blue-800/60 flex items-center justify-between">
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-primary-50 to-accent-100 dark:from-primary-950/40 dark:to-accent-950/40 border border-primary-200 dark:border-primary-800/60 flex items-center justify-between">
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <CreditCard className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                        <p className="text-xs font-bold text-blue-900 dark:text-blue-200">Standard Service Estimate</p>
+                        <CreditCard className="w-4 h-4 text-primary-600 dark:text-primary-400" />
+                        <p className="text-xs font-bold text-primary-900 dark:text-primary-200">Standard Service Estimate</p>
                       </div>
-                      <p className="text-[11px] text-blue-700 dark:text-blue-400 mt-0.5">Includes initial diagnosis & verified technician visit</p>
+                      <p className="text-[11px] text-primary-700 dark:text-primary-400 mt-0.5">Includes initial diagnosis & verified technician visit</p>
                     </div>
                     <div className="text-right">
                       <span className="text-xl font-black text-primary-600 dark:text-primary-400">
@@ -933,7 +933,7 @@ export default function CreateRequestPage() {
                   loading={submittingAction === 'payOnline'}
                   disabled={!!submittingAction}
                   onClick={() => handleSubmit(true)}
-                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 font-extrabold text-white shadow-md shadow-blue-600/20 text-xs flex items-center justify-center gap-1.5"
+                  className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 font-extrabold text-white shadow-md shadow-primary-600/20 text-xs flex items-center justify-center gap-1.5"
                 >
                   ⚡ Book & Pay Online (₹{selectedService?.basePrice || 499})
                 </Button>
