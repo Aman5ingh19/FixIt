@@ -45,3 +45,8 @@ docker-compose.override.yml
 coverage/
 tmp/
 temp/
+
+# Local Docs / Scripts
+FixIt_System_Architecture_and_Working_Model_Documentation.pdf
+generate_pdf.py
+
