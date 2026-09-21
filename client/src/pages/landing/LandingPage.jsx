@@ -767,7 +767,7 @@ export default function LandingPage() {
       <footer className="bg-white dark:bg-surface-100 border-t border-surface-200 dark:border-surface-300 py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-primary-600 rounded-lg flex items-center justify-center">
+            <div className="w-7 h-7 bg-blue-600 rounded-lg flex items-center justify-center shadow-xs">
               <Wrench className="w-3.5 h-3.5 text-white" />
             </div>
             <span className="font-bold text-surface-900 text-base">FixIt</span>
